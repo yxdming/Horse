@@ -27,13 +27,24 @@ async def get_memories(
     return memory_service.get_all_memories(params)
 
 
-@router.get("/{memory_id}", response_model=dict)
-async def get_memory(memory_id: str):
-    """Get memory by ID"""
-    memory = memory_service.get_memory_by_id(memory_id)
-    if not memory:
-        raise HTTPException(status_code=404, detail="Memory not found")
-    return memory
+@router.get("/categories/list", response_model=dict)
+async def get_categories():
+    """Get all memory categories"""
+    categories = memory_service.get_categories()
+    return {"categories": categories}
+
+
+@router.get("/types/list", response_model=dict)
+async def get_memory_types():
+    """Get all memory types"""
+    types = memory_service.get_memory_types()
+    return {"types": types}
+
+
+@router.get("/stats/summary", response_model=dict)
+async def get_memory_stats():
+    """Get memory statistics"""
+    return memory_service.get_memory_stats()
 
 
 @router.post("/", response_model=dict)
@@ -43,6 +54,15 @@ async def create_memory(memory_create: MemoryCreate):
         return memory_service.create_memory(memory_create)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+@router.get("/{memory_id}", response_model=dict)
+async def get_memory(memory_id: str):
+    """Get memory by ID"""
+    memory = memory_service.get_memory_by_id(memory_id)
+    if not memory:
+        raise HTTPException(status_code=404, detail="Memory not found")
+    return memory
 
 
 @router.put("/{memory_id}", response_model=dict)
@@ -61,20 +81,6 @@ async def delete_memory(memory_id: str):
     if not success:
         raise HTTPException(status_code=404, detail="Memory not found")
     return {"message": "Memory deleted successfully"}
-
-
-@router.get("/categories/list", response_model=dict)
-async def get_categories():
-    """Get all memory categories"""
-    categories = memory_service.get_categories()
-    return {"categories": categories}
-
-
-@router.get("/types/list", response_model=dict)
-async def get_memory_types():
-    """Get all memory types"""
-    types = memory_service.get_memory_types()
-    return {"types": types}
 
 
 @router.get("/stats/summary", response_model=dict)
