@@ -1,0 +1,130 @@
+/* Sidebar container - dark theme */
+.ant-layout-sider {
+  background: #001529 !important;
+}
+
+.ant-layout-sider .ant-layout-sider-children {
+  background: #001529 !important;
+}
+
+/* Logo section */
+.logo {
+  height: 64px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 16px;
+  background: #001529;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 12px;
+}
+
+/* When sidebar is collapsed, center the logo */
+.ant-layout-sider-collapsed .logo {
+  justify-content: center;
+}
+
+.logo-image {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.logo h1 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Dark menu - all text white */
+.ant-menu-dark {
+  background: #001529 !important;
+}
+
+.ant-menu-dark .ant-menu-item {
+  color: rgba(255, 255, 255, 0.85) !important;
+  background: transparent !important;
+}
+
+.ant-menu-dark .ant-menu-item:hover {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+.ant-menu-dark .ant-menu-item-selected {
+  background-color: #1890ff !important;
+  color: #ffffff !important;
+}
+
+.ant-menu-dark .ant-menu-item-selected > span {
+  color: #ffffff !important;
+}
+
+.ant-menu-dark .ant-menu-item span {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.ant-menu-dark .ant-menu-item:hover span {
+  color: #ffffff;
+}
+
+/* Menu icons */
+.ant-menu-dark .ant-menu-item .anticon {
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.ant-menu-dark .ant-menu-item:hover .anticon {
+  color: #ffffff;
+}
+
+.ant-menu-dark .ant-menu-item-selected .anticon {
+  color: #ffffff;
+}
+
+/* Sider trigger (collapse button) */
+.ant-layout-sider-trigger {
+  background: #002140 !important;
+  color: #ffffff !important;
+}
+
+.ant-layout-sider-trigger:hover {
+  background: #001529 !important;
+  color: #ffffff !important;
+}
+
+/* Header styles */
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.header-content h2 {
+  font-size: 20px;
+  font-weight: 500;
+  color: #262626;
+  margin: 0;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 4px 12px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+}
+
+.user-info:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.user-info span {
+  font-size: 14px;
+  color: #595959;
+  font-weight: 500;
+}
