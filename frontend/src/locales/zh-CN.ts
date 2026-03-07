@@ -263,12 +263,18 @@ export default {
       batchExport: '批量导出',
 
       // 搜索
-      searchPlaceholder: '搜索记忆内容或标签',
+      searchPlaceholder: '搜索记忆标题、内容或标签',
       typePlaceholder: '记忆类型',
       categoryPlaceholder: '分类',
       importancePlaceholder: '最低重要性',
 
       // 列
+      colTitle: '标题',
+      colCategory: '分类',
+      colType: '类型',
+      colImportance: '重要性',
+      colAccessCount: '访问次数',
+      colCreateTime: '创建时间',
       content: '内容',
       category: '分类',
       type: '类型',
@@ -287,13 +293,22 @@ export default {
       addModalTitle: '新增记忆',
       editModalTitle: '编辑记忆',
       quickAddModalTitle: '快速添加记忆',
+      titleLabel: '标题',
+      titlePlaceholder: '请输入记忆标题',
       contentLabel: '内容',
       contentPlaceholder: '请输入记忆内容',
       categoryLabel: '分类',
+      categoryHelp: '可以从现有分类中选择，或输入新的分类名称',
+      categorySelectPlaceholder: '输入或选择分类',
       tagsLabel: '标签',
       tagsPlaceholder: '输入标签，按回车添加',
       typeLabel: '类型',
       importanceLabel: '重要性',
+
+      // 统计
+      statsTotal: '记忆总数',
+      statsCategories: '分类数量',
+      statsTypes: '类型数量',
 
       // 消息
       fetchFailed: '获取记忆列表失败',
@@ -305,6 +320,8 @@ export default {
       deleteFailed: '删除失败',
       deleteConfirm: '确定要删除这条记忆吗？',
       accessSuccess: '已更新访问信息',
+      semanticSearch: '语义搜索',
+      semanticSearchDeveloping: '语义搜索功能开发中',
     },
 
     // 模板管理
@@ -312,7 +329,7 @@ export default {
       title: '模板管理',
       addButton: '新增模板',
       description: '模板说明',
-      descriptionText: '记忆模板可以帮助您快速创建结构化的记忆内容。模板定义了记忆的格式和必填字段。',
+      descriptionText: '预设记忆模板可以快速创建特定类型的记忆，提高记录效率。模板包含默认的分类、记忆类型、重要性和标签。',
 
       // 列
       name: '模板名称',
@@ -320,17 +337,63 @@ export default {
       fieldCount: '字段数量',
       lastUsed: '最后使用',
       actions: '操作',
+      defaultImportance: '默认重要性',
+
+      // 弹窗
+      addModalTitle: '新增模板',
+      editModalTitle: '编辑模板',
+      nameLabel: '模板名称',
+      namePlaceholder: '请输入模板名称',
+      descriptionLabel: '描述',
+      descriptionPlaceholder: '请输入模板描述',
+      categoryPlaceholder: '请输入分类',
+      defaultImportanceLabel: '默认重要性',
+      defaultImportancePlaceholder: '请选择默认重要性',
+      defaultTagsLabel: '默认标签',
 
       // 消息
       deleteSuccess: '删除成功',
       deleteConfirm: '确定要删除这个模板吗？',
+      applied: '已应用模板：{name}',
+      use: '使用',
     },
 
     // 权限管理
     permissions: {
       title: '权限管理',
+      addButton: '添加用户',
       description: '权限说明',
-      descriptionText: '配置不同用户对记忆库的访问权限。管理员可以管理所有记忆，普通用户只能管理自己的记忆。',
+      descriptionText: '管理员拥有所有权限，编辑者可以创建、编辑和查看记忆，查看者只能浏览记忆内容。',
+
+      // 列
+      colUsername: '用户名',
+      colRole: '角色',
+      colPermissions: '权限',
+      colMemoryCount: '记忆数量',
+      colLastAccess: '最后访问',
+
+      // 弹窗
+      addModalTitle: '添加记忆库用户',
+      usernameLabel: '用户名',
+      usernamePlaceholder: '请输入用户名',
+      roleLabel: '角色',
+      rolePlaceholder: '请选择角色',
+      roleAdmin: '管理员',
+      roleEditor: '编辑者',
+      roleViewer: '查看者',
+      permissionsLabel: '权限',
+      permissionsPlaceholder: '请选择权限',
+      permAll: '全部',
+      permCreate: '创建',
+      permEdit: '编辑',
+      permView: '查看',
+      permDelete: '删除',
+
+      // 消息
+      removeSuccess: '移除成功',
+      removeConfirm: '确定要移除这个用户吗？',
+      remove: '移除',
+      addSuccess: '添加成功',
     },
   },
 
@@ -358,6 +421,8 @@ export default {
       port: '端口',
       database: '数据库名',
       status: '状态',
+      tableCount: '表数量',
+      lastSync: '最后同步',
       actions: '操作',
 
       // 状态
@@ -377,6 +442,7 @@ export default {
       nameLabel: '数据源名称',
       typeLabel: '数据库类型',
       hostLabel: '主机地址',
+      hostPlaceholder: '例如：192.168.1.100',
       portLabel: '端口',
       databaseLabel: '数据库名',
       usernameLabel: '用户名',
@@ -384,8 +450,13 @@ export default {
 
       // 按钮
       testConnection: '测试连接',
+      testConnecting: '正在测试连接...',
       testSuccess: '连接成功',
       testFailed: '连接失败',
+
+      // 提示信息
+      alertMessage: '数据源说明',
+      alertDescription: '配置和管理数据库连接，支持MySQL、PostgreSQL等主流数据库。系统会自动同步表结构信息用于自然语言转SQL。',
 
       // 消息
       fetchFailed: '获取数据源列表失败',
@@ -407,19 +478,46 @@ export default {
       // 列
       term: '术语',
       definition: '定义',
+      mapping: '映射规则',
       category: '分类',
+      example: '示例问句',
       examples: '示例',
       updateTime: '更新时间',
       actions: '操作',
+
+      // 统计
+      statsTotal: '术语总数',
+      statsSales: '销售指标',
+      statsUser: '用户指标',
+      statsOther: '其他指标',
+
+      // 分类
+      categorySales: '销售指标',
+      categoryUser: '用户指标',
+      categoryProduct: '产品指标',
+      categoryFinance: '财务指标',
 
       // 弹窗
       addModalTitle: '新增术语',
       editModalTitle: '编辑术语',
       termLabel: '术语',
+      termPlaceholder: '例如：GMV、DAU、转化率',
       definitionLabel: '定义',
+      definitionPlaceholder: '例如：成交总额、日活跃用户数',
+      mappingLabel: '映射规则',
+      mappingPlaceholder: '例如：SUM(order_amount)',
+      mappingRequired: '请输入SQL映射规则',
       categoryLabel: '分类',
+      categoryPlaceholder: '请选择分类',
+      exampleLabel: '示例问句',
+      examplePlaceholder: '例如：本月GMV是多少',
+      exampleRequired: '请输入示例问句',
       examplesLabel: '示例',
       examplesPlaceholder: '每行一个示例',
+
+      // 提示信息
+      alertMessage: '行业黑话说明',
+      alertDescription: '维护业务术语词典，将行业黑话、业务术语映射到数据库字段和SQL表达式，提高问数理解的准确度。',
 
       // 消息
       fetchFailed: '获取术语列表失败',
@@ -441,7 +539,7 @@ export default {
       question: '问题',
       sql: '生成的SQL',
       resultCount: '结果数量',
-      duration: '耗时',
+      duration: '耗时(ms)',
       status: '状态',
       database: '数据库',
       confidence: '置信度',
@@ -458,6 +556,13 @@ export default {
       statsSuccess: '成功',
       statsFailed: '失败',
       avgDuration: '平均耗时',
+
+      // 提示信息
+      alertMessage: '历史说明',
+      alertDescription: '查看用户的问数历史，包括问句、生成的SQL、执行结果等。可用于分析用户需求、优化术语词典。',
+
+      // 消息
+      fetchFailed: '获取历史记录失败',
     },
 
     // 自然语言问数
@@ -465,22 +570,32 @@ export default {
       title: '自然语言问数',
       selectDatabase: '选择数据库',
       questionLabel: '问题',
-      questionPlaceholder: '请输入您的问题，例如：查询最近7天的用户增长趋势',
-      askButton: '提问',
-      clearButton: '清空',
+      questionPlaceholder: '请输入问句，例如：本月销售额是多少、Top 10产品...',
+      askButton: '生成SQL',
+      clearButton: '清空结果',
+      executeButton: '执行查询',
+
+      // 示例
+      exampleLabel: '示例问句',
+      example1: '本月销售额是多少',
+      example2: 'Top 10销售产品',
+      example3: '最近7天用户增长趋势',
+      example4: '各地区GMV排名',
 
       // 结果
-      resultTitle: '查询结果',
+      resultTitle: '生成结果',
       generatedSQL: '生成的SQL',
       confidence: '置信度',
+      recognizedTerms: '识别术语',
+      explanation: '理解说明',
       duration: '耗时',
       resultCount: '结果数量',
 
       // 消息
       noDatabase: '请先选择数据库',
-      questionRequired: '请输入问题',
+      questionRequired: '请输入问句',
       askSuccess: '查询成功',
-      askFailed: '查询失败',
+      askFailed: '生成SQL失败',
     },
   },
 

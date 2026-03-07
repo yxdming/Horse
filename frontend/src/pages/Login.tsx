@@ -1,11 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { Form, Input, Button, Card, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { authApi } from '../services/api';
+import { useTranslation } from '../contexts/LanguageContext';
+import { createTranslateProxy } from '../utils/i18n';
 import './Login.css';
 
 const Login: React.FC = () => {
+  const { t } = useTranslation();
+  const tp = useMemo(() => createTranslateProxy(t), [t]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
@@ -23,12 +27,12 @@ const Login: React.FC = () => {
       localStorage.setItem('token', response.access_token);
       localStorage.setItem('user', JSON.stringify(response.user));
 
-      message.success('登录成功！');
+      message.success(tp('login.loginSuccess'));
 
       // 跳转到之前访问的页面或首页
       navigate(from, { replace: true });
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : '登录失败';
+      const errorMessage = error instanceof Error ? error.message : tp('login.loginFailed');
       message.error(errorMessage);
     } finally {
       setLoading(false);
@@ -39,7 +43,7 @@ const Login: React.FC = () => {
     <div className="login-container">
       <Card className="login-card">
         <div className="login-header">
-          <h1>AIDP Manager</h1>
+          <h1>{tp('login.title')}</h1>
         </div>
 
         <Form
@@ -50,22 +54,22 @@ const Login: React.FC = () => {
         >
           <Form.Item
             name="username"
-            rules={[{ required: true, message: '请输入用户名!' }]}
+            rules={[{ required: true, message: tp('login.usernamePlaceholder') }]}
           >
             <Input
               prefix={<UserOutlined />}
-              placeholder="用户名"
+              placeholder={tp('login.username')}
               autoComplete="username"
             />
           </Form.Item>
 
           <Form.Item
             name="password"
-            rules={[{ required: true, message: '请输入密码!' }]}
+            rules={[{ required: true, message: tp('login.passwordPlaceholder') }]}
           >
             <Input.Password
               prefix={<LockOutlined />}
-              placeholder="密码"
+              placeholder={tp('login.password')}
               autoComplete="current-password"
             />
           </Form.Item>
@@ -78,7 +82,7 @@ const Login: React.FC = () => {
               block
               size="large"
             >
-              登录
+              {tp('login.loginButton')}
             </Button>
           </Form.Item>
         </Form>

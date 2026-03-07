@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   Table,
   Button,
@@ -33,11 +33,15 @@ import {
 // @ts-expect-error - Types are used for type checking
 import type { DatabaseSource, GlossaryTerm, QuestionHistory } from '../types';
 import { questioningApi } from '../services/api';
+import { useTranslation } from '../contexts/LanguageContext';
+import { createTranslateProxy } from '../utils/i18n';
 
 const { TextArea } = Input;
 const { Search } = Input;
 
 const QuestioningPage: React.FC = () => {
+  const { t } = useTranslation();
+  const tp = useMemo(() => createTranslateProxy(t), [t]);
   const [activeTab, setActiveTab] = useState('databases');
 
   // 数据库管理状态
@@ -75,7 +79,7 @@ const QuestioningPage: React.FC = () => {
       const response = await questioningApi.getDatabases();
       setDatabases(response.databases || []);
     } catch (error) {
-      message.error('获取数据库列表失败');
+      message.error(tp('questioning.databases.fetchFailed'));
     }
   };
 
@@ -94,10 +98,10 @@ const QuestioningPage: React.FC = () => {
   const handleDeleteDb = async (id: string) => {
     try {
       await questioningApi.deleteDatabase(id);
-      message.success('删除成功');
+      message.success(tp('questioning.databases.deleteSuccess'));
       fetchDatabases();
     } catch (error) {
-      message.error('删除失败');
+      message.error(tp('questioning.databases.deleteFailed'));
     }
   };
 
@@ -107,82 +111,82 @@ const QuestioningPage: React.FC = () => {
 
       if (editingDb) {
         await questioningApi.updateDatabase(editingDb.id, values);
-        message.success('更新成功');
+        message.success(tp('questioning.databases.updateSuccess'));
       } else {
         await questioningApi.createDatabase(values);
-        message.success('添加成功');
+        message.success(tp('questioning.databases.createSuccess'));
       }
 
       setDbModalVisible(false);
       dbForm.resetFields();
       fetchDatabases();
     } catch (error) {
-      message.error(editingDb ? '更新失败' : '添加失败');
+      message.error(editingDb ? tp('questioning.databases.updateFailed') : tp('questioning.databases.createFailed'));
     }
   };
 
   const handleTestConnection = async (db_id: string) => {
     try {
-      message.loading('正在测试连接...', 0);
+      message.loading(tp('questioning.databases.testConnecting'), 0);
       await questioningApi.testConnection(db_id);
       message.destroy();
-      message.success('连接成功！');
+      message.success(tp('questioning.databases.testSuccess'));
       fetchDatabases();
     } catch (error) {
       message.destroy();
-      message.error('连接失败');
+      message.error(tp('questioning.databases.testFailed'));
     }
   };
 
   const databaseColumns = [
     {
-      title: '数据库名称',
+      title: tp('questioning.databases.name'),
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: '类型',
+      title: tp('questioning.databases.type'),
       dataIndex: 'type',
       key: 'type',
       render: (type: string) => <Tag color="blue">{type}</Tag>,
     },
     {
-      title: '主机',
+      title: tp('questioning.databases.host'),
       dataIndex: 'host',
       key: 'host',
     },
     {
-      title: '端口',
+      title: tp('questioning.databases.port'),
       dataIndex: 'port',
       key: 'port',
     },
     {
-      title: '数据库名',
+      title: tp('questioning.databases.database'),
       dataIndex: 'database',
       key: 'database',
     },
     {
-      title: '状态',
+      title: tp('questioning.databases.status'),
       dataIndex: 'status',
       key: 'status',
       render: (status: string) => (
         <Tag color={status === 'connected' ? 'success' : 'error'} icon={status === 'connected' ? <CheckCircleOutlined /> : <CloseCircleOutlined />}>
-          {status === 'connected' ? '已连接' : '未连接'}
+          {status === 'connected' ? tp('questioning.databases.statusConnected') : tp('questioning.databases.statusDisconnected')}
         </Tag>
       ),
     },
     {
-      title: '表数量',
+      title: tp('questioning.databases.tableCount'),
       dataIndex: 'tableCount',
       key: 'tableCount',
     },
     {
-      title: '最后同步',
+      title: tp('questioning.databases.lastSync'),
       dataIndex: 'lastSync',
       key: 'lastSync',
     },
     {
-      title: '操作',
+      title: tp('common.actions'),
       key: 'action',
       render: (_: any, record: any) => (
         <Space size="small">
@@ -192,7 +196,7 @@ const QuestioningPage: React.FC = () => {
             icon={<PlayCircleOutlined />}
             onClick={() => handleTestConnection(record.id)}
           >
-            测试
+            {tp('questioning.databases.testConnection')}
           </Button>
           <Button
             type="link"
@@ -200,16 +204,16 @@ const QuestioningPage: React.FC = () => {
             icon={<EditOutlined />}
             onClick={() => handleEditDb(record)}
           >
-            编辑
+            {tp('common.edit')}
           </Button>
           <Popconfirm
-            title="确定要删除这个数据库连接吗？"
+            title={tp('questioning.databases.deleteConfirm')}
             onConfirm={() => handleDeleteDb(record.id)}
-            okText="确定"
-            cancelText="取消"
+            okText={tp('common.confirm')}
+            cancelText={tp('common.cancel')}
           >
             <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-              删除
+              {tp('common.delete')}
             </Button>
           </Popconfirm>
         </Space>
@@ -223,7 +227,7 @@ const QuestioningPage: React.FC = () => {
       const response = await questioningApi.getGlossaries();
       setGlossaries(response.glossaries || []);
     } catch (error) {
-      message.error('获取术语列表失败');
+      message.error(tp('questioning.glossaries.fetchFailed'));
     }
   };
 
@@ -240,10 +244,10 @@ const QuestioningPage: React.FC = () => {
   const handleDeleteGlossary = async (id: string) => {
     try {
       await questioningApi.deleteGlossary(id);
-      message.success('删除成功');
+      message.success(tp('questioning.glossaries.deleteSuccess'));
       fetchGlossaries();
     } catch (error) {
-      message.error('删除失败');
+      message.error(tp('questioning.glossaries.deleteFailed'));
     }
   };
 
@@ -254,44 +258,44 @@ const QuestioningPage: React.FC = () => {
       setGlossaryModalVisible(false);
       glossaryForm.resetFields();
       fetchGlossaries();
-      message.success('添加成功');
+      message.success(tp('questioning.glossaries.createSuccess'));
     } catch (error) {
-      message.error('添加失败');
+      message.error(tp('questioning.glossaries.createFailed'));
     }
   };
 
   const glossaryColumns = [
     {
-      title: '术语',
+      title: tp('questioning.glossaries.term'),
       dataIndex: 'term',
       key: 'term',
       render: (term: string) => <Tag color="purple" style={{ fontSize: 14 }}>{term}</Tag>,
     },
     {
-      title: '定义',
+      title: tp('questioning.glossaries.definition'),
       dataIndex: 'definition',
       key: 'definition',
     },
     {
-      title: '映射规则',
+      title: tp('questioning.glossaries.mapping'),
       dataIndex: 'mapping',
       key: 'mapping',
       render: (mapping: string) => <Tag color="geekblue">{mapping}</Tag>,
     },
     {
-      title: '分类',
+      title: tp('questioning.glossaries.category'),
       dataIndex: 'category',
       key: 'category',
       render: (category: string) => <Tag color="blue">{category}</Tag>,
     },
     {
-      title: '示例问句',
+      title: tp('questioning.glossaries.example'),
       dataIndex: 'example',
       key: 'example',
       ellipsis: true,
     },
     {
-      title: '操作',
+      title: tp('common.actions'),
       key: 'action',
       render: (_: any, record: any) => (
         <Space size="small">
@@ -301,16 +305,16 @@ const QuestioningPage: React.FC = () => {
             icon={<EditOutlined />}
             onClick={() => handleEditGlossary(record)}
           >
-            编辑
+            {tp('common.edit')}
           </Button>
           <Popconfirm
-            title="确定要删除这个术语吗？"
+            title={tp('questioning.glossaries.deleteConfirm')}
             onConfirm={() => handleDeleteGlossary(record.id)}
-            okText="确定"
-            cancelText="取消"
+            okText={tp('common.confirm')}
+            cancelText={tp('common.cancel')}
           >
             <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-              删除
+              {tp('common.delete')}
             </Button>
           </Popconfirm>
         </Space>
@@ -324,56 +328,56 @@ const QuestioningPage: React.FC = () => {
       const response = await questioningApi.getHistories(0, 10);
       setHistories(response.histories || []);
     } catch (error) {
-      message.error('获取历史记录失败');
+      message.error(tp('questioning.history.fetchFailed'));
     }
   };
 
   const historyColumns = [
     {
-      title: '问句',
+      title: tp('questioning.history.question'),
       dataIndex: 'question',
       key: 'question',
       width: 250,
     },
     {
-      title: '生成的SQL',
+      title: tp('questioning.history.sql'),
       dataIndex: 'sql',
       key: 'sql',
       width: 300,
       ellipsis: true,
     },
     {
-      title: '结果',
+      title: tp('questioning.history.resultCount'),
       dataIndex: 'result',
       key: 'result',
       width: 150,
       ellipsis: true,
     },
     {
-      title: '耗时(ms)',
+      title: tp('questioning.history.duration'),
       dataIndex: 'duration',
       key: 'duration',
       width: 100,
     },
     {
-      title: '状态',
+      title: tp('questioning.history.status'),
       dataIndex: 'status',
       key: 'status',
       width: 100,
       render: (status: string) => (
         <Tag color={status === 'success' ? 'success' : 'error'} icon={status === 'success' ? <CheckCircleOutlined /> : <CloseCircleOutlined />}>
-          {status === 'success' ? '成功' : '失败'}
+          {status === 'success' ? tp('questioning.history.statusSuccess') : tp('questioning.history.statusFailed')}
         </Tag>
       ),
     },
     {
-      title: '数据库',
+      title: tp('questioning.history.database'),
       dataIndex: 'database',
       key: 'database',
       width: 120,
     },
     {
-      title: '时间',
+      title: tp('questioning.history.askTime'),
       dataIndex: 'createdAt',
       key: 'createdAt',
       width: 180,
@@ -383,7 +387,7 @@ const QuestioningPage: React.FC = () => {
   // ==================== 问答测试 ====================
   const handleTestQuestion = async () => {
     if (!question.trim()) {
-      message.warning('请输入问句');
+      message.warning(tp('questioning.ask.questionRequired'));
       return;
     }
 
@@ -395,7 +399,7 @@ const QuestioningPage: React.FC = () => {
       });
       setTestResult(response);
     } catch (error) {
-      message.error('生成SQL失败');
+      message.error(tp('questioning.ask.askFailed'));
     } finally {
       setTesting(false);
     }
@@ -408,21 +412,21 @@ const QuestioningPage: React.FC = () => {
       label: (
         <span>
           <DatabaseOutlined />
-          数据库管理
+          {tp('questioning.tabs.databases')}
         </span>
       ),
       children: (
         <Card
-          title="数据源管理"
+          title={tp('questioning.databases.title')}
           extra={
             <Button type="primary" icon={<PlusOutlined />} onClick={handleAddDb}>
-              添加数据源
+              {tp('questioning.databases.addButton')}
             </Button>
           }
         >
           <Alert
-            message="数据源说明"
-            description="配置和管理数据库连接，支持MySQL、PostgreSQL等主流数据库。系统会自动同步表结构信息用于自然语言转SQL。"
+            message={tp('questioning.databases.alertMessage')}
+            description={tp('questioning.databases.alertDescription')}
             type="info"
             showIcon
             style={{ marginBottom: 16 }}
@@ -441,35 +445,35 @@ const QuestioningPage: React.FC = () => {
       label: (
         <span>
           <BookOutlined />
-          行业黑话
+          {tp('questioning.tabs.glossaries')}
         </span>
       ),
       children: (
         <Card
-          title="术语词典管理"
+          title={tp('questioning.glossaries.title')}
           extra={
             <Button type="primary" icon={<PlusOutlined />} onClick={handleAddGlossary}>
-              添加术语
+              {tp('questioning.glossaries.addButton')}
             </Button>
           }
         >
           <Row gutter={16} style={{ marginBottom: 16 }}>
             <Col span={6}>
-              <Statistic title="术语总数" value={glossaries.length} prefix={<BookOutlined />} />
+              <Statistic title={tp('questioning.glossaries.statsTotal')} value={glossaries.length} prefix={<BookOutlined />} />
             </Col>
             <Col span={6}>
-              <Statistic title="销售指标" value={glossaries.filter(g => g.category === '销售指标').length} />
+              <Statistic title={tp('questioning.glossaries.statsSales')} value={glossaries.filter(g => g.category === tp('questioning.glossaries.categorySales')).length} />
             </Col>
             <Col span={6}>
-              <Statistic title="用户指标" value={glossaries.filter(g => g.category === '用户指标').length} />
+              <Statistic title={tp('questioning.glossaries.statsUser')} value={glossaries.filter(g => g.category === tp('questioning.glossaries.categoryUser')).length} />
             </Col>
             <Col span={6}>
-              <Statistic title="其他指标" value={glossaries.filter(g => g.category !== '销售指标' && g.category !== '用户指标').length} />
+              <Statistic title={tp('questioning.glossaries.statsOther')} value={glossaries.filter(g => g.category !== tp('questioning.glossaries.categorySales') && g.category !== tp('questioning.glossaries.categoryUser')).length} />
             </Col>
           </Row>
           <Alert
-            message="行业黑话说明"
-            description="维护业务术语词典，将行业黑话、业务术语映射到数据库字段和SQL表达式，提高问数理解的准确度。"
+            message={tp('questioning.glossaries.alertMessage')}
+            description={tp('questioning.glossaries.alertDescription')}
             type="info"
             showIcon
             style={{ marginBottom: 16 }}
@@ -488,16 +492,16 @@ const QuestioningPage: React.FC = () => {
       label: (
         <span>
           <PlayCircleOutlined />
-          问答测试
+          {tp('questioning.tabs.ask')}
         </span>
       ),
       children: (
-        <Card title="自然语言问数测试">
+        <Card title={tp('questioning.ask.title')}>
           <Space direction="vertical" style={{ width: '100%' }} size="large">
             <Card size="small">
               <Search
-                placeholder="请输入问句，例如：本月销售额是多少、Top 10产品..."
-                enterButton="生成SQL"
+                placeholder={tp('questioning.ask.questionPlaceholder')}
+                enterButton={tp('questioning.ask.askButton')}
                 size="large"
                 value={question}
                 onChange={(e) => setQuestion(e.target.value)}
@@ -506,50 +510,50 @@ const QuestioningPage: React.FC = () => {
               />
               <div style={{ marginTop: 12 }}>
                 <Space>
-                  <span>示例问句：</span>
+                  <span>{tp('questioning.ask.exampleLabel')}：</span>
                   <Tag
                     style={{ cursor: 'pointer' }}
-                    onClick={() => setQuestion('本月销售额是多少')}
+                    onClick={() => setQuestion(tp('questioning.ask.example1'))}
                   >
-                    本月销售额是多少
+                    {tp('questioning.ask.example1')}
                   </Tag>
                   <Tag
                     style={{ cursor: 'pointer' }}
-                    onClick={() => setQuestion('Top 10销售产品')}
+                    onClick={() => setQuestion(tp('questioning.ask.example2'))}
                   >
-                    Top 10销售产品
+                    {tp('questioning.ask.example2')}
                   </Tag>
                   <Tag
                     style={{ cursor: 'pointer' }}
-                    onClick={() => setQuestion('最近7天用户增长趋势')}
+                    onClick={() => setQuestion(tp('questioning.ask.example3'))}
                   >
-                    最近7天用户增长趋势
+                    {tp('questioning.ask.example3')}
                   </Tag>
                   <Tag
                     style={{ cursor: 'pointer' }}
-                    onClick={() => setQuestion('各地区GMV排名')}
+                    onClick={() => setQuestion(tp('questioning.ask.example4'))}
                   >
-                    各地区GMV排名
+                    {tp('questioning.ask.example4')}
                   </Tag>
                 </Space>
               </div>
             </Card>
 
             {testResult && (
-              <Card size="small" title="生成结果">
+              <Card size="small" title={tp('questioning.ask.resultTitle')}>
                 <Descriptions column={1} bordered size="small">
-                  <Descriptions.Item label="置信度">
+                  <Descriptions.Item label={tp('questioning.ask.confidence')}>
                     <Progress percent={Math.round(testResult.confidence * 100)} status="active" />
                   </Descriptions.Item>
-                  <Descriptions.Item label="识别术语">
+                  <Descriptions.Item label={tp('questioning.ask.recognizedTerms')}>
                     {testResult.glossaries.map((g: string) => (
                       <Tag key={g} color="purple">{g}</Tag>
                     ))}
                   </Descriptions.Item>
-                  <Descriptions.Item label="理解说明">
+                  <Descriptions.Item label={tp('questioning.ask.explanation')}>
                     {testResult.explanation}
                   </Descriptions.Item>
-                  <Descriptions.Item label="生成的SQL">
+                  <Descriptions.Item label={tp('questioning.ask.generatedSQL')}>
                     <pre style={{
                       background: '#f5f5f5',
                       padding: '12px',
@@ -564,10 +568,10 @@ const QuestioningPage: React.FC = () => {
                 <div style={{ marginTop: 16 }}>
                   <Space>
                     <Button type="primary" icon={<PlayCircleOutlined />}>
-                      执行查询
+                      {tp('questioning.ask.executeButton')}
                     </Button>
                     <Button onClick={() => setTestResult(null)}>
-                      清空结果
+                      {tp('questioning.ask.clearButton')}
                     </Button>
                   </Space>
                 </div>
@@ -582,14 +586,14 @@ const QuestioningPage: React.FC = () => {
       label: (
         <span>
           <HistoryOutlined />
-          问数历史
+          {tp('questioning.tabs.history')}
         </span>
       ),
       children: (
-        <Card title="问答历史记录">
+        <Card title={tp('questioning.history.title')}>
           <Alert
-            message="历史说明"
-            description="查看用户的问数历史，包括问句、生成的SQL、执行结果等。可用于分析用户需求、优化术语词典。"
+            message={tp('questioning.history.alertMessage')}
+            description={tp('questioning.history.alertDescription')}
             type="info"
             showIcon
             style={{ marginBottom: 16 }}
@@ -621,7 +625,7 @@ const QuestioningPage: React.FC = () => {
 
       {/* 数据库编辑弹窗 */}
       <Modal
-        title={editingDb ? '编辑数据源' : '添加数据源'}
+        title={editingDb ? tp('questioning.databases.editModalTitle') : tp('questioning.databases.addModalTitle')}
         open={dbModalVisible}
         onOk={handleSubmitDb}
         onCancel={() => {
@@ -629,82 +633,82 @@ const QuestioningPage: React.FC = () => {
           dbForm.resetFields();
         }}
         width={600}
-        okText="确定"
-        cancelText="取消"
+        okText={tp('common.confirm')}
+        cancelText={tp('common.cancel')}
       >
         <Form form={dbForm} layout="vertical">
           <Form.Item
-            label="数据库名称"
+            label={tp('questioning.databases.nameLabel')}
             name="name"
-            rules={[{ required: true, message: '请输入数据库名称' }]}
+            rules={[{ required: true, message: tp('common.validation.required', { field: tp('questioning.databases.nameLabel') }) }]}
           >
-            <Input placeholder="请输入数据库名称" />
+            <Input placeholder={tp('questioning.databases.nameLabel')} />
           </Form.Item>
 
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label="数据库类型"
+                label={tp('questioning.databases.typeLabel')}
                 name="type"
                 initialValue="MySQL"
-                rules={[{ required: true, message: '请选择数据库类型' }]}
+                rules={[{ required: true, message: tp('common.validation.requiredSelect', { field: tp('questioning.databases.typeLabel') }) }]}
               >
-                <Select placeholder="请选择数据库类型">
-                  <Select.Option value="MySQL">MySQL</Select.Option>
-                  <Select.Option value="PostgreSQL">PostgreSQL</Select.Option>
-                  <Select.Option value="Oracle">Oracle</Select.Option>
-                  <Select.Option value="SQLServer">SQL Server</Select.Option>
+                <Select placeholder={tp('questioning.databases.typeLabel')}>
+                  <Select.Option value="MySQL">{tp('questioning.databases.typeMySQL')}</Select.Option>
+                  <Select.Option value="PostgreSQL">{tp('questioning.databases.typePostgreSQL')}</Select.Option>
+                  <Select.Option value="Oracle">{tp('questioning.databases.typeOracle')}</Select.Option>
+                  <Select.Option value="SQLServer">{tp('questioning.databases.typeSQLServer')}</Select.Option>
                 </Select>
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                label="端口"
+                label={tp('questioning.databases.portLabel')}
                 name="port"
                 initialValue={3306}
-                rules={[{ required: true, message: '请输入端口号' }]}
+                rules={[{ required: true, message: tp('common.validation.required', { field: tp('questioning.databases.portLabel') }) }]}
               >
-                <Input type="number" placeholder="端口号" />
+                <Input type="number" placeholder={tp('questioning.databases.portLabel')} />
               </Form.Item>
             </Col>
           </Row>
 
           <Form.Item
-            label="主机地址"
+            label={tp('questioning.databases.hostLabel')}
             name="host"
-            rules={[{ required: true, message: '请输入主机地址' }]}
+            rules={[{ required: true, message: tp('common.validation.required', { field: tp('questioning.databases.hostLabel') }) }]}
           >
-            <Input placeholder="例如：192.168.1.100" />
+            <Input placeholder={tp('questioning.databases.hostPlaceholder')} />
           </Form.Item>
 
           <Form.Item
-            label="数据库名"
+            label={tp('questioning.databases.databaseLabel')}
             name="database"
-            rules={[{ required: true, message: '请输入数据库名' }]}
+            rules={[{ required: true, message: tp('common.validation.required', { field: tp('questioning.databases.databaseLabel') }) }]}
           >
-            <Input placeholder="请输入数据库名" />
+            <Input placeholder={tp('questioning.databases.databaseLabel')} />
           </Form.Item>
 
           <Form.Item
-            label="用户名"
+            label={tp('questioning.databases.usernameLabel')}
             name="username"
-            rules={[{ required: true, message: '请输入用户名' }]}
+            rules={[{ required: true, message: tp('common.validation.required', { field: tp('questioning.databases.usernameLabel') }) }]}
           >
-            <Input placeholder="请输入用户名" />
+            <Input placeholder={tp('questioning.databases.usernameLabel')} />
           </Form.Item>
 
           <Form.Item
-            label="密码"
+            label={tp('questioning.databases.passwordLabel')}
             name="password"
           >
-            <Input.Password placeholder="请输入密码" />
+            <Input.Password placeholder={tp('questioning.databases.passwordLabel')} />
           </Form.Item>
         </Form>
       </Modal>
 
       {/* 术语编辑弹窗 */}
       <Modal
-        title="添加术语"
+        title={tp('questioning.glossaries.addModalTitle')}
         open={glossaryModalVisible}
         onOk={handleSubmitGlossary}
         onCancel={() => {
@@ -712,54 +716,54 @@ const QuestioningPage: React.FC = () => {
           glossaryForm.resetFields();
         }}
         width={600}
-        okText="确定"
-        cancelText="取消"
+        okText={tp('common.confirm')}
+        cancelText={tp('common.cancel')}
       >
         <Form form={glossaryForm} layout="vertical">
           <Form.Item
-            label="术语"
+            label={tp('questioning.glossaries.termLabel')}
             name="term"
-            rules={[{ required: true, message: '请输入术语' }]}
+            rules={[{ required: true, message: tp('common.validation.required', { field: tp('questioning.glossaries.termLabel') }) }]}
           >
-            <Input placeholder="例如：GMV、DAU、转化率" />
+            <Input placeholder={tp('questioning.glossaries.termPlaceholder')} />
           </Form.Item>
 
           <Form.Item
-            label="定义"
+            label={tp('questioning.glossaries.definitionLabel')}
             name="definition"
-            rules={[{ required: true, message: '请输入定义' }]}
+            rules={[{ required: true, message: tp('common.validation.required', { field: tp('questioning.glossaries.definitionLabel') }) }]}
           >
-            <Input placeholder="例如：成交总额、日活跃用户数" />
+            <Input placeholder={tp('questioning.glossaries.definitionPlaceholder')} />
           </Form.Item>
 
           <Form.Item
-            label="映射规则"
+            label={tp('questioning.glossaries.mappingLabel')}
             name="mapping"
-            rules={[{ required: true, message: '请输入SQL映射规则' }]}
+            rules={[{ required: true, message: tp('questioning.glossaries.mappingRequired') }]}
           >
-            <TextArea rows={3} placeholder="例如：SUM(order_amount)" />
+            <TextArea rows={3} placeholder={tp('questioning.glossaries.mappingPlaceholder')} />
           </Form.Item>
 
           <Form.Item
-            label="分类"
+            label={tp('questioning.glossaries.categoryLabel')}
             name="category"
-            initialValue="销售指标"
-            rules={[{ required: true, message: '请选择分类' }]}
+            initialValue={tp('questioning.glossaries.categorySales')}
+            rules={[{ required: true, message: tp('common.validation.requiredSelect', { field: tp('questioning.glossaries.categoryLabel') }) }]}
           >
-            <Select placeholder="请选择分类">
-              <Select.Option value="销售指标">销售指标</Select.Option>
-              <Select.Option value="用户指标">用户指标</Select.Option>
-              <Select.Option value="产品指标">产品指标</Select.Option>
-              <Select.Option value="财务指标">财务指标</Select.Option>
+            <Select placeholder={tp('questioning.glossaries.categoryPlaceholder')}>
+              <Select.Option value={tp('questioning.glossaries.categorySales')}>{tp('questioning.glossaries.categorySales')}</Select.Option>
+              <Select.Option value={tp('questioning.glossaries.categoryUser')}>{tp('questioning.glossaries.categoryUser')}</Select.Option>
+              <Select.Option value={tp('questioning.glossaries.categoryProduct')}>{tp('questioning.glossaries.categoryProduct')}</Select.Option>
+              <Select.Option value={tp('questioning.glossaries.categoryFinance')}>{tp('questioning.glossaries.categoryFinance')}</Select.Option>
             </Select>
           </Form.Item>
 
           <Form.Item
-            label="示例问句"
+            label={tp('questioning.glossaries.exampleLabel')}
             name="example"
-            rules={[{ required: true, message: '请输入示例问句' }]}
+            rules={[{ required: true, message: tp('questioning.glossaries.exampleRequired') }]}
           >
-            <Input placeholder="例如：本月GMV是多少" />
+            <Input placeholder={tp('questioning.glossaries.examplePlaceholder')} />
           </Form.Item>
         </Form>
       </Modal>

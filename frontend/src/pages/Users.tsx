@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   Table,
   Button,
@@ -24,10 +24,14 @@ import {
 } from '@ant-design/icons';
 import type { User, UserCreate, UserUpdate } from '../types';
 import { userApi } from '../services/api';
+import { useTranslation } from '../contexts/LanguageContext';
+import { createTranslateProxy } from '../utils/i18n';
 
 const { Search } = Input;
 
 const Users: React.FC = () => {
+  const { t } = useTranslation();
+  const tp = useMemo(() => createTranslateProxy(t), [t]);
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [total, setTotal] = useState(0);
@@ -58,7 +62,7 @@ const Users: React.FC = () => {
       setUsers(response.users || []);
       setTotal(response.total || 0);
     } catch (error) {
-      message.error('获取用户列表失败');
+      message.error(tp('users.fetchFailed'));
     } finally {
       setLoading(false);
     }
@@ -80,10 +84,10 @@ const Users: React.FC = () => {
   const handleDelete = async (id: string) => {
     try {
       await userApi.deleteUser(id);
-      message.success('删除成功');
+      message.success(tp('users.deleteSuccess'));
       fetchUsers();
     } catch (error) {
-      message.error('删除失败');
+      message.error(tp('users.deleteFailed'));
     }
   };
 
@@ -99,7 +103,7 @@ const Users: React.FC = () => {
           status: values.status,
         };
         await userApi.updateUser(editingUser.id, updateData);
-        message.success('更新成功');
+        message.success(tp('users.updateSuccess'));
       } else {
         const createData: UserCreate = {
           username: values.username,
@@ -107,7 +111,7 @@ const Users: React.FC = () => {
           role: values.role,
         };
         await userApi.createUser(createData);
-        message.success('创建成功');
+        message.success(tp('users.createSuccess'));
 
         // 创建成功后，清除筛选条件并跳转到第一页
         setSearchQuery('');
@@ -124,7 +128,7 @@ const Users: React.FC = () => {
         fetchUsers();
       }, 100);
     } catch (error) {
-      message.error(editingUser ? '更新失败' : '创建失败');
+      message.error(editingUser ? tp('users.updateFailed') : tp('users.createFailed'));
     }
   };
 
@@ -144,11 +148,11 @@ const Users: React.FC = () => {
   const getRoleText = (role: string) => {
     switch (role) {
       case 'admin':
-        return '管理员';
+        return tp('users.roleAdmin');
       case 'user':
-        return '普通用户';
+        return tp('users.roleUser');
       case 'readonly':
-        return '只读用户';
+        return tp('users.roleReadonly');
       default:
         return role;
     }
@@ -159,52 +163,52 @@ const Users: React.FC = () => {
   };
 
   const getStatusText = (status: string) => {
-    return status === 'active' ? '启用' : '禁用';
+    return status === 'active' ? tp('users.statusActive') : tp('users.statusInactive');
   };
 
   const columns = [
     {
-      title: '用户名',
+      title: tp('users.username'),
       dataIndex: 'username',
       key: 'username',
       width: 120,
     },
     {
-      title: '邮箱',
+      title: tp('users.email'),
       dataIndex: 'email',
       key: 'email',
       width: 200,
     },
     {
-      title: '角色',
+      title: tp('users.role'),
       dataIndex: 'role',
       key: 'role',
       width: 100,
       render: (role: string) => <Tag color={getRoleColor(role)}>{getRoleText(role)}</Tag>,
     },
     {
-      title: '状态',
+      title: tp('users.status'),
       dataIndex: 'status',
       key: 'status',
       width: 100,
       render: (status: string) => <Tag color={getStatusColor(status)}>{getStatusText(status)}</Tag>,
     },
     {
-      title: '创建时间',
+      title: tp('users.createTime'),
       dataIndex: 'created_at',
       key: 'created_at',
       width: 180,
       render: (date: string) => new Date(date).toLocaleString('zh-CN'),
     },
     {
-      title: '最后登录',
+      title: tp('users.lastLogin'),
       dataIndex: 'last_login',
       key: 'last_login',
       width: 180,
       render: (date: string) => (date ? new Date(date).toLocaleString('zh-CN') : '-'),
     },
     {
-      title: '操作',
+      title: tp('common.actions'),
       key: 'action',
       width: 150,
       fixed: 'right' as const,
@@ -216,16 +220,16 @@ const Users: React.FC = () => {
             icon={<EditOutlined />}
             onClick={() => handleEdit(record)}
           >
-            编辑
+            {tp('common.edit')}
           </Button>
           <Popconfirm
-            title="确定要删除这个用户吗？"
+            title={tp('users.deleteConfirm')}
             onConfirm={() => handleDelete(record.id)}
-            okText="确定"
-            cancelText="取消"
+            okText={tp('common.confirm')}
+            cancelText={tp('common.cancel')}
           >
             <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-              删除
+              {tp('common.delete')}
             </Button>
           </Popconfirm>
         </Space>
@@ -242,61 +246,61 @@ const Users: React.FC = () => {
       <Card style={{ marginBottom: 16 }}>
         <Row gutter={16}>
           <Col span={6}>
-            <Statistic title="总用户数" value={total} prefix={<UserOutlined />} />
+            <Statistic title={tp('users.statsTotal')} value={total} prefix={<UserOutlined />} />
           </Col>
           <Col span={6}>
-            <Statistic title="活跃用户" value={activeUserCount} suffix={`/ ${total}`} />
+            <Statistic title={tp('users.statsActive')} value={activeUserCount} suffix={`/ ${total}`} />
           </Col>
           <Col span={6}>
-            <Statistic title="管理员" value={adminCount} />
+            <Statistic title={tp('users.statsAdmin')} value={adminCount} />
           </Col>
           <Col span={6}>
-            <Statistic title="普通用户" value={users.filter((u) => u.role === 'user').length} />
+            <Statistic title={tp('users.statsUser')} value={users.filter((u) => u.role === 'user').length} />
           </Col>
         </Row>
       </Card>
 
       <Card
-        title="用户管理"
+        title={tp('users.title')}
         extra={
           <Space>
             <Button icon={<ReloadOutlined />} onClick={fetchUsers}>
-              刷新
+              {tp('common.refresh')}
             </Button>
             <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-              新增用户
+              {tp('users.addButton')}
             </Button>
           </Space>
         }
       >
         <Space style={{ marginBottom: 16 }} size="middle">
           <Search
-            placeholder="搜索用户名或邮箱"
+            placeholder={tp('users.searchPlaceholder')}
             allowClear
             style={{ width: 300 }}
             onSearch={setSearchQuery}
             enterButton
           />
           <Select
-            placeholder="筛选角色"
+            placeholder={tp('users.roleFilter')}
             allowClear
             style={{ width: 120 }}
             value={roleFilter}
             onChange={setRoleFilter}
           >
-            <Select.Option value="admin">管理员</Select.Option>
-            <Select.Option value="user">普通用户</Select.Option>
-            <Select.Option value="readonly">只读用户</Select.Option>
+            <Select.Option value="admin">{tp('users.roleAdmin')}</Select.Option>
+            <Select.Option value="user">{tp('users.roleUser')}</Select.Option>
+            <Select.Option value="readonly">{tp('users.roleReadonly')}</Select.Option>
           </Select>
           <Select
-            placeholder="筛选状态"
+            placeholder={tp('users.statusFilter')}
             allowClear
             style={{ width: 120 }}
             value={statusFilter}
             onChange={setStatusFilter}
           >
-            <Select.Option value="active">启用</Select.Option>
-            <Select.Option value="inactive">禁用</Select.Option>
+            <Select.Option value="active">{tp('users.statusActive')}</Select.Option>
+            <Select.Option value="inactive">{tp('users.statusInactive')}</Select.Option>
           </Select>
         </Space>
 
@@ -311,7 +315,7 @@ const Users: React.FC = () => {
             pageSize: pageSize,
             total: total,
             showSizeChanger: true,
-            showTotal: (total) => `共 ${total} 条`,
+            showTotal: (total) => tp('common.pagination.total', { total }),
             onChange: (page, pageSize) => {
               setPage(page);
               setPageSize(pageSize);
@@ -321,57 +325,57 @@ const Users: React.FC = () => {
       </Card>
 
       <Modal
-        title={editingUser ? '编辑用户' : '新增用户'}
+        title={editingUser ? tp('users.editModalTitle') : tp('users.addModalTitle')}
         open={modalVisible}
         onOk={handleSubmit}
         onCancel={() => {
           setModalVisible(false);
           form.resetFields();
         }}
-        okText="确定"
-        cancelText="取消"
+        okText={tp('common.confirm')}
+        cancelText={tp('common.cancel')}
       >
         <Form form={form} layout="vertical">
           <Form.Item
-            label="用户名"
+            label={tp('users.usernameLabel')}
             name="username"
-            rules={[{ required: true, message: '请输入用户名' }]}
+            rules={[{ required: true, message: tp('common.validation.required', { field: tp('users.usernameLabel') }) }]}
           >
-            <Input placeholder="请输入用户名" />
+            <Input placeholder={tp('users.usernamePlaceholder')} />
           </Form.Item>
 
           <Form.Item
-            label="邮箱"
+            label={tp('users.emailLabel')}
             name="email"
             rules={[
-              { required: true, message: '请输入邮箱' },
-              { type: 'email', message: '请输入有效的邮箱地址' },
+              { required: true, message: tp('common.validation.required', { field: tp('users.emailLabel') }) },
+              { type: 'email', message: tp('common.validation.email') },
             ]}
           >
-            <Input placeholder="请输入邮箱" />
+            <Input placeholder={tp('users.emailPlaceholder')} />
           </Form.Item>
 
           <Form.Item
-            label="角色"
+            label={tp('users.roleLabel')}
             name="role"
-            rules={[{ required: true, message: '请选择角色' }]}
+            rules={[{ required: true, message: tp('common.validation.requiredSelect', { field: tp('users.roleLabel') }) }]}
           >
-            <Select placeholder="请选择角色">
-              <Select.Option value="admin">管理员</Select.Option>
-              <Select.Option value="user">普通用户</Select.Option>
-              <Select.Option value="readonly">只读用户</Select.Option>
+            <Select placeholder={tp('users.rolePlaceholder')}>
+              <Select.Option value="admin">{tp('users.roleAdmin')}</Select.Option>
+              <Select.Option value="user">{tp('users.roleUser')}</Select.Option>
+              <Select.Option value="readonly">{tp('users.roleReadonly')}</Select.Option>
             </Select>
           </Form.Item>
 
           {editingUser && (
             <Form.Item
-              label="状态"
+              label={tp('users.statusLabel')}
               name="status"
-              rules={[{ required: true, message: '请选择状态' }]}
+              rules={[{ required: true, message: tp('common.validation.requiredSelect', { field: tp('users.statusLabel') }) }]}
             >
-              <Select placeholder="请选择状态">
-                <Select.Option value="active">启用</Select.Option>
-                <Select.Option value="inactive">禁用</Select.Option>
+              <Select placeholder={tp('users.statusPlaceholder')}>
+                <Select.Option value="active">{tp('users.statusActive')}</Select.Option>
+                <Select.Option value="inactive">{tp('users.statusInactive')}</Select.Option>
               </Select>
             </Form.Item>
           )}

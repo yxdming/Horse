@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   Card,
   Form,
@@ -19,11 +19,15 @@ import {
 } from '@ant-design/icons';
 import type { QAStrategy } from '../types';
 import { configApi } from '../services/api';
+import { useTranslation } from '../contexts/LanguageContext';
+import { createTranslateProxy } from '../utils/i18n';
 
 const { TextArea } = Input;
 const { Title, Text } = Typography;
 
 const Strategy: React.FC = () => {
+  const { t } = useTranslation();
+  const tp = useMemo(() => createTranslateProxy(t), [t]);
   const [loading, setLoading] = useState(false);
   const [config, setConfig] = useState<QAStrategy | null>(null);
   const [form] = Form.useForm();
@@ -39,7 +43,7 @@ const Strategy: React.FC = () => {
       setConfig(data);
       form.setFieldsValue(data);
     } catch (error) {
-      message.error('获取配置失败');
+      message.error(tp('fetchConfigError'));
     } finally {
       setLoading(false);
     }
@@ -50,10 +54,10 @@ const Strategy: React.FC = () => {
       const values = await form.validateFields();
       setLoading(true);
       await configApi.updateQAStrategy(values);
-      message.success('配置保存成功');
+      message.success(tp('saveConfigSuccess'));
       fetchConfig();
     } catch (error) {
-      message.error('配置保存失败');
+      message.error(tp('saveConfigError'));
     } finally {
       setLoading(false);
     }
@@ -63,10 +67,10 @@ const Strategy: React.FC = () => {
     try {
       setLoading(true);
       await configApi.resetQAStrategy();
-      message.success('配置已重置为默认值');
+      message.success(tp('resetConfigSuccess'));
       fetchConfig();
     } catch (error) {
-      message.error('配置重置失败');
+      message.error(tp('resetConfigError'));
     } finally {
       setLoading(false);
     }
@@ -78,23 +82,23 @@ const Strategy: React.FC = () => {
         title={
           <Space>
             <SettingOutlined />
-            <span>问答策略配置</span>
+            <span>{tp('title')}</span>
           </Space>
         }
         extra={
           <Space>
             <Button icon={<ReloadOutlined />} onClick={fetchConfig} loading={loading}>
-              刷新
+              {tp('refresh')}
             </Button>
             <Button type="primary" icon={<SaveOutlined />} onClick={handleSubmit} loading={loading}>
-              保存配置
+              {tp('saveConfig')}
             </Button>
           </Space>
         }
       >
         <Alert
-          message="配置说明"
-          description="这些配置将影响AI问答系统的行为和回复质量。请根据实际需求调整参数。"
+          message={tp('configInfo.title')}
+          description={tp('configInfo.description')}
           type="info"
           showIcon
           style={{ marginBottom: 24 }}
@@ -106,107 +110,107 @@ const Strategy: React.FC = () => {
           initialValues={config || undefined}
           disabled={loading}
         >
-          <Title level={4}>模型参数</Title>
+          <Title level={4}>{tp('modelParams.title')}</Title>
 
           <Form.Item
             label={
               <Space>
-                <Text strong>Temperature（温度）</Text>
+                <Text strong>{tp('modelParams.temperature.label')}</Text>
                 <Text type="secondary">: {form.getFieldValue('temperature')?.toFixed(2) || 0.7}</Text>
               </Space>
             }
             name="temperature"
-            tooltip="控制回答的随机性和创造性。值越高，回答越随机；值越低，回答越确定。"
-            rules={[{ required: true, message: '请输入Temperature值' }]}
+            tooltip={tp('modelParams.temperature.tooltip')}
+            rules={[{ required: true, message: tp('modelParams.temperature.required') }]}
           >
             <Slider
               min={0}
               max={2}
               step={0.1}
               marks={{
-                0: '确定',
-                0.7: '平衡',
-                1.4: '创造',
-                2: '随机',
+                0: tp('modelParams.temperature.marks.deterministic'),
+                0.7: tp('modelParams.temperature.marks.balanced'),
+                1.4: tp('modelParams.temperature.marks.creative'),
+                2: tp('modelParams.temperature.marks.random'),
               }}
             />
           </Form.Item>
 
           <Form.Item
-            label="Max Tokens（最大生成长度）"
+            label={tp('modelParams.maxTokens.label')}
             name="max_tokens"
-            tooltip="控制AI回答的最大长度（字符数）。"
-            rules={[{ required: true, message: '请输入Max Tokens值' }]}
+            tooltip={tp('modelParams.maxTokens.tooltip')}
+            rules={[{ required: true, message: tp('modelParams.maxTokens.required') }]}
           >
             <InputNumber
               min={100}
               max={8000}
               step={100}
               style={{ width: '100%' }}
-              formatter={(value) => `${value} 字符`}
-              parser={(value: any) => value?.replace(' 字符', '')}
+              formatter={(value) => `${value} ${tp('modelParams.maxTokens.unit')}`}
+              parser={(value: any) => value?.replace(` ${tp('modelParams.maxTokens.unit')}`, '')}
             />
           </Form.Item>
 
           <Divider />
 
-          <Title level={4}>检索策略</Title>
+          <Title level={4}>{tp('retrievalStrategy.title')}</Title>
 
           <Form.Item
-            label="Top-K（检索数量）"
+            label={tp('retrievalStrategy.topK.label')}
             name="top_k"
-            tooltip="从知识库中检索最相关的K个文档用于生成回答。"
-            rules={[{ required: true, message: '请输入Top-K值' }]}
+            tooltip={tp('retrievalStrategy.topK.tooltip')}
+            rules={[{ required: true, message: tp('retrievalStrategy.topK.required') }]}
           >
             <InputNumber
               min={1}
               max={20}
               style={{ width: '100%' }}
-              formatter={(value) => `${value} 个文档`}
-              parser={(value: any) => value?.replace(' 个文档', '')}
+              formatter={(value) => `${value} ${tp('retrievalStrategy.topK.unit')}`}
+              parser={(value: any) => value?.replace(` ${tp('retrievalStrategy.topK.unit')}`, '')}
             />
           </Form.Item>
 
           <Form.Item
             label={
               <Space>
-                <Text strong>Similarity Threshold（相似度阈值）</Text>
+                <Text strong>{tp('retrievalStrategy.similarityThreshold.label')}</Text>
                 <Text type="secondary">
                   : {form.getFieldValue('similarity_threshold')?.toFixed(2) || 0.75}
                 </Text>
               </Space>
             }
             name="similarity_threshold"
-            tooltip="只使用相似度高于此阈值的文档。值越高，检索结果越精确但可能越少。"
-            rules={[{ required: true, message: '请输入相似度阈值' }]}
+            tooltip={tp('retrievalStrategy.similarityThreshold.tooltip')}
+            rules={[{ required: true, message: tp('retrievalStrategy.similarityThreshold.required') }]}
           >
             <Slider
               min={0}
               max={1}
               step={0.05}
               marks={{
-                0: '全部',
-                0.5: '宽松',
-                0.75: '适中',
-                0.9: '严格',
-                1: '精确',
+                0: tp('retrievalStrategy.similarityThreshold.marks.all'),
+                0.5: tp('retrievalStrategy.similarityThreshold.marks.loose'),
+                0.75: tp('retrievalStrategy.similarityThreshold.marks.moderate'),
+                0.9: tp('retrievalStrategy.similarityThreshold.marks.strict'),
+                1: tp('retrievalStrategy.similarityThreshold.marks.precise'),
               }}
             />
           </Form.Item>
 
           <Divider />
 
-          <Title level={4}>提示词配置</Title>
+          <Title level={4}>{tp('promptConfig.title')}</Title>
 
           <Form.Item
-            label="System Prompt（系统提示词）"
+            label={tp('promptConfig.systemPrompt.label')}
             name="system_prompt"
-            tooltip="设置AI助手的角色和行为方式，这将影响回答的风格和质量。"
-            rules={[{ required: true, message: '请输入系统提示词' }]}
+            tooltip={tp('promptConfig.systemPrompt.tooltip')}
+            rules={[{ required: true, message: tp('promptConfig.systemPrompt.required') }]}
           >
             <TextArea
               rows={8}
-              placeholder="请输入系统提示词，例如：你是一个专业的AI助手，基于知识库内容回答用户问题。"
+              placeholder={tp('promptConfig.systemPrompt.placeholder')}
               showCount
               maxLength={2000}
             />
@@ -214,38 +218,38 @@ const Strategy: React.FC = () => {
 
           <Divider />
 
-          <Title level={4}>快捷操作</Title>
+          <Title level={4}>{tp('quickActions.title')}</Title>
 
           <Space>
             <Button danger onClick={handleReset} loading={loading}>
-              恢复默认配置
+              {tp('quickActions.resetDefault')}
             </Button>
           </Space>
         </Form>
 
         <Divider />
 
-        <Title level={4}>配置预览</Title>
+        <Title level={4}>{tp('configPreview.title')}</Title>
         <Card size="small" style={{ background: '#f5f5f5' }}>
           <Space direction="vertical" style={{ width: '100%' }}>
             <Text>
-              <Text strong>Temperature:</Text> {form.getFieldValue('temperature') || 0.7}
+              <Text strong>{tp('configPreview.fields.temperature')}:</Text> {form.getFieldValue('temperature') || 0.7}
             </Text>
             <Text>
-              <Text strong>Max Tokens:</Text> {form.getFieldValue('max_tokens') || 2000}
+              <Text strong>{tp('configPreview.fields.maxTokens')}:</Text> {form.getFieldValue('max_tokens') || 2000}
             </Text>
             <Text>
-              <Text strong>Top-K:</Text> {form.getFieldValue('top_k') || 5}
+              <Text strong>{tp('configPreview.fields.topK')}:</Text> {form.getFieldValue('top_k') || 5}
             </Text>
             <Text>
-              <Text strong>Similarity Threshold:</Text>{' '}
+              <Text strong>{tp('configPreview.fields.similarityThreshold')}:</Text>{' '}
               {form.getFieldValue('similarity_threshold') || 0.75}
             </Text>
             <Text>
-              <Text strong>System Prompt:</Text>
+              <Text strong>{tp('configPreview.fields.systemPrompt')}:</Text>
             </Text>
             <Text type="secondary" style={{ whiteSpace: 'pre-wrap' }}>
-              {form.getFieldValue('system_prompt') || '未设置'}
+              {form.getFieldValue('system_prompt') || tp('configPreview.fields.notSet')}
             </Text>
           </Space>
         </Card>

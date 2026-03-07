@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { Row, Col, Card, Statistic, Spin } from 'antd';
 import {
   UserOutlined,
@@ -9,8 +9,12 @@ import {
 import ReactECharts from 'echarts-for-react';
 import type { DashboardStats, GrowthDataPoint } from '../types';
 import { statsApi } from '../services/api';
+import { useTranslation } from '../contexts/LanguageContext';
+import { createTranslateProxy } from '../utils/i18n';
 
 const Dashboard: React.FC = () => {
+  const { t } = useTranslation();
+  const tp = useMemo(() => createTranslateProxy(t), [t]);
   const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [userGrowth, setUserGrowth] = useState<GrowthDataPoint[]>([]);
@@ -44,7 +48,7 @@ const Dashboard: React.FC = () => {
 
   const getUserGrowthOption = () => ({
     title: {
-      text: '用户增长趋势',
+      text: tp('dashboard.charts.userGrowth'),
       left: 'center',
     },
     tooltip: {
@@ -81,7 +85,7 @@ const Dashboard: React.FC = () => {
 
   const getQAStatsOption = () => ({
     title: {
-      text: '问答量统计',
+      text: tp('dashboard.charts.qaStats'),
       left: 'center',
     },
     tooltip: {
@@ -107,7 +111,7 @@ const Dashboard: React.FC = () => {
 
   const getCategoryDistOption = () => ({
     title: {
-      text: '知识库分类分布',
+      text: tp('dashboard.charts.categoryDist'),
       left: 'center',
     },
     tooltip: {
@@ -119,7 +123,7 @@ const Dashboard: React.FC = () => {
     },
     series: [
       {
-        name: '文档数量',
+        name: tp('dashboard.charts.docCount'),
         type: 'pie',
         radius: '50%',
         data: categoryDist.map(d => ({
@@ -151,7 +155,7 @@ const Dashboard: React.FC = () => {
         <Col xs={24} sm={12} md={6}>
           <Card>
             <Statistic
-              title="总用户数"
+              title={tp('dashboard.stats.totalUsers')}
               value={stats?.users.total_users || 0}
               prefix={<UserOutlined />}
               valueStyle={{ color: '#1890ff' }}
@@ -161,7 +165,7 @@ const Dashboard: React.FC = () => {
         <Col xs={24} sm={12} md={6}>
           <Card>
             <Statistic
-              title="活跃用户"
+              title={tp('dashboard.stats.activeUsers')}
               value={stats?.users.active_users || 0}
               prefix={<UserOutlined />}
               valueStyle={{ color: '#52c41a' }}
@@ -171,7 +175,7 @@ const Dashboard: React.FC = () => {
         <Col xs={24} sm={12} md={6}>
           <Card>
             <Statistic
-              title="知识库文档"
+              title={tp('dashboard.stats.totalDocuments')}
               value={stats?.knowledge.total_documents || 0}
               prefix={<DatabaseOutlined />}
               valueStyle={{ color: '#722ed1' }}
@@ -181,7 +185,7 @@ const Dashboard: React.FC = () => {
         <Col xs={24} sm={12} md={6}>
           <Card>
             <Statistic
-              title="今日问答"
+              title={tp('dashboard.stats.todayQA')}
               value={stats?.qa.today_qa_count || 0}
               prefix={<QuestionCircleOutlined />}
               valueStyle={{ color: '#fa8c16' }}
@@ -192,34 +196,34 @@ const Dashboard: React.FC = () => {
 
       <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
         <Col xs={24} md={12}>
-          <Card title="系统概览">
+          <Card title={tp('dashboard.overview.title')}>
             <Row gutter={[16, 16]}>
               <Col span={12}>
                 <Statistic
-                  title="向量索引数"
+                  title={tp('dashboard.overview.vectorCount')}
                   value={stats?.vectors.total_vectors || 0}
-                  suffix="条"
+                  suffix={tp('dashboard.overview.unit条')}
                 />
               </Col>
               <Col span={12}>
                 <Statistic
-                  title="平均响应时间"
+                  title={tp('dashboard.overview.avgResponseTime')}
                   value={stats?.qa.avg_response_time || 0}
-                  suffix="秒"
+                  suffix={tp('dashboard.overview.unit秒')}
                   prefix={<ClockCircleOutlined />}
                   precision={2}
                 />
               </Col>
               <Col span={12}>
                 <Statistic
-                  title="分类数量"
+                  title={tp('dashboard.overview.categoryCount')}
                   value={stats?.knowledge.categories || 0}
-                  suffix="个"
+                  suffix={tp('dashboard.overview.unit个')}
                 />
               </Col>
               <Col span={12}>
                 <Statistic
-                  title="成功率"
+                  title={tp('dashboard.overview.successRate')}
                   value={(stats?.qa.success_rate || 0) * 100}
                   suffix="%"
                   precision={1}
@@ -230,7 +234,7 @@ const Dashboard: React.FC = () => {
           </Card>
         </Col>
         <Col xs={24} md={12}>
-          <Card title="知识库分类分布">
+          <Card title={tp('dashboard.charts.categoryDist')}>
             <ReactECharts option={getCategoryDistOption()} style={{ height: 250 }} />
           </Card>
         </Col>
@@ -238,12 +242,12 @@ const Dashboard: React.FC = () => {
 
       <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
         <Col xs={24} lg={12}>
-          <Card title="用户增长趋势（近30天）">
+          <Card title={tp('dashboard.charts.userGrowthPeriod')}>
             <ReactECharts option={getUserGrowthOption()} style={{ height: 300 }} />
           </Card>
         </Col>
         <Col xs={24} lg={12}>
-          <Card title="问答量统计（近7天）">
+          <Card title={tp('dashboard.charts.qaStatsPeriod')}>
             <ReactECharts option={getQAStatsOption()} style={{ height: 300 }} />
           </Card>
         </Col>

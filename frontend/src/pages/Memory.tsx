@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import {
   Table,
   Button,
@@ -32,11 +32,15 @@ import {
 } from '@ant-design/icons';
 import type { Memory } from '../types';
 import { memoryApi } from '../services/api';
+import { useTranslation } from '../contexts/LanguageContext';
+import { createTranslateProxy } from '../utils/i18n';
 
 const { TextArea } = Input;
 const { Search } = Input;
 
 const MemoryPage: React.FC = () => {
+  const { t } = useTranslation();
+  const tp = useMemo(() => createTranslateProxy(t), [t]);
   const [activeTab, setActiveTab] = useState('memories');
 
   // 记忆管理状态
@@ -94,7 +98,7 @@ const MemoryPage: React.FC = () => {
       setMemories(response.memories || []);
       setMemoryTotal(response.total || 0);
     } catch (error) {
-      message.error('获取记忆列表失败');
+      message.error(tp('memory.list.fetchFailed'));
     } finally {
       setMemoryLoading(false);
     }
@@ -133,10 +137,10 @@ const MemoryPage: React.FC = () => {
   const handleDeleteMemory = async (id: string) => {
     try {
       await memoryApi.deleteMemory(id);
-      message.success('删除成功');
+      message.success(tp('memory.list.deleteSuccess'));
       fetchMemories();
     } catch (error) {
-      message.error('删除失败');
+      message.error(tp('memory.list.deleteFailed'));
     }
   };
 
@@ -146,10 +150,10 @@ const MemoryPage: React.FC = () => {
 
       if (editingMemory) {
         await memoryApi.updateMemory(editingMemory.id, values);
-        message.success('更新成功');
+        message.success(tp('memory.list.updateSuccess'));
       } else {
         await memoryApi.createMemory(values);
-        message.success('创建成功');
+        message.success(tp('memory.list.createSuccess'));
       }
 
       setMemoryModalVisible(false);
@@ -157,34 +161,34 @@ const MemoryPage: React.FC = () => {
       fetchMemories();
       fetchMemoryCategories();
     } catch (error) {
-      message.error(editingMemory ? '更新失败' : '创建失败');
+      message.error(editingMemory ? tp('memory.list.updateFailed') : tp('memory.list.createFailed'));
     }
   };
 
   const memoryColumns = [
     {
-      title: '标题',
+      title: tp('memory.list.colTitle'),
       dataIndex: 'title',
       key: 'title',
       width: 200,
       ellipsis: true,
     },
     {
-      title: '分类',
+      title: tp('memory.list.colCategory'),
       dataIndex: 'category',
       key: 'category',
       width: 120,
       render: (category: string) => <Tag color="blue">{category}</Tag>,
     },
     {
-      title: '类型',
+      title: tp('memory.list.colType'),
       dataIndex: 'memory_type',
       key: 'memory_type',
       width: 120,
       render: (type: string) => <Tag color="purple">{type}</Tag>,
     },
     {
-      title: '重要性',
+      title: tp('memory.list.colImportance'),
       dataIndex: 'importance',
       key: 'importance',
       width: 100,
@@ -194,20 +198,20 @@ const MemoryPage: React.FC = () => {
       },
     },
     {
-      title: '访问次数',
+      title: tp('memory.list.colAccessCount'),
       dataIndex: 'access_count',
       key: 'access_count',
       width: 100,
     },
     {
-      title: '创建时间',
+      title: tp('memory.list.colCreateTime'),
       dataIndex: 'created_at',
       key: 'created_at',
       width: 180,
       render: (date: string) => new Date(date).toLocaleString('zh-CN'),
     },
     {
-      title: '操作',
+      title: tp('common.actions'),
       key: 'action',
       width: 150,
       fixed: 'right' as const,
@@ -219,16 +223,16 @@ const MemoryPage: React.FC = () => {
             icon={<EditOutlined />}
             onClick={() => handleEditMemory(record)}
           >
-            编辑
+            {tp('common.edit')}
           </Button>
           <Popconfirm
-            title="确定要删除这条记忆吗？"
+            title={tp('memory.list.deleteConfirm')}
             onConfirm={() => handleDeleteMemory(record.id)}
-            okText="确定"
-            cancelText="取消"
+            okText={tp('common.confirm')}
+            cancelText={tp('common.cancel')}
           >
             <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-              删除
+              {tp('common.delete')}
             </Button>
           </Popconfirm>
         </Space>
@@ -287,17 +291,17 @@ const MemoryPage: React.FC = () => {
 
   const handleDeleteTemplate = (id: string) => {
     setTemplates(templates.filter(t => t.id !== id));
-    message.success('删除成功');
+    message.success(tp('memory.templates.deleteSuccess'));
   };
 
   const handleSubmitTemplate = () => {
     templateForm.validateFields().then((values) => {
       if (editingTemplate) {
         setTemplates(templates.map(t => t.id === editingTemplate.id ? { ...values, id: editingTemplate.id } : t));
-        message.success('更新成功');
+        message.success(tp('memory.list.updateSuccess'));
       } else {
         setTemplates([...templates, { ...values, id: Date.now().toString(), created_at: new Date().toISOString() }]);
-        message.success('创建成功');
+        message.success(tp('memory.list.createSuccess'));
       }
       setTemplateModalVisible(false);
       templateForm.resetFields();
@@ -313,41 +317,41 @@ const MemoryPage: React.FC = () => {
       tags: template.tags,
     });
     setMemoryModalVisible(true);
-    message.info(`已应用模板：${template.name}`);
+    message.info(tp('memory.templates.applied', { name: template.name }));
   };
 
   const templateColumns = [
     {
-      title: '模板名称',
+      title: tp('memory.templates.name'),
       dataIndex: 'name',
       key: 'name',
     },
     {
-      title: '描述',
+      title: tp('memory.templates.colDescription'),
       dataIndex: 'description',
       key: 'description',
       ellipsis: true,
     },
     {
-      title: '分类',
+      title: tp('memory.list.colCategory'),
       dataIndex: 'category',
       key: 'category',
       render: (category: string) => <Tag color="blue">{category}</Tag>,
     },
     {
-      title: '记忆类型',
+      title: tp('memory.list.colType'),
       dataIndex: 'memory_type',
       key: 'memory_type',
       render: (type: string) => <Tag color="purple">{type}</Tag>,
     },
     {
-      title: '默认重要性',
+      title: tp('memory.templates.defaultImportance'),
       dataIndex: 'default_importance',
       key: 'default_importance',
       render: (importance: number) => <Tag color="orange">{'★'.repeat(importance)}</Tag>,
     },
     {
-      title: '操作',
+      title: tp('common.actions'),
       key: 'action',
       render: (_: any, record: any) => (
         <Space size="small">
@@ -357,7 +361,7 @@ const MemoryPage: React.FC = () => {
             icon={<FileTextOutlined />}
             onClick={() => handleUseTemplate(record)}
           >
-            使用
+            {tp('memory.templates.use')}
           </Button>
           <Button
             type="link"
@@ -365,16 +369,16 @@ const MemoryPage: React.FC = () => {
             icon={<EditOutlined />}
             onClick={() => handleEditTemplate(record)}
           >
-            编辑
+            {tp('common.edit')}
           </Button>
           <Popconfirm
-            title="确定要删除这个模板吗？"
+            title={tp('memory.templates.deleteConfirm')}
             onConfirm={() => handleDeleteTemplate(record.id)}
-            okText="确定"
-            cancelText="取消"
+            okText={tp('common.confirm')}
+            cancelText={tp('common.cancel')}
           >
             <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-              删除
+              {tp('common.delete')}
             </Button>
           </Popconfirm>
         </Space>
@@ -420,23 +424,23 @@ const MemoryPage: React.FC = () => {
 
   const handleDeleteUser = (id: string) => {
     setMemoryUsers(memoryUsers.filter(u => u.id !== id));
-    message.success('移除成功');
+    message.success(tp('memory.permissions.removeSuccess'));
   };
 
   const userColumns = [
     {
-      title: '用户名',
+      title: tp('memory.permissions.colUsername'),
       dataIndex: 'username',
       key: 'username',
     },
     {
-      title: '角色',
+      title: tp('memory.permissions.colRole'),
       dataIndex: 'role',
       key: 'role',
       render: (role: string) => <Tag color="blue">{role}</Tag>,
     },
     {
-      title: '权限',
+      title: tp('memory.permissions.colPermissions'),
       dataIndex: 'permissions',
       key: 'permissions',
       render: (permissions: string[]) => (
@@ -450,12 +454,12 @@ const MemoryPage: React.FC = () => {
       ),
     },
     {
-      title: '记忆数量',
+      title: tp('memory.permissions.colMemoryCount'),
       dataIndex: 'memoryCount',
       key: 'memoryCount',
     },
     {
-      title: '最后访问',
+      title: tp('memory.permissions.colLastAccess'),
       dataIndex: 'lastAccess',
       key: 'lastAccess',
       render: (date: string) => (
@@ -465,17 +469,17 @@ const MemoryPage: React.FC = () => {
       ),
     },
     {
-      title: '操作',
+      title: tp('common.actions'),
       key: 'action',
       render: (_: any, record: any) => (
         <Popconfirm
-          title="确定要移除这个用户吗？"
+          title={tp('memory.permissions.removeConfirm')}
           onConfirm={() => handleDeleteUser(record.id)}
-          okText="确定"
-          cancelText="取消"
+          okText={tp('common.confirm')}
+          cancelText={tp('common.cancel')}
         >
           <Button type="link" size="small" danger>
-            移除
+            {tp('memory.permissions.remove')}
           </Button>
         </Popconfirm>
       ),
@@ -489,19 +493,19 @@ const MemoryPage: React.FC = () => {
       label: (
         <span>
           <BulbOutlined />
-          记忆列表
+          {tp('memory.tabs.list')}
         </span>
       ),
       children: (
         <Card
-          title="记忆库管理"
+          title={tp('memory.title')}
           extra={
             <Space>
               <Button icon={<ReloadOutlined />} onClick={fetchMemories}>
-                刷新
+                {tp('common.refresh')}
               </Button>
               <Button type="primary" icon={<PlusOutlined />} onClick={handleAddMemory}>
-                新增记忆
+                {tp('memory.list.addButton')}
               </Button>
             </Space>
           }
@@ -511,21 +515,21 @@ const MemoryPage: React.FC = () => {
               <Row gutter={16}>
                 <Col span={6}>
                   <Statistic
-                    title="总记忆数"
+                    title={tp('memory.list.statsTotal')}
                     value={memoryTotal}
                     prefix={<BulbOutlined />}
                   />
                 </Col>
                 <Col span={6}>
                   <Statistic
-                    title="分类数"
+                    title={tp('memory.list.statsCategories')}
                     value={memoryCategories.length}
                     prefix={<FolderOutlined />}
                   />
                 </Col>
                 <Col span={6}>
                   <Statistic
-                    title="记忆类型"
+                    title={tp('memory.list.statsTypes')}
                     value={memoryTypes.length}
                     prefix={<Tag />}
                   />
@@ -533,9 +537,9 @@ const MemoryPage: React.FC = () => {
                 <Col span={6}>
                   <Button
                     icon={<SearchOutlined />}
-                    onClick={() => message.info('语义搜索功能开发中')}
+                    onClick={() => message.info(tp('memory.list.semanticSearchDeveloping'))}
                   >
-                    语义搜索
+                    {tp('memory.list.semanticSearch')}
                   </Button>
                 </Col>
               </Row>
@@ -544,14 +548,14 @@ const MemoryPage: React.FC = () => {
             <Card size="small">
               <Space>
                 <Search
-                  placeholder="搜索记忆标题、内容或标签"
+                  placeholder={tp('memory.list.searchPlaceholder')}
                   allowClear
                   style={{ width: 300 }}
                   onSearch={setMemorySearchQuery}
                   enterButton
                 />
                 <Select
-                  placeholder="选择分类"
+                  placeholder={tp('memory.list.categoryPlaceholder')}
                   allowClear
                   style={{ width: 150 }}
                   value={memorySelectedCategory}
@@ -559,7 +563,7 @@ const MemoryPage: React.FC = () => {
                   options={memoryCategories.map(cat => ({ label: cat, value: cat }))}
                 />
                 <Select
-                  placeholder="记忆类型"
+                  placeholder={tp('memory.list.typePlaceholder')}
                   allowClear
                   style={{ width: 150 }}
                   value={memorySelectedType}
@@ -567,7 +571,7 @@ const MemoryPage: React.FC = () => {
                   options={memoryTypes.map(type => ({ label: type, value: type }))}
                 />
                 <Select
-                  placeholder="最低重要性"
+                  placeholder={tp('memory.list.importancePlaceholder')}
                   allowClear
                   style={{ width: 150 }}
                   value={memoryMinImportance}
@@ -595,7 +599,7 @@ const MemoryPage: React.FC = () => {
                 total: memoryTotal,
                 showSizeChanger: true,
                 showQuickJumper: true,
-                showTotal: (total) => `共 ${total} 条`,
+                showTotal: (total) => tp('common.pagination.total', { total }),
                 onChange: (page, pageSize) => {
                   setMemoryPage(page);
                   setMemoryPageSize(pageSize || 10);
@@ -611,21 +615,21 @@ const MemoryPage: React.FC = () => {
       label: (
         <span>
           <FileTextOutlined />
-          记忆库模板
+          {tp('memory.tabs.templates')}
         </span>
       ),
       children: (
         <Card
-          title="记忆库模板管理"
+          title={tp('memory.templates.title')}
           extra={
             <Button type="primary" icon={<PlusOutlined />} onClick={handleAddTemplate}>
-              新增模板
+              {tp('memory.templates.addButton')}
             </Button>
           }
         >
           <Alert
-            message="模板说明"
-            description="预设记忆模板可以快速创建特定类型的记忆，提高记录效率。模板包含默认的分类、记忆类型、重要性和标签。"
+            message={tp('memory.templates.description')}
+            description={tp('memory.templates.descriptionText')}
             type="info"
             showIcon
             style={{ marginBottom: 16 }}
@@ -644,21 +648,21 @@ const MemoryPage: React.FC = () => {
       label: (
         <span>
           <TeamOutlined />
-          用户权限
+          {tp('memory.tabs.permissions')}
         </span>
       ),
       children: (
         <Card
-          title="记忆库用户权限"
+          title={tp('memory.permissions.title')}
           extra={
             <Button type="primary" icon={<PlusOutlined />} onClick={handleAddUser}>
-              添加用户
+              {tp('memory.permissions.addButton')}
             </Button>
           }
         >
           <Alert
-            message="权限说明"
-            description="管理员拥有所有权限，编辑者可以创建、编辑和查看记忆，查看者只能浏览记忆内容。"
+            message={tp('memory.permissions.description')}
+            description={tp('memory.permissions.descriptionText')}
             type="info"
             showIcon
             style={{ marginBottom: 16 }}
@@ -685,7 +689,7 @@ const MemoryPage: React.FC = () => {
 
       {/* 记忆编辑弹窗 */}
       <Modal
-        title={editingMemory ? '编辑记忆' : '新增记忆'}
+        title={editingMemory ? tp('memory.list.editModalTitle') : tp('memory.list.addModalTitle')}
         open={memoryModalVisible}
         onOk={handleSubmitMemory}
         onCancel={() => {
@@ -693,60 +697,60 @@ const MemoryPage: React.FC = () => {
           memoryForm.resetFields();
         }}
         width={800}
-        okText="确定"
-        cancelText="取消"
+        okText={tp('common.confirm')}
+        cancelText={tp('common.cancel')}
       >
         <Form form={memoryForm} layout="vertical">
           <Form.Item
-            label="标题"
+            label={tp('memory.list.titleLabel')}
             name="title"
-            rules={[{ required: true, message: '请输入记忆标题' }]}
+            rules={[{ required: true, message: tp('common.validation.required', { field: tp('memory.list.titleLabel') }) }]}
           >
-            <Input placeholder="请输入记忆标题" />
+            <Input placeholder={tp('memory.list.titlePlaceholder')} />
           </Form.Item>
 
           <Form.Item
-            label="分类"
+            label={tp('memory.list.categoryLabel')}
             name="category"
-            rules={[{ required: true, message: '请输入分类名称' }]}
-            extra="可以从现有分类中选择，或输入新的分类名称"
+            rules={[{ required: true, message: tp('common.validation.required', { field: tp('memory.list.categoryLabel') }) }]}
+            extra={tp('memory.list.categoryHelp')}
           >
             <AutoComplete
               options={memoryCategories.map((cat) => ({ label: cat, value: cat }))}
-              placeholder="输入或选择分类"
+              placeholder={tp('memory.list.categorySelectPlaceholder')}
               filterOption={(inputValue, option) =>
                 option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
               }
             />
           </Form.Item>
 
-          <Form.Item label="标签" name="tags">
-            <Select mode="tags" placeholder="输入标签，按回车添加" />
+          <Form.Item label={tp('memory.list.tagsLabel')} name="tags">
+            <Select mode="tags" placeholder={tp('memory.list.tagsPlaceholder')} />
           </Form.Item>
 
           <Row gutter={16}>
             <Col span={12}>
               <Form.Item
-                label="记忆类型"
+                label={tp('memory.list.typeLabel')}
                 name="memory_type"
-                initialValue="长期记忆"
-                rules={[{ required: true, message: '请选择记忆类型' }]}
+                initialValue={tp('memory.list.typeLongTerm')}
+                rules={[{ required: true, message: tp('common.validation.requiredSelect', { field: tp('memory.list.typeLabel') }) }]}
               >
-                <Select placeholder="请选择记忆类型">
-                  <Select.Option value="长期记忆">长期记忆</Select.Option>
-                  <Select.Option value="短期记忆">短期记忆</Select.Option>
-                  <Select.Option value="工作记忆">工作记忆</Select.Option>
+                <Select placeholder={tp('memory.list.typePlaceholder')}>
+                  <Select.Option value={tp('memory.list.typeLongTerm')}>{tp('memory.list.typeLongTerm')}</Select.Option>
+                  <Select.Option value={tp('memory.list.typeShortTerm')}>{tp('memory.list.typeShortTerm')}</Select.Option>
+                  <Select.Option value={tp('memory.list.typeWorking')}>{tp('memory.list.typeWorking')}</Select.Option>
                 </Select>
               </Form.Item>
             </Col>
             <Col span={12}>
               <Form.Item
-                label="重要性"
+                label={tp('memory.list.importanceLabel')}
                 name="importance"
                 initialValue={3}
-                rules={[{ required: true, message: '请选择重要性' }]}
+                rules={[{ required: true, message: tp('common.validation.requiredSelect', { field: tp('memory.list.importanceLabel') }) }]}
               >
-                <Select placeholder="请选择重要性">
+                <Select placeholder={tp('memory.list.importancePlaceholder')}>
                   <Select.Option value={1}>⭐</Select.Option>
                   <Select.Option value={2}>⭐⭐</Select.Option>
                   <Select.Option value={3}>⭐⭐⭐</Select.Option>
@@ -758,18 +762,18 @@ const MemoryPage: React.FC = () => {
           </Row>
 
           <Form.Item
-            label="内容"
+            label={tp('memory.list.contentLabel')}
             name="content"
-            rules={[{ required: true, message: '请输入记忆内容' }]}
+            rules={[{ required: true, message: tp('common.validation.required', { field: tp('memory.list.contentLabel') }) }]}
           >
-            <TextArea rows={10} placeholder="请输入记忆内容" />
+            <TextArea rows={10} placeholder={tp('memory.list.contentPlaceholder')} />
           </Form.Item>
         </Form>
       </Modal>
 
       {/* 模板编辑弹窗 */}
       <Modal
-        title={editingTemplate ? '编辑模板' : '新增模板'}
+        title={editingTemplate ? tp('memory.templates.editModalTitle') : tp('memory.templates.addModalTitle')}
         open={templateModalVisible}
         onOk={handleSubmitTemplate}
         onCancel={() => {
@@ -777,54 +781,54 @@ const MemoryPage: React.FC = () => {
           templateForm.resetFields();
         }}
         width={600}
-        okText="确定"
-        cancelText="取消"
+        okText={tp('common.confirm')}
+        cancelText={tp('common.cancel')}
       >
         <Form form={templateForm} layout="vertical">
           <Form.Item
-            label="模板名称"
+            label={tp('memory.templates.nameLabel')}
             name="name"
-            rules={[{ required: true, message: '请输入模板名称' }]}
+            rules={[{ required: true, message: tp('common.validation.required', { field: tp('memory.templates.nameLabel') }) }]}
           >
-            <Input placeholder="请输入模板名称" />
+            <Input placeholder={tp('memory.templates.namePlaceholder')} />
           </Form.Item>
 
           <Form.Item
-            label="描述"
+            label={tp('memory.templates.descriptionLabel')}
             name="description"
-            rules={[{ required: true, message: '请输入模板描述' }]}
+            rules={[{ required: true, message: tp('common.validation.required', { field: tp('memory.templates.descriptionLabel') }) }]}
           >
-            <TextArea rows={3} placeholder="请输入模板描述" />
+            <TextArea rows={3} placeholder={tp('memory.templates.descriptionPlaceholder')} />
           </Form.Item>
 
           <Form.Item
-            label="分类"
+            label={tp('memory.list.categoryLabel')}
             name="category"
-            rules={[{ required: true, message: '请输入分类' }]}
+            rules={[{ required: true, message: tp('common.validation.required', { field: tp('memory.list.categoryLabel') }) }]}
           >
-            <Input placeholder="请输入分类" />
+            <Input placeholder={tp('memory.templates.categoryPlaceholder')} />
           </Form.Item>
 
           <Form.Item
-            label="记忆类型"
+            label={tp('memory.list.typeLabel')}
             name="memory_type"
-            initialValue="长期记忆"
-            rules={[{ required: true, message: '请选择记忆类型' }]}
+            initialValue={tp('memory.list.typeLongTerm')}
+            rules={[{ required: true, message: tp('common.validation.requiredSelect', { field: tp('memory.list.typeLabel') }) }]}
           >
-            <Select placeholder="请选择记忆类型">
-              <Select.Option value="长期记忆">长期记忆</Select.Option>
-              <Select.Option value="短期记忆">短期记忆</Select.Option>
-              <Select.Option value="工作记忆">工作记忆</Select.Option>
+            <Select placeholder={tp('memory.list.typePlaceholder')}>
+              <Select.Option value={tp('memory.list.typeLongTerm')}>{tp('memory.list.typeLongTerm')}</Select.Option>
+              <Select.Option value={tp('memory.list.typeShortTerm')}>{tp('memory.list.typeShortTerm')}</Select.Option>
+              <Select.Option value={tp('memory.list.typeWorking')}>{tp('memory.list.typeWorking')}</Select.Option>
             </Select>
           </Form.Item>
 
           <Form.Item
-            label="默认重要性"
+            label={tp('memory.templates.defaultImportanceLabel')}
             name="default_importance"
             initialValue={3}
-            rules={[{ required: true, message: '请选择默认重要性' }]}
+            rules={[{ required: true, message: tp('common.validation.requiredSelect', { field: tp('memory.templates.defaultImportanceLabel') }) }]}
           >
-            <Select placeholder="请选择默认重要性">
+            <Select placeholder={tp('memory.templates.defaultImportancePlaceholder')}>
               <Select.Option value={1}>⭐</Select.Option>
               <Select.Option value={2}>⭐⭐</Select.Option>
               <Select.Option value={3}>⭐⭐⭐</Select.Option>
@@ -833,15 +837,15 @@ const MemoryPage: React.FC = () => {
             </Select>
           </Form.Item>
 
-          <Form.Item label="默认标签" name="tags">
-            <Select mode="tags" placeholder="输入标签，按回车添加" />
+          <Form.Item label={tp('memory.templates.defaultTagsLabel')} name="tags">
+            <Select mode="tags" placeholder={tp('memory.list.tagsPlaceholder')} />
           </Form.Item>
         </Form>
       </Modal>
 
       {/* 添加用户弹窗 */}
       <Modal
-        title="添加记忆库用户"
+        title={tp('memory.permissions.addModalTitle')}
         open={userModalVisible}
         onOk={() => {
           userForm.validateFields().then((values) => {
@@ -856,48 +860,48 @@ const MemoryPage: React.FC = () => {
             ]);
             setUserModalVisible(false);
             userForm.resetFields();
-            message.success('添加成功');
+            message.success(tp('memory.permissions.addSuccess'));
           });
         }}
         onCancel={() => {
           setUserModalVisible(false);
           userForm.resetFields();
         }}
-        okText="确定"
-        cancelText="取消"
+        okText={tp('common.confirm')}
+        cancelText={tp('common.cancel')}
       >
         <Form form={userForm} layout="vertical">
           <Form.Item
-            label="用户名"
+            label={tp('memory.permissions.usernameLabel')}
             name="username"
-            rules={[{ required: true, message: '请输入用户名' }]}
+            rules={[{ required: true, message: tp('common.validation.required', { field: tp('memory.permissions.usernameLabel') }) }]}
           >
-            <Input placeholder="请输入用户名" />
+            <Input placeholder={tp('memory.permissions.usernamePlaceholder')} />
           </Form.Item>
 
           <Form.Item
-            label="角色"
+            label={tp('memory.permissions.roleLabel')}
             name="role"
-            rules={[{ required: true, message: '请选择角色' }]}
+            rules={[{ required: true, message: tp('common.validation.requiredSelect', { field: tp('memory.permissions.roleLabel') }) }]}
           >
-            <Select placeholder="请选择角色">
-              <Select.Option value="管理员">管理员</Select.Option>
-              <Select.Option value="编辑者">编辑者</Select.Option>
-              <Select.Option value="查看者">查看者</Select.Option>
+            <Select placeholder={tp('memory.permissions.rolePlaceholder')}>
+              <Select.Option value={tp('memory.permissions.roleAdmin')}>{tp('memory.permissions.roleAdmin')}</Select.Option>
+              <Select.Option value={tp('memory.permissions.roleEditor')}>{tp('memory.permissions.roleEditor')}</Select.Option>
+              <Select.Option value={tp('memory.permissions.roleViewer')}>{tp('memory.permissions.roleViewer')}</Select.Option>
             </Select>
           </Form.Item>
 
           <Form.Item
-            label="权限"
+            label={tp('memory.permissions.permissionsLabel')}
             name="permissions"
-            rules={[{ required: true, message: '请选择权限' }]}
+            rules={[{ required: true, message: tp('common.validation.requiredSelect', { field: tp('memory.permissions.permissionsLabel') }) }]}
           >
-            <Select mode="multiple" placeholder="请选择权限">
-              <Select.Option value="全部">全部</Select.Option>
-              <Select.Option value="创建">创建</Select.Option>
-              <Select.Option value="编辑">编辑</Select.Option>
-              <Select.Option value="查看">查看</Select.Option>
-              <Select.Option value="删除">删除</Select.Option>
+            <Select mode="multiple" placeholder={tp('memory.permissions.permissionsPlaceholder')}>
+              <Select.Option value={tp('memory.permissions.permAll')}>{tp('memory.permissions.permAll')}</Select.Option>
+              <Select.Option value={tp('memory.permissions.permCreate')}>{tp('memory.permissions.permCreate')}</Select.Option>
+              <Select.Option value={tp('memory.permissions.permEdit')}>{tp('memory.permissions.permEdit')}</Select.Option>
+              <Select.Option value={tp('memory.permissions.permView')}>{tp('memory.permissions.permView')}</Select.Option>
+              <Select.Option value={tp('memory.permissions.permDelete')}>{tp('memory.permissions.permDelete')}</Select.Option>
             </Select>
           </Form.Item>
         </Form>
