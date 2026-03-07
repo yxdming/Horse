@@ -30,7 +30,6 @@ import {
   ExportOutlined,
   FolderOutlined,
   FileOutlined,
-  TeamOutlined,
   InfoCircleOutlined,
   LinkOutlined,
 } from '@ant-design/icons';
@@ -67,19 +66,12 @@ const Knowledge: React.FC = () => {
   const [mappingModalVisible, setMappingModalVisible] = useState(false);
   const [mappingForm] = Form.useForm();
 
-  // 用户管理状态
-  const [kbUsers, setKbUsers] = useState<any[]>([]);
-  const [userModalVisible, setUserModalVisible] = useState(false);
-  const [userForm] = Form.useForm();
-
   useEffect(() => {
     if (activeTab === 'files') {
       fetchDocuments();
       fetchCategories();
     } else if (activeTab === 'mappings') {
       fetchMappings();
-    } else if (activeTab === 'users') {
-      fetchKbUsers();
     }
   }, [activeTab, page, pageSize, searchQuery, selectedCategory]);
 
@@ -427,75 +419,6 @@ const Knowledge: React.FC = () => {
     },
   ];
 
-  // ==================== 用户管理 ====================
-  const fetchKbUsers = () => {
-    // 模拟数据
-    setKbUsers([
-      { id: '1', username: 'admin', role: '管理员', permissions: ['全部'], lastAccess: '2026-03-06 12:00' },
-      { id: '2', username: 'user1', role: '编辑者', permissions: ['编辑', '查看'], lastAccess: '2026-03-06 10:30' },
-      { id: '3', username: 'user2', role: '查看者', permissions: ['查看'], lastAccess: '2026-03-05 16:20' },
-    ]);
-  };
-
-  const handleAddKbUser = () => {
-    userForm.resetFields();
-    setUserModalVisible(true);
-  };
-
-  const handleDeleteKbUser = (id: string) => {
-    setKbUsers(kbUsers.filter(u => u.id !== id));
-    message.success('删除成功');
-  };
-
-  const userColumns = [
-    {
-      title: '用户名',
-      dataIndex: 'username',
-      key: 'username',
-    },
-    {
-      title: '角色',
-      dataIndex: 'role',
-      key: 'role',
-      render: (role: string) => <Tag color="blue">{role}</Tag>,
-    },
-    {
-      title: '权限',
-      dataIndex: 'permissions',
-      key: 'permissions',
-      render: (permissions: string[]) => (
-        <>
-          {permissions.map((p) => (
-            <Tag key={p} color="green">
-              {p}
-            </Tag>
-          ))}
-        </>
-      ),
-    },
-    {
-      title: '最后访问',
-      dataIndex: 'lastAccess',
-      key: 'lastAccess',
-    },
-    {
-      title: '操作',
-      key: 'action',
-      render: (_: any, record: any) => (
-        <Popconfirm
-          title="确定要移除这个用户吗？"
-          onConfirm={() => handleDeleteKbUser(record.id)}
-          okText="确定"
-          cancelText="取消"
-        >
-          <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-            移除
-          </Button>
-        </Popconfirm>
-      ),
-    },
-  ];
-
   // ==================== 渲染 ====================
   const tabItems = [
     {
@@ -700,39 +623,6 @@ const Knowledge: React.FC = () => {
         </>
       ),
     },
-    {
-      key: 'users',
-      label: (
-        <span>
-          <TeamOutlined />
-          用户管理
-        </span>
-      ),
-      children: (
-        <Card
-          title="知识库用户权限"
-          extra={
-            <Button type="primary" icon={<PlusOutlined />} onClick={handleAddKbUser}>
-              添加用户
-            </Button>
-          }
-        >
-          <Alert
-            message="权限说明"
-            description="管理员拥有所有权限，编辑者可以编辑和查看文档，查看者只能浏览文档内容。"
-            type="info"
-            showIcon
-            style={{ marginBottom: 16 }}
-          />
-          <Table
-            columns={userColumns}
-            dataSource={kbUsers}
-            rowKey="id"
-            pagination={false}
-          />
-        </Card>
-      ),
-    },
   ];
 
   return (
@@ -894,67 +784,6 @@ const Knowledge: React.FC = () => {
               <Select.Option value="NFS">NFS</Select.Option>
               <Select.Option value="S3">S3</Select.Option>
               <Select.Option value="LOCAL">本地文件系统</Select.Option>
-            </Select>
-          </Form.Item>
-        </Form>
-      </Modal>
-
-      {/* 添加用户弹窗 */}
-      <Modal
-        title="添加知识库用户"
-        open={userModalVisible}
-        onOk={() => {
-          userForm.validateFields().then((values) => {
-            setKbUsers([
-              ...kbUsers,
-              {
-                id: Date.now().toString(),
-                ...values,
-                lastAccess: new Date().toLocaleString('zh-CN')
-              }
-            ]);
-            setUserModalVisible(false);
-            userForm.resetFields();
-            message.success('添加成功');
-          });
-        }}
-        onCancel={() => {
-          setUserModalVisible(false);
-          userForm.resetFields();
-        }}
-        okText="确定"
-        cancelText="取消"
-      >
-        <Form form={userForm} layout="vertical">
-          <Form.Item
-            label="用户名"
-            name="username"
-            rules={[{ required: true, message: '请输入用户名' }]}
-          >
-            <Input placeholder="请输入用户名" />
-          </Form.Item>
-
-          <Form.Item
-            label="角色"
-            name="role"
-            rules={[{ required: true, message: '请选择角色' }]}
-          >
-            <Select placeholder="请选择角色">
-              <Select.Option value="管理员">管理员</Select.Option>
-              <Select.Option value="编辑者">编辑者</Select.Option>
-              <Select.Option value="查看者">查看者</Select.Option>
-            </Select>
-          </Form.Item>
-
-          <Form.Item
-            label="权限"
-            name="permissions"
-            rules={[{ required: true, message: '请选择权限' }]}
-          >
-            <Select mode="multiple" placeholder="请选择权限">
-              <Select.Option value="全部">全部</Select.Option>
-              <Select.Option value="编辑">编辑</Select.Option>
-              <Select.Option value="查看">查看</Select.Option>
             </Select>
           </Form.Item>
         </Form>
