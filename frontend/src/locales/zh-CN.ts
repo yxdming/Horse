@@ -79,11 +79,30 @@ export default {
       avgResponseTime: '平均响应时间',
     },
 
+    // 系统概览
+    overview: {
+      title: '系统概览',
+      vectorCount: '向量索引数',
+      avgResponseTime: '平均响应时间',
+      categoryCount: '分类数量',
+      successRate: '成功率',
+      unit个: '个',
+      unit条: '条',
+      unit秒: '秒',
+      unit次: '次',
+    },
+
     // 图表
     charts: {
       userGrowth: '用户增长趋势',
+      userGrowthPeriod: '用户增长趋势（近30天）',
       questionVolume: '问答量统计',
+      questionVolumePeriod: '问答量统计（近7天）',
       categoryDistribution: '知识库分类分布',
+      docCount: '文档数量',
+      categoryDist: '分类分布',
+      qaStats: '问答统计',
+      qaStatsPeriod: '问答统计（近7天）',
       last7Days: '最近7天',
       last30Days: '最近30天',
     },

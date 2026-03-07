@@ -79,11 +79,30 @@ export default {
       avgResponseTime: 'Avg Response Time',
     },
 
+    // System Overview
+    overview: {
+      title: 'System Overview',
+      vectorCount: 'Vector Count',
+      avgResponseTime: 'Avg Response Time',
+      categoryCount: 'Categories',
+      successRate: 'Success Rate',
+      unit个: '',
+      unit条: '',
+      unit秒: '',
+      unit次: '',
+    },
+
     // Charts
     charts: {
       userGrowth: 'User Growth Trend',
+      userGrowthPeriod: 'User Growth (Last 30 Days)',
       questionVolume: 'Question Volume',
+      questionVolumePeriod: 'Question Volume (Last 7 Days)',
       categoryDistribution: 'Category Distribution',
+      docCount: 'Document Count',
+      categoryDist: 'Category Distribution',
+      qaStats: 'Q&A Statistics',
+      qaStatsPeriod: 'Q&A Statistics (Last 7 Days)',
       last7Days: 'Last 7 Days',
       last30Days: 'Last 30 Days',
     },
