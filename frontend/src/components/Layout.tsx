@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Layout, Menu, Dropdown, Avatar } from 'antd';
+import React, { useState, useEffect, useMemo } from 'react';
+import { Layout, Menu, Dropdown, Avatar, Space } from 'antd';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import {
   DashboardOutlined,
@@ -10,6 +10,9 @@ import {
   BulbOutlined,
   QuestionCircleOutlined,
 } from '@ant-design/icons';
+import { useTranslation } from '../contexts/LanguageContext';
+import { createTranslateProxy } from '../utils/i18n';
+import LanguageSwitcher from './LanguageSwitcher';
 import './Layout.css';
 import logoImage from '../images/logo.png';
 
@@ -20,6 +23,8 @@ const AppLayout: React.FC = () => {
   const [username, setUsername] = useState('');
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useTranslation();
+  const tp = useMemo(() => createTranslateProxy(t), [t]);
 
   useEffect(() => {
     // 获取当前登录用户信息
@@ -34,32 +39,32 @@ const AppLayout: React.FC = () => {
     {
       key: '/',
       icon: <DashboardOutlined />,
-      label: '数据总览',
+      label: tp('sidebar.dashboard'),
     },
     {
       key: '/knowledge',
       icon: <DatabaseOutlined />,
-      label: '知识库管理',
+      label: tp('sidebar.knowledge'),
     },
     {
       key: '/memory',
       icon: <BulbOutlined />,
-      label: '记忆库管理',
+      label: tp('sidebar.memory'),
     },
     {
       key: '/questioning',
       icon: <QuestionCircleOutlined />,
-      label: '问数管理',
+      label: tp('sidebar.questioning'),
     },
     {
       key: '/users',
       icon: <UserOutlined />,
-      label: '用户管理',
+      label: tp('sidebar.users'),
     },
     {
       key: '/strategy',
       icon: <SettingOutlined />,
-      label: '问答策略',
+      label: tp('sidebar.strategy'),
     },
   ];
 
@@ -76,10 +81,14 @@ const AppLayout: React.FC = () => {
     {
       key: 'logout',
       icon: <LogoutOutlined />,
-      label: '退出登录',
+      label: tp('sidebar.logout'),
       onClick: handleLogout,
     },
   ];
+
+  const currentLabel = useMemo(() => {
+    return menuItems.find(item => item.key === location.pathname)?.label || 'AIDP Manager';
+  }, [menuItems, location.pathname]);
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -92,7 +101,7 @@ const AppLayout: React.FC = () => {
       >
         <div className="logo">
           <img src={logoImage} alt="AIDP Manager Logo" className="logo-image" />
-          {!collapsed && <h1>AIDP Manager</h1>}
+          {!collapsed && <h1>{tp('layout.header.title')}</h1>}
         </div>
         <Menu
           mode="inline"
@@ -111,17 +120,20 @@ const AppLayout: React.FC = () => {
         }}>
           <div className="header-content">
             <h2 style={{ margin: 0 }}>
-              {menuItems.find(item => item.key === location.pathname)?.label || 'AIDP Manager'}
+              {currentLabel}
             </h2>
-            <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
-              <div className="user-info">
-                <Avatar
-                  icon={<UserOutlined />}
-                  style={{ marginRight: 8, backgroundColor: '#595959' }}
-                />
-                <span>{username}</span>
-              </div>
-            </Dropdown>
+            <Space size="middle">
+              <LanguageSwitcher style={{ width: 120 }} />
+              <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
+                <div className="user-info">
+                  <Avatar
+                    icon={<UserOutlined />}
+                    style={{ marginRight: 8, backgroundColor: '#595959' }}
+                  />
+                  <span>{username}</span>
+                </div>
+              </Dropdown>
+            </Space>
           </div>
         </Header>
         <Content style={{

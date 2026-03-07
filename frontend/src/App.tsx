@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { ConfigProvider } from 'antd';
 import zhCN from 'antd/locale/zh_CN';
+import enUS from 'antd/locale/en_US';
+import { LanguageProvider, useTranslation } from './contexts/LanguageContext';
 import AppLayout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
@@ -12,10 +14,18 @@ import Questioning from './pages/Questioning';
 import Users from './pages/Users';
 import Strategy from './pages/Strategy';
 
-const App: React.FC = () => {
+const antdLocales: Record<string, any> = {
+  'zh-CN': zhCN,
+  'en-US': enUS,
+};
+
+const AppContent: React.FC = () => {
+  const { language } = useTranslation();
+  const antdLocale = useMemo(() => antdLocales[language] || zhCN, [language]);
+
   return (
     <ConfigProvider
-      locale={zhCN}
+      locale={antdLocale}
       theme={{
         token: {
           colorPrimary: '#595959',
@@ -64,6 +74,14 @@ const App: React.FC = () => {
         </Routes>
       </BrowserRouter>
     </ConfigProvider>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <LanguageProvider>
+      <AppContent />
+    </LanguageProvider>
   );
 };
 

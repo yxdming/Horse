@@ -35,11 +35,15 @@ import {
 } from '@ant-design/icons';
 import type { KnowledgeDocument, SearchResult } from '../types';
 import { knowledgeApi } from '../services/api';
+import { useTranslation } from '../contexts/LanguageContext';
+import { createTranslateProxy } from '../utils/i18n';
 
 const { TextArea } = Input;
 const { Search } = Input;
 
 const Knowledge: React.FC = () => {
+  const { t } = useTranslation();
+  const tp = createTranslateProxy(t);
   const [activeTab, setActiveTab] = useState('files');
 
   // 文件管理状态
@@ -88,7 +92,7 @@ const Knowledge: React.FC = () => {
       setDocuments(response.documents || []);
       setTotal(response.total || 0);
     } catch (error) {
-      message.error('获取文档列表失败');
+      message.error(tp('knowledge.files.fetchFailed'));
     } finally {
       setLoading(false);
     }
@@ -118,10 +122,10 @@ const Knowledge: React.FC = () => {
   const handleDelete = async (id: string) => {
     try {
       await knowledgeApi.deleteDocument(id);
-      message.success('删除成功');
+      message.success(tp('knowledge.files.deleteSuccess'));
       fetchDocuments();
     } catch (error) {
-      message.error('删除失败');
+      message.error(tp('knowledge.files.deleteFailed'));
     }
   };
 
@@ -131,10 +135,10 @@ const Knowledge: React.FC = () => {
 
       if (editingDoc) {
         await knowledgeApi.updateDocument(editingDoc.id, values);
-        message.success('更新成功');
+        message.success(tp('knowledge.files.updateSuccess'));
       } else {
         await knowledgeApi.createDocument(values);
-        message.success('创建成功');
+        message.success(tp('knowledge.files.createSuccess'));
       }
 
       setModalVisible(false);
@@ -142,13 +146,13 @@ const Knowledge: React.FC = () => {
       fetchDocuments();
       fetchCategories();
     } catch (error) {
-      message.error(editingDoc ? '更新失败' : '创建失败');
+      message.error(editingDoc ? tp('knowledge.files.updateFailed') : tp('knowledge.files.createFailed'));
     }
   };
 
   const handleSemanticSearch = async () => {
     if (!searchQueryText.trim()) {
-      message.warning('请输入搜索内容');
+      message.warning(tp('knowledge.files.searchWarning'));
       return;
     }
 
@@ -157,7 +161,7 @@ const Knowledge: React.FC = () => {
       const response = await knowledgeApi.semanticSearch(searchQueryText, 5, selectedCategory);
       setSearchResults(response.results || []);
     } catch (error) {
-      message.error('搜索失败');
+      message.error(tp('knowledge.files.searchFailed'));
     } finally {
       setSearchLoading(false);
     }
@@ -167,10 +171,13 @@ const Knowledge: React.FC = () => {
     try {
       setLoading(true);
       const response = await knowledgeApi.rebuildVectors();
-      message.success(`重建完成: ${response.vectorized}/${response.total} 个文档`);
+      message.success(tp('knowledge.files.rebuildSuccess', {
+        vectorized: response.vectorized,
+        total: response.total,
+      }));
       fetchDocuments();
     } catch (error) {
-      message.error('重建失败');
+      message.error(tp('knowledge.files.rebuildFailed') || '重建失败');
     } finally {
       setLoading(false);
     }
@@ -178,21 +185,21 @@ const Knowledge: React.FC = () => {
 
   const documentColumns = [
     {
-      title: '标题',
+      title: tp('knowledge.files.colTitle'),
       dataIndex: 'title',
       key: 'title',
       width: 200,
       ellipsis: true,
     },
     {
-      title: '分类',
+      title: tp('knowledge.files.colCategory'),
       dataIndex: 'category',
       key: 'category',
       width: 120,
       render: (category: string) => <Tag color="blue">{category}</Tag>,
     },
     {
-      title: '标签',
+      title: tp('knowledge.files.colTags'),
       dataIndex: 'tags',
       key: 'tags',
       width: 150,
@@ -207,22 +214,22 @@ const Knowledge: React.FC = () => {
       ),
     },
     {
-      title: '向量化',
+      title: tp('knowledge.files.colVectorized'),
       dataIndex: 'vectorized',
       key: 'vectorized',
       width: 100,
       render: (vectorized: boolean) =>
-        vectorized ? <Tag color="success">已索引</Tag> : <Tag color="warning">未索引</Tag>,
+        vectorized ? <Tag color="success">{tp('knowledge.files.indexed')}</Tag> : <Tag color="warning">{tp('knowledge.files.notIndexed')}</Tag>,
     },
     {
-      title: '更新时间',
+      title: tp('knowledge.files.colUpdateTime'),
       dataIndex: 'updated_at',
       key: 'updated_at',
       width: 180,
       render: (date: string) => new Date(date).toLocaleString('zh-CN'),
     },
     {
-      title: '操作',
+      title: tp('common.actions'),
       key: 'action',
       width: 150,
       fixed: 'right' as const,
@@ -234,16 +241,16 @@ const Knowledge: React.FC = () => {
             icon={<EditOutlined />}
             onClick={() => handleEdit(record)}
           >
-            编辑
+            {tp('common.edit')}
           </Button>
           <Popconfirm
-            title="确定要删除这个文档吗？"
+            title={tp('knowledge.files.deleteConfirm')}
             onConfirm={() => handleDelete(record.id)}
-            okText="确定"
-            cancelText="取消"
+            okText={tp('common.confirm')}
+            cancelText={tp('common.cancel')}
           >
             <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-              删除
+              {tp('common.delete')}
             </Button>
           </Popconfirm>
         </Space>
@@ -305,25 +312,25 @@ const Knowledge: React.FC = () => {
 
   const handleDeleteMapping = (id: string) => {
     setMappings(mappings.filter(m => m.id !== id));
-    message.success('删除成功');
+    message.success(tp('knowledge.mappings.deleteSuccess'));
   };
 
   const handleExecuteMapping = (id: string) => {
-    message.success(`任务 ${id} 已开始执行`);
+    message.success(tp('knowledge.mappings.executeSuccess', { id }));
   };
 
   const handleViewMappingDetail = (record: any) => {
     Modal.info({
-      title: '目录映射详情',
+      title: tp('knowledge.mappings.detailTitle'),
       width: 600,
       content: (
         <div>
-          <p><strong>任务ID：</strong>{record.id}</p>
-          <p><strong>目录名称：</strong>{record.directoryName}</p>
-          <p><strong>目录路径：</strong>{record.directoryPath}</p>
-          <p><strong>文件系统：</strong>{record.fileSystem}</p>
-          <p><strong>最近入库时间：</strong>{record.lastImportTime}</p>
-          <p><strong>操作人：</strong>{record.operator}</p>
+          <p><strong>{tp('knowledge.mappings.taskId')}：</strong>{record.id}</p>
+          <p><strong>{tp('knowledge.mappings.directoryName')}：</strong>{record.directoryName}</p>
+          <p><strong>{tp('knowledge.mappings.directoryPath')}：</strong>{record.directoryPath}</p>
+          <p><strong>{tp('knowledge.mappings.fileSystem')}：</strong>{record.fileSystem}</p>
+          <p><strong>{tp('knowledge.mappings.lastImportTime')}：</strong>{record.lastImportTime}</p>
+          <p><strong>{tp('knowledge.mappings.operator')}：</strong>{record.operator}</p>
         </div>
       ),
     });
@@ -331,27 +338,27 @@ const Knowledge: React.FC = () => {
 
   const mappingColumns = [
     {
-      title: '任务ID',
+      title: tp('knowledge.mappings.taskId'),
       dataIndex: 'id',
       key: 'id',
       width: 120,
       render: (id: string) => <Tag color="blue">{id}</Tag>,
     },
     {
-      title: '目录名称',
+      title: tp('knowledge.mappings.directoryName'),
       dataIndex: 'directoryName',
       key: 'directoryName',
       width: 150,
     },
     {
-      title: '目录路径',
+      title: tp('knowledge.mappings.directoryPath'),
       dataIndex: 'directoryPath',
       key: 'directoryPath',
       width: 200,
       ellipsis: true,
     },
     {
-      title: '文件系统',
+      title: tp('knowledge.mappings.fileSystem'),
       dataIndex: 'fileSystem',
       key: 'fileSystem',
       width: 100,
@@ -365,13 +372,13 @@ const Knowledge: React.FC = () => {
       },
     },
     {
-      title: '最近一次目录入库时间',
+      title: tp('knowledge.mappings.lastImportTime'),
       dataIndex: 'lastImportTime',
       key: 'lastImportTime',
       width: 180,
     },
     {
-      title: '任务操作人',
+      title: tp('knowledge.mappings.operator'),
       dataIndex: 'operator',
       key: 'operator',
       width: 120,
@@ -382,7 +389,7 @@ const Knowledge: React.FC = () => {
       ),
     },
     {
-      title: '操作',
+      title: tp('knowledge.mappings.actions'),
       key: 'action',
       width: 180,
       fixed: 'right' as const,
@@ -394,7 +401,7 @@ const Knowledge: React.FC = () => {
             icon={<SearchOutlined />}
             onClick={() => handleViewMappingDetail(record)}
           >
-            查看
+            {tp('knowledge.mappings.view')}
           </Button>
           <Button
             type="link"
@@ -402,16 +409,16 @@ const Knowledge: React.FC = () => {
             icon={<ReloadOutlined />}
             onClick={() => handleExecuteMapping(record.id)}
           >
-            执行
+            {tp('knowledge.mappings.execute')}
           </Button>
           <Popconfirm
-            title="确定要删除这个映射任务吗？"
+            title={tp('knowledge.mappings.deleteConfirm')}
             onConfirm={() => handleDeleteMapping(record.id)}
-            okText="确定"
-            cancelText="取消"
+            okText={tp('common.confirm')}
+            cancelText={tp('common.cancel')}
           >
             <Button type="link" size="small" danger icon={<DeleteOutlined />}>
-              删除
+              {tp('common.delete')}
             </Button>
           </Popconfirm>
         </Space>
@@ -426,29 +433,29 @@ const Knowledge: React.FC = () => {
       label: (
         <span>
           <InfoCircleOutlined />
-          知识库简介
+          {tp('knowledge.tabs.intro')}
         </span>
       ),
       children: (
         <Card>
-          <Descriptions title="知识库信息" bordered column={2}>
-            <Descriptions.Item label="知识库名称">AIDP Manager 知识库</Descriptions.Item>
-            <Descriptions.Item label="创建时间">2026-03-01</Descriptions.Item>
-            <Descriptions.Item label="文档总数">{total}</Descriptions.Item>
-            <Descriptions.Item label="已索引文档">{documents.filter(d => d.vectorized).length}</Descriptions.Item>
-            <Descriptions.Item label="分类数量">{categories.length}</Descriptions.Item>
-            <Descriptions.Item label="向量维度">10</Descriptions.Item>
-            <Descriptions.Item label="存储路径">/data/knowledge</Descriptions.Item>
-            <Descriptions.Item label="索引状态">
-              <Tag color="success">正常</Tag>
+          <Descriptions title={tp('knowledge.intro.info')} bordered column={2}>
+            <Descriptions.Item label={tp('knowledge.intro.name')}>{tp('knowledge.intro.nameValue')}</Descriptions.Item>
+            <Descriptions.Item label={tp('knowledge.intro.createTime')}>2026-03-01</Descriptions.Item>
+            <Descriptions.Item label={tp('knowledge.intro.totalDocs')}>{total}</Descriptions.Item>
+            <Descriptions.Item label={tp('knowledge.intro.indexedDocs')}>{documents.filter(d => d.vectorized).length}</Descriptions.Item>
+            <Descriptions.Item label={tp('knowledge.intro.categoryCount')}>{categories.length}</Descriptions.Item>
+            <Descriptions.Item label={tp('knowledge.intro.vectorDimension')}>10</Descriptions.Item>
+            <Descriptions.Item label={tp('knowledge.intro.storagePath')}>/data/knowledge</Descriptions.Item>
+            <Descriptions.Item label={tp('knowledge.intro.indexStatus')}>
+              <Tag color="success">{tp('knowledge.intro.indexStatusNormal')}</Tag>
             </Descriptions.Item>
           </Descriptions>
 
           <Divider />
 
           <Alert
-            message="知识库说明"
-            description="本知识库采用向量检索技术，支持语义搜索。文档被向量化后，可以通过自然语言进行智能检索，系统会返回语义最相关的文档内容。"
+            message={tp('knowledge.intro.description')}
+            description={tp('knowledge.intro.descriptionText')}
             type="info"
             showIcon
           />
@@ -459,7 +466,7 @@ const Knowledge: React.FC = () => {
             <Col span={8}>
               <Card>
                 <Statistic
-                  title="总文档数"
+                  title={tp('knowledge.intro.statsTotal')}
                   value={total}
                   prefix={<FileOutlined />}
                 />
@@ -468,7 +475,7 @@ const Knowledge: React.FC = () => {
             <Col span={8}>
               <Card>
                 <Statistic
-                  title="已索引"
+                  title={tp('knowledge.intro.statsIndexed')}
                   value={documents.filter(d => d.vectorized).length}
                   suffix={`/ ${total}`}
                   prefix={<SearchOutlined />}
@@ -478,7 +485,7 @@ const Knowledge: React.FC = () => {
             <Col span={8}>
               <Card>
                 <Statistic
-                  title="分类数"
+                  title={tp('knowledge.intro.statsCategories')}
                   value={categories.length}
                   prefix={<FolderOutlined />}
                 />
@@ -493,21 +500,21 @@ const Knowledge: React.FC = () => {
       label: (
         <span>
           <LinkOutlined />
-          目录映射
+          {tp('knowledge.tabs.mappings')}
         </span>
       ),
       children: (
         <Card
-          title="目录映射配置"
+          title={tp('knowledge.mappings.title')}
           extra={
             <Button type="primary" icon={<PlusOutlined />} onClick={handleAddMapping}>
-              新增映射
+              {tp('knowledge.mappings.addButton')}
             </Button>
           }
         >
           <Alert
-            message="目录映射说明"
-            description="配置需要定期扫描和导入的目录任务。支持 NFS、S3 和本地文件系统。系统会记录每次入库的时间和操作人信息，可通过执行按钮手动触发入库任务。"
+            message={tp('knowledge.mappings.description')}
+            description={tp('knowledge.mappings.descriptionText')}
             type="info"
             showIcon
             style={{ marginBottom: 16 }}
@@ -526,7 +533,7 @@ const Knowledge: React.FC = () => {
       label: (
         <span>
           <FileOutlined />
-          文件管理
+          {tp('knowledge.tabs.files')}
         </span>
       ),
       children: (
@@ -534,60 +541,64 @@ const Knowledge: React.FC = () => {
           <Card style={{ marginBottom: 16 }}>
             <Row gutter={16}>
               <Col span={6}>
-                <Statistic title="总文档数" value={total} />
+                <Statistic title={tp('knowledge.files.statsTotal')} value={total} />
               </Col>
               <Col span={6}>
                 <Statistic
-                  title="已索引"
+                  title={tp('knowledge.files.statsIndexed')}
                   value={documents.filter((d) => d.vectorized).length}
                   suffix={`/ ${total}`}
                 />
               </Col>
               <Col span={6}>
-                <Statistic title="分类数" value={categories.length} />
+                <Statistic title={tp('knowledge.files.statsCategories')} value={categories.length} />
               </Col>
               <Col span={6}>
-                <Statistic title="当前页" value={page} suffix={`/ ${Math.ceil(total / pageSize) || 1}`} />
+                <Statistic
+                  title={tp('knowledge.files.statsCurrentPage')}
+                  value={page}
+                  suffix={`/ ${Math.ceil(total / pageSize) || 1}`}
+                />
               </Col>
             </Row>
           </Card>
 
           <Card
-            title="文档列表"
+            title={tp('knowledge.files.title')}
             extra={
               <Space>
                 <Button icon={<ReloadOutlined />} onClick={fetchDocuments}>
-                  刷新
+                  {tp('common.refresh')}
                 </Button>
                 <Button icon={<SearchOutlined />} onClick={() => setSearchModalVisible(true)}>
-                  语义搜索
+                  {tp('knowledge.files.semanticSearch')}
                 </Button>
-                <Button icon={<ImportOutlined />}>批量导入</Button>
-                <Button icon={<ExportOutlined />}>批量导出</Button>
+                <Button icon={<ImportOutlined />}>{tp('common.import')}</Button>
+                <Button icon={<ExportOutlined />}>{tp('common.export')}</Button>
                 <Popconfirm
-                  title="确定要重建向量索引吗？这可能需要一些时间。"
+                  title={tp('knowledge.files.rebuildConfirm')}
                   onConfirm={handleRebuildVectors}
-                  okText="确定"
-                  cancelText="取消"
+                  okText={tp('common.confirm')}
+                  cancelText={tp('common.cancel')}
                 >
-                  <Button icon={<ReloadOutlined />}>重建索引</Button>
+                  <Button icon={<ReloadOutlined />}>{tp('knowledge.files.rebuildIndex')}</Button>
                 </Popconfirm>
                 <Button type="primary" icon={<PlusOutlined />} onClick={handleAdd}>
-                  新增文档
+                  {tp('knowledge.files.addButton')}
                 </Button>
               </Space>
             }
           >
             <Space style={{ marginBottom: 16 }} size="middle">
               <Search
-                placeholder="搜索文档标题、内容或标签"
+                placeholder={tp('knowledge.files.searchPlaceholder')}
                 allowClear
                 style={{ width: 300 }}
                 onSearch={setSearchQuery}
                 enterButton
               />
               <Select
-                placeholder="选择分类"
+                placeholder={tp('knowledge.files.categoryPlaceholder')}
                 allowClear
                 style={{ width: 150 }}
                 value={selectedCategory}
@@ -612,7 +623,7 @@ const Knowledge: React.FC = () => {
                 pageSize: pageSize,
                 total: total,
                 showSizeChanger: true,
-                showTotal: (total) => `共 ${total} 条`,
+                showTotal: (total) => tp('common.pagination.total', { total }),
                 onChange: (page, pageSize) => {
                   setPage(page);
                   setPageSize(pageSize);
@@ -636,7 +647,7 @@ const Knowledge: React.FC = () => {
 
       {/* 文档编辑弹窗 */}
       <Modal
-        title={editingDoc ? '编辑文档' : '新增文档'}
+        title={editingDoc ? tp('knowledge.files.editModalTitle') : tp('knowledge.files.addModalTitle')}
         open={modalVisible}
         onOk={handleSubmit}
         onCancel={() => {
@@ -644,50 +655,50 @@ const Knowledge: React.FC = () => {
           form.resetFields();
         }}
         width={800}
-        okText="确定"
-        cancelText="取消"
+        okText={tp('common.confirm')}
+        cancelText={tp('common.cancel')}
       >
         <Form form={form} layout="vertical">
           <Form.Item
-            label="标题"
+            label={tp('knowledge.files.titleLabel')}
             name="title"
-            rules={[{ required: true, message: '请输入文档标题' }]}
+            rules={[{ required: true, message: tp('common.validation.required', { field: tp('knowledge.files.titleLabel') }) }]}
           >
-            <Input placeholder="请输入文档标题" />
+            <Input placeholder={tp('knowledge.files.titlePlaceholder')} />
           </Form.Item>
 
           <Form.Item
-            label="分类"
+            label={tp('knowledge.files.categoryLabel')}
             name="category"
-            rules={[{ required: true, message: '请输入分类名称' }]}
-            extra="可以从现有分类中选择，或输入新的分类名称"
+            rules={[{ required: true, message: tp('common.validation.required', { field: tp('knowledge.files.categoryLabel') }) }]}
+            extra={tp('knowledge.files.categoryHelp')}
           >
             <AutoComplete
               options={categories.map((cat) => ({ label: cat, value: cat }))}
-              placeholder="输入或选择分类"
+              placeholder={tp('knowledge.files.categoryPlaceholder')}
               filterOption={(inputValue, option) =>
                 option?.value.toUpperCase().indexOf(inputValue.toUpperCase()) !== -1
               }
             />
           </Form.Item>
 
-          <Form.Item label="标签" name="tags">
-            <Select mode="tags" placeholder="输入标签，按回车添加" />
+          <Form.Item label={tp('knowledge.files.tagsLabel')} name="tags">
+            <Select mode="tags" placeholder={tp('knowledge.files.tagsPlaceholder')} />
           </Form.Item>
 
           <Form.Item
-            label="内容"
+            label={tp('knowledge.files.contentLabel')}
             name="content"
-            rules={[{ required: true, message: '请输入文档内容' }]}
+            rules={[{ required: true, message: tp('common.validation.required', { field: tp('knowledge.files.contentLabel') }) }]}
           >
-            <TextArea rows={10} placeholder="请输入文档内容" />
+            <TextArea rows={10} placeholder={tp('knowledge.files.contentPlaceholder')} />
           </Form.Item>
         </Form>
       </Modal>
 
       {/* 语义搜索弹窗 */}
       <Modal
-        title="语义搜索"
+        title={tp('knowledge.files.searchModalTitle')}
         open={searchModalVisible}
         onCancel={() => setSearchModalVisible(false)}
         footer={null}
@@ -695,9 +706,9 @@ const Knowledge: React.FC = () => {
       >
         <Space direction="vertical" style={{ width: '100%' }} size="large">
           <Search
-            placeholder="输入搜索内容，系统将使用语义搜索找到相关文档"
+            placeholder={tp('knowledge.files.searchModalPlaceholder')}
             allowClear
-            enterButton="搜索"
+            enterButton={tp('common.search')}
             size="large"
             value={searchQueryText}
             onChange={(e) => setSearchQueryText(e.target.value)}
@@ -707,7 +718,7 @@ const Knowledge: React.FC = () => {
 
           {searchResults.length > 0 && (
             <div>
-              <Divider>搜索结果</Divider>
+              <Divider>{tp('knowledge.files.searchResults')}</Divider>
               {searchResults.map((result) => (
                 <Card
                   key={result.id}
@@ -716,7 +727,7 @@ const Knowledge: React.FC = () => {
                   title={
                     <Space>
                       <span>{result.title}</span>
-                      <Tag color="blue">相似度: {(result.similarity_score * 100).toFixed(1)}%</Tag>
+                      <Tag color="blue">{tp('knowledge.files.similarity')}: {(result.similarity_score * 100).toFixed(1)}%</Tag>
                     </Space>
                   }
                 >
@@ -730,7 +741,7 @@ const Knowledge: React.FC = () => {
 
       {/* 目录映射弹窗 */}
       <Modal
-        title="新增目录映射"
+        title={tp('knowledge.mappings.modalTitle')}
         open={mappingModalVisible}
         onOk={() => {
           mappingForm.validateFields().then((values) => {
@@ -746,44 +757,44 @@ const Knowledge: React.FC = () => {
             ]);
             setMappingModalVisible(false);
             mappingForm.resetFields();
-            message.success('添加成功');
+            message.success(tp('knowledge.mappings.addSuccess'));
           });
         }}
         onCancel={() => {
           setMappingModalVisible(false);
           mappingForm.resetFields();
         }}
-        okText="确定"
-        cancelText="取消"
+        okText={tp('common.confirm')}
+        cancelText={tp('common.cancel')}
         width={600}
       >
         <Form form={mappingForm} layout="vertical">
           <Form.Item
-            label="目录名称"
+            label={tp('knowledge.mappings.directoryNameLabel')}
             name="directoryName"
-            rules={[{ required: true, message: '请输入目录名称' }]}
+            rules={[{ required: true, message: tp('common.validation.required', { field: tp('knowledge.mappings.directoryNameLabel') }) }]}
           >
-            <Input placeholder="例如：技术文档目录" />
+            <Input placeholder={tp('knowledge.mappings.directoryNamePlaceholder')} />
           </Form.Item>
 
           <Form.Item
-            label="目录路径"
+            label={tp('knowledge.mappings.directoryPathLabel')}
             name="directoryPath"
-            rules={[{ required: true, message: '请输入目录路径' }]}
+            rules={[{ required: true, message: tp('common.validation.required', { field: tp('knowledge.mappings.directoryPathLabel') }) }]}
           >
-            <Input placeholder="/data/documents/tech" />
+            <Input placeholder={tp('knowledge.mappings.directoryPathPlaceholder')} />
           </Form.Item>
 
           <Form.Item
-            label="文件系统"
+            label={tp('knowledge.mappings.fileSystemLabel')}
             name="fileSystem"
-            rules={[{ required: true, message: '请选择文件系统类型' }]}
+            rules={[{ required: true, message: tp('common.validation.requiredSelect', { field: tp('knowledge.mappings.fileSystemLabel') }) }]}
             initialValue="NFS"
           >
-            <Select placeholder="请选择文件系统">
-              <Select.Option value="NFS">NFS</Select.Option>
-              <Select.Option value="S3">S3</Select.Option>
-              <Select.Option value="LOCAL">本地文件系统</Select.Option>
+            <Select placeholder={tp('knowledge.mappings.fileSystemPlaceholder')}>
+              <Select.Option value="NFS">{tp('knowledge.mappings.fileSystemNFS')}</Select.Option>
+              <Select.Option value="S3">{tp('knowledge.mappings.fileSystemS3')}</Select.Option>
+              <Select.Option value="LOCAL">{tp('knowledge.mappings.fileSystemLOCAL')}</Select.Option>
             </Select>
           </Form.Item>
         </Form>
