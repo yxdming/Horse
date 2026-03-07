@@ -4,7 +4,10 @@ import type {
   UserUpdate,
   DocumentCreate,
   DocumentUpdate,
-  QAStrategy
+  QAStrategy,
+  MemoryCreate,
+  MemoryUpdate,
+  MemorySearchParams
 } from '../types';
 
 const api = axios.create({
@@ -88,6 +91,33 @@ export const knowledgeApi = {
 
   rebuildVectors: () =>
     api.post('/knowledge/vectors/rebuild').then(res => res.data),
+};
+
+// Memory APIs
+export const memoryApi = {
+  getMemories: (params?: MemorySearchParams) =>
+    api.get('/memory/', { params }).then(res => res.data),
+
+  getMemory: (id: string) =>
+    api.get(`/memory/${id}`).then(res => res.data),
+
+  createMemory: (data: MemoryCreate) =>
+    api.post('/memory/', data).then(res => res.data),
+
+  updateMemory: (id: string, data: MemoryUpdate) =>
+    api.put(`/memory/${id}`, data).then(res => res.data),
+
+  deleteMemory: (id: string) =>
+    api.delete(`/memory/${id}`).then(res => res.data),
+
+  getCategories: () =>
+    api.get('/memory/categories/list').then(res => res.data),
+
+  getTypes: () =>
+    api.get('/memory/types/list').then(res => res.data),
+
+  getStats: () =>
+    api.get('/memory/stats/summary').then(res => res.data),
 };
 
 // Stats APIs

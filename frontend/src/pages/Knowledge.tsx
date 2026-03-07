@@ -959,6 +959,7 @@ const Knowledge: React.FC = () => {
           </Form.Item>
         </Form>
       </Modal>
+
     </div>
   );
 };

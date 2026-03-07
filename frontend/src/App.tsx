@@ -7,6 +7,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Knowledge from './pages/Knowledge';
+import Memory from './pages/Memory';
 import Users from './pages/Users';
 import Strategy from './pages/Strategy';
 
@@ -53,6 +54,7 @@ const App: React.FC = () => {
           >
             <Route index element={<Dashboard />} />
             <Route path="knowledge" element={<Knowledge />} />
+            <Route path="memory" element={<Memory />} />
             <Route path="users" element={<Users />} />
             <Route path="strategy" element={<Strategy />} />
           </Route>

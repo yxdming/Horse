@@ -7,6 +7,7 @@ import {
   UserOutlined,
   SettingOutlined,
   LogoutOutlined,
+  BulbOutlined,
 } from '@ant-design/icons';
 import './Layout.css';
 import logoImage from '../images/logo.png';
@@ -38,6 +39,11 @@ const AppLayout: React.FC = () => {
       key: '/knowledge',
       icon: <DatabaseOutlined />,
       label: '知识库管理',
+    },
+    {
+      key: '/memory',
+      icon: <BulbOutlined />,
+      label: '记忆库管理',
     },
     {
       key: '/users',

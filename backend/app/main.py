@@ -56,11 +56,12 @@ def create_app() -> FastAPI:
         )
 
     # Import and register API routes
-    from app.api import users, knowledge, stats, config, auth
+    from app.api import users, knowledge, stats, config, auth, memory
 
     app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
     app.include_router(users.router, prefix="/api/users", tags=["users"])
     app.include_router(knowledge.router, prefix="/api/knowledge", tags=["knowledge"])
+    app.include_router(memory.router, prefix="/api/memory", tags=["memory"])
     app.include_router(stats.router, prefix="/api/stats", tags=["stats"])
     app.include_router(config.router, prefix="/api/config", tags=["config"])
 

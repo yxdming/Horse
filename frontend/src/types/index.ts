@@ -100,3 +100,63 @@ export interface GrowthDataPoint {
   date: string;
   count: number;
 }
+
+// Memory types
+export interface Memory {
+  id: string;
+  title: string;
+  content: string;
+  category: string;
+  tags: string[];
+  importance: number; // 1-5
+  memory_type: string; // '长期记忆', '短期记忆', '工作记忆'
+  vectorized: boolean;
+  created_at: string;
+  updated_at?: string;
+  access_count: number;
+  last_accessed?: string;
+}
+
+export interface MemoryCreate {
+  title: string;
+  content: string;
+  category?: string;
+  tags?: string[];
+  importance?: number;
+  memory_type?: string;
+}
+
+export interface MemoryUpdate {
+  title?: string;
+  content?: string;
+  category?: string;
+  tags?: string[];
+  importance?: number;
+  memory_type?: string;
+  vectorized?: boolean;
+}
+
+export interface MemorySearchParams {
+  skip?: number;
+  limit?: number;
+  category?: string;
+  memory_type?: string;
+  search?: string;
+  min_importance?: number;
+}
+
+export interface MemoryListResponse {
+  memories: Memory[];
+  total: number;
+}
+
+export interface MemoryStats {
+  total_memories: number;
+  vectorized_memories: number;
+  by_type: Record<string, number>;
+  by_category: Record<string, number>;
+  avg_importance: number;
+  total_access: number;
+  most_accessed: Memory[];
+}
+
