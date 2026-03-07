@@ -43,7 +43,7 @@ const Strategy: React.FC = () => {
       setConfig(data);
       form.setFieldsValue(data);
     } catch (error) {
-      message.error(tp('fetchConfigError'));
+      message.error(tp('strategy.fetchConfigError'));
     } finally {
       setLoading(false);
     }
@@ -54,10 +54,10 @@ const Strategy: React.FC = () => {
       const values = await form.validateFields();
       setLoading(true);
       await configApi.updateQAStrategy(values);
-      message.success(tp('saveConfigSuccess'));
+      message.success(tp('strategy.saveConfigSuccess'));
       fetchConfig();
     } catch (error) {
-      message.error(tp('saveConfigError'));
+      message.error(tp('strategy.saveConfigError'));
     } finally {
       setLoading(false);
     }
@@ -67,10 +67,10 @@ const Strategy: React.FC = () => {
     try {
       setLoading(true);
       await configApi.resetQAStrategy();
-      message.success(tp('resetConfigSuccess'));
+      message.success(tp('strategy.resetConfigSuccess'));
       fetchConfig();
     } catch (error) {
-      message.error(tp('resetConfigError'));
+      message.error(tp('strategy.resetConfigError'));
     } finally {
       setLoading(false);
     }
@@ -82,23 +82,23 @@ const Strategy: React.FC = () => {
         title={
           <Space>
             <SettingOutlined />
-            <span>{tp('title')}</span>
+            <span>{tp('strategy.title')}</span>
           </Space>
         }
         extra={
           <Space>
             <Button icon={<ReloadOutlined />} onClick={fetchConfig} loading={loading}>
-              {tp('refresh')}
+              {tp('strategy.refresh')}
             </Button>
             <Button type="primary" icon={<SaveOutlined />} onClick={handleSubmit} loading={loading}>
-              {tp('saveConfig')}
+              {tp('strategy.saveConfig')}
             </Button>
           </Space>
         }
       >
         <Alert
-          message={tp('configInfo.title')}
-          description={tp('configInfo.description')}
+          message={tp('strategy.configInfo.title')}
+          description={tp('strategy.configInfo.description')}
           type="info"
           showIcon
           style={{ marginBottom: 24 }}
@@ -110,107 +110,107 @@ const Strategy: React.FC = () => {
           initialValues={config || undefined}
           disabled={loading}
         >
-          <Title level={4}>{tp('modelParams.title')}</Title>
+          <Title level={4}>{tp('strategy.modelParams.title')}</Title>
 
           <Form.Item
             label={
               <Space>
-                <Text strong>{tp('modelParams.temperature.label')}</Text>
+                <Text strong>{tp('strategy.modelParams.temperature.label')}</Text>
                 <Text type="secondary">: {form.getFieldValue('temperature')?.toFixed(2) || 0.7}</Text>
               </Space>
             }
             name="temperature"
-            tooltip={tp('modelParams.temperature.tooltip')}
-            rules={[{ required: true, message: tp('modelParams.temperature.required') }]}
+            tooltip={tp('strategy.modelParams.temperature.tooltip')}
+            rules={[{ required: true, message: tp('strategy.modelParams.temperature.required') }]}
           >
             <Slider
               min={0}
               max={2}
               step={0.1}
               marks={{
-                0: tp('modelParams.temperature.marks.deterministic'),
-                0.7: tp('modelParams.temperature.marks.balanced'),
-                1.4: tp('modelParams.temperature.marks.creative'),
-                2: tp('modelParams.temperature.marks.random'),
+                0: tp('strategy.modelParams.temperature.marks.deterministic'),
+                0.7: tp('strategy.modelParams.temperature.marks.balanced'),
+                1.4: tp('strategy.modelParams.temperature.marks.creative'),
+                2: tp('strategy.modelParams.temperature.marks.random'),
               }}
             />
           </Form.Item>
 
           <Form.Item
-            label={tp('modelParams.maxTokens.label')}
+            label={tp('strategy.modelParams.maxTokens.label')}
             name="max_tokens"
-            tooltip={tp('modelParams.maxTokens.tooltip')}
-            rules={[{ required: true, message: tp('modelParams.maxTokens.required') }]}
+            tooltip={tp('strategy.modelParams.maxTokens.tooltip')}
+            rules={[{ required: true, message: tp('strategy.modelParams.maxTokens.required') }]}
           >
             <InputNumber
               min={100}
               max={8000}
               step={100}
               style={{ width: '100%' }}
-              formatter={(value) => `${value} ${tp('modelParams.maxTokens.unit')}`}
-              parser={(value: any) => value?.replace(` ${tp('modelParams.maxTokens.unit')}`, '')}
+              formatter={(value) => `${value} ${tp('strategy.modelParams.maxTokens.unit')}`}
+              parser={(value: any) => value?.replace(` ${tp('strategy.modelParams.maxTokens.unit')}`, '')}
             />
           </Form.Item>
 
           <Divider />
 
-          <Title level={4}>{tp('retrievalStrategy.title')}</Title>
+          <Title level={4}>{tp('strategy.retrievalStrategy.title')}</Title>
 
           <Form.Item
-            label={tp('retrievalStrategy.topK.label')}
+            label={tp('strategy.retrievalStrategy.topK.label')}
             name="top_k"
-            tooltip={tp('retrievalStrategy.topK.tooltip')}
-            rules={[{ required: true, message: tp('retrievalStrategy.topK.required') }]}
+            tooltip={tp('strategy.retrievalStrategy.topK.tooltip')}
+            rules={[{ required: true, message: tp('strategy.retrievalStrategy.topK.required') }]}
           >
             <InputNumber
               min={1}
               max={20}
               style={{ width: '100%' }}
-              formatter={(value) => `${value} ${tp('retrievalStrategy.topK.unit')}`}
-              parser={(value: any) => value?.replace(` ${tp('retrievalStrategy.topK.unit')}`, '')}
+              formatter={(value) => `${value} ${tp('strategy.retrievalStrategy.topK.unit')}`}
+              parser={(value: any) => value?.replace(` ${tp('strategy.retrievalStrategy.topK.unit')}`, '')}
             />
           </Form.Item>
 
           <Form.Item
             label={
               <Space>
-                <Text strong>{tp('retrievalStrategy.similarityThreshold.label')}</Text>
+                <Text strong>{tp('strategy.retrievalStrategy.similarityThreshold.label')}</Text>
                 <Text type="secondary">
                   : {form.getFieldValue('similarity_threshold')?.toFixed(2) || 0.75}
                 </Text>
               </Space>
             }
             name="similarity_threshold"
-            tooltip={tp('retrievalStrategy.similarityThreshold.tooltip')}
-            rules={[{ required: true, message: tp('retrievalStrategy.similarityThreshold.required') }]}
+            tooltip={tp('strategy.retrievalStrategy.similarityThreshold.tooltip')}
+            rules={[{ required: true, message: tp('strategy.retrievalStrategy.similarityThreshold.required') }]}
           >
             <Slider
               min={0}
               max={1}
               step={0.05}
               marks={{
-                0: tp('retrievalStrategy.similarityThreshold.marks.all'),
-                0.5: tp('retrievalStrategy.similarityThreshold.marks.loose'),
-                0.75: tp('retrievalStrategy.similarityThreshold.marks.moderate'),
-                0.9: tp('retrievalStrategy.similarityThreshold.marks.strict'),
-                1: tp('retrievalStrategy.similarityThreshold.marks.precise'),
+                0: tp('strategy.retrievalStrategy.similarityThreshold.marks.all'),
+                0.5: tp('strategy.retrievalStrategy.similarityThreshold.marks.loose'),
+                0.75: tp('strategy.retrievalStrategy.similarityThreshold.marks.moderate'),
+                0.9: tp('strategy.retrievalStrategy.similarityThreshold.marks.strict'),
+                1: tp('strategy.retrievalStrategy.similarityThreshold.marks.precise'),
               }}
             />
           </Form.Item>
 
           <Divider />
 
-          <Title level={4}>{tp('promptConfig.title')}</Title>
+          <Title level={4}>{tp('strategy.promptConfig.title')}</Title>
 
           <Form.Item
-            label={tp('promptConfig.systemPrompt.label')}
+            label={tp('strategy.promptConfig.systemPrompt.label')}
             name="system_prompt"
-            tooltip={tp('promptConfig.systemPrompt.tooltip')}
-            rules={[{ required: true, message: tp('promptConfig.systemPrompt.required') }]}
+            tooltip={tp('strategy.promptConfig.systemPrompt.tooltip')}
+            rules={[{ required: true, message: tp('strategy.promptConfig.systemPrompt.required') }]}
           >
             <TextArea
               rows={8}
-              placeholder={tp('promptConfig.systemPrompt.placeholder')}
+              placeholder={tp('strategy.promptConfig.systemPrompt.placeholder')}
               showCount
               maxLength={2000}
             />
@@ -218,38 +218,38 @@ const Strategy: React.FC = () => {
 
           <Divider />
 
-          <Title level={4}>{tp('quickActions.title')}</Title>
+          <Title level={4}>{tp('strategy.quickActions.title')}</Title>
 
           <Space>
             <Button danger onClick={handleReset} loading={loading}>
-              {tp('quickActions.resetDefault')}
+              {tp('strategy.quickActions.resetDefault')}
             </Button>
           </Space>
         </Form>
 
         <Divider />
 
-        <Title level={4}>{tp('configPreview.title')}</Title>
+        <Title level={4}>{tp('strategy.configPreview.title')}</Title>
         <Card size="small" style={{ background: '#f5f5f5' }}>
           <Space direction="vertical" style={{ width: '100%' }}>
             <Text>
-              <Text strong>{tp('configPreview.fields.temperature')}:</Text> {form.getFieldValue('temperature') || 0.7}
+              <Text strong>{tp('strategy.configPreview.fields.temperature')}:</Text> {form.getFieldValue('temperature') || 0.7}
             </Text>
             <Text>
-              <Text strong>{tp('configPreview.fields.maxTokens')}:</Text> {form.getFieldValue('max_tokens') || 2000}
+              <Text strong>{tp('strategy.configPreview.fields.maxTokens')}:</Text> {form.getFieldValue('max_tokens') || 2000}
             </Text>
             <Text>
-              <Text strong>{tp('configPreview.fields.topK')}:</Text> {form.getFieldValue('top_k') || 5}
+              <Text strong>{tp('strategy.configPreview.fields.topK')}:</Text> {form.getFieldValue('top_k') || 5}
             </Text>
             <Text>
-              <Text strong>{tp('configPreview.fields.similarityThreshold')}:</Text>{' '}
+              <Text strong>{tp('strategy.configPreview.fields.similarityThreshold')}:</Text>{' '}
               {form.getFieldValue('similarity_threshold') || 0.75}
             </Text>
             <Text>
-              <Text strong>{tp('configPreview.fields.systemPrompt')}:</Text>
+              <Text strong>{tp('strategy.configPreview.fields.systemPrompt')}:</Text>
             </Text>
             <Text type="secondary" style={{ whiteSpace: 'pre-wrap' }}>
-              {form.getFieldValue('system_prompt') || tp('configPreview.fields.notSet')}
+              {form.getFieldValue('system_prompt') || tp('strategy.configPreview.fields.notSet')}
             </Text>
           </Space>
         </Card>

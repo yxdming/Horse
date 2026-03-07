@@ -678,6 +678,97 @@ export default {
   // ==================== 问答策略 ====================
   strategy: {
     title: '问答策略配置',
+    refresh: '刷新',
+    saveConfig: '保存配置',
+
+    // 通用消息
+    fetchConfigError: '获取配置失败',
+    saveConfigSuccess: '配置保存成功',
+    saveConfigError: '配置保存失败',
+    resetConfigSuccess: '已恢复默认配置',
+    resetConfigError: '恢复默认配置失败',
+
+    // 配置说明
+    configInfo: {
+      title: '配置说明',
+      description: '配置问答策略将影响AI回答的质量和风格。修改后需要保存才能生效。',
+    },
+
+    // 模型参数
+    modelParams: {
+      title: '模型参数',
+      temperature: {
+        label: 'Temperature (温度)',
+        tooltip: '控制输出的随机性。值越高输出越随机、越有创意；值越低输出越确定、越一致',
+        required: '请输入温度值',
+        unit: '',
+        marks: {
+          deterministic: '确定性',
+          balanced: '平衡',
+          creative: '创意',
+          random: '随机',
+        },
+      },
+      maxTokens: {
+        label: '最大Token数',
+        tooltip: '限制单次回答的最大长度，1 Token约等于0.75个汉字',
+        required: '请输入最大Token数',
+        unit: 'tokens',
+      },
+    },
+
+    // 检索策略
+    retrievalStrategy: {
+      title: '检索策略',
+      topK: {
+        label: 'Top-K 文档数量',
+        tooltip: '从向量数据库中检索最相关的K个文档作为上下文',
+        required: '请输入Top-K值',
+        unit: '个',
+      },
+      similarityThreshold: {
+        label: '相似度阈值',
+        tooltip: '只返回相似度高于此阈值的文档，范围0-1，值越高要求越严格',
+        required: '请输入相似度阈值',
+        marks: {
+          all: '全部',
+          loose: '宽松',
+          moderate: '适中',
+          strict: '严格',
+          precise: '精确',
+        },
+      },
+    },
+
+    // 提示词配置
+    promptConfig: {
+      title: '提示词配置',
+      systemPrompt: {
+        label: '系统提示词',
+        tooltip: '定义AI助手的角色、任务和回答风格',
+        required: '请输入系统提示词',
+        placeholder: '例如：你是一个专业的AI助手，负责回答用户关于知识库的问题...',
+      },
+    },
+
+    // 快捷操作
+    quickActions: {
+      title: '快捷操作',
+      resetDefault: '恢复默认配置',
+    },
+
+    // 配置预览
+    configPreview: {
+      title: '当前配置预览',
+      fields: {
+        temperature: '温度',
+        maxTokens: '最大Token数',
+        topK: 'Top-K',
+        similarityThreshold: '相似度阈值',
+        systemPrompt: '系统提示词',
+        notSet: '未设置',
+      },
+    },
 
     // Tabs
     tabs: {
@@ -687,11 +778,10 @@ export default {
       security: '安全设置',
     },
 
-    // 模型参数
+    // 模型
     model: {
       title: '模型参数配置',
       description: '配置AI模型的基本参数',
-
       temperatureLabel: 'Temperature (温度)',
       temperatureHelp: '控制输出的随机性，值越高输出越随机',
       maxTokensLabel: '最大Token数',
@@ -700,18 +790,16 @@ export default {
       topPHelp: '核采样参数，控制词汇选择范围',
       frequencyPenaltyLabel: '频率惩罚',
       frequencyPenaltyHelp: '降低重复内容的出现概率',
-
       saveButton: '保存参数',
       resetButton: '重置默认',
       saveSuccess: '参数保存成功',
       saveFailed: '参数保存失败',
     },
 
-    // 检索策略
+    // 检索
     retrieval: {
       title: '检索策略配置',
       description: '配置知识库检索相关参数',
-
       topKLabel: 'Top-K',
       topKHelp: '返回最相关的K个文档',
       thresholdLabel: '相似度阈值',
@@ -721,7 +809,6 @@ export default {
       searchModeSemantic: '语义检索',
       searchModeHybrid: '混合检索',
       searchModeKeyword: '关键词检索',
-
       saveButton: '保存策略',
       testButton: '测试检索',
       saveSuccess: '策略保存成功',
@@ -732,14 +819,12 @@ export default {
     prompt: {
       title: '提示词模板管理',
       description: '自定义系统提示词模板',
-
       systemPromptLabel: '系统提示词',
       systemPromptHelp: '定义AI助手的角色和行为准则',
       userPromptLabel: '用户提示词模板',
       userPromptHelp: '定义用户输入的处理方式',
       contextPromptLabel: '上下文模板',
       contextHelp: '定义检索到的上下文如何组织',
-
       saveButton: '保存模板',
       previewButton: '预览效果',
       resetButton: '恢复默认',
@@ -751,7 +836,6 @@ export default {
     security: {
       title: '安全设置',
       description: '配置内容过滤和安全规则',
-
       enableFilterLabel: '启用敏感词过滤',
       enableFilterHelp: '自动过滤敏感内容',
       customWordsLabel: '自定义敏感词',
@@ -760,7 +844,6 @@ export default {
       maxLengthHelp: '限制单次回答的最大字符数',
       enableAuditLabel: '启用审计日志',
       enableAuditHelp: '记录所有问答内容用于审计',
-
       saveButton: '保存设置',
       saveSuccess: '设置保存成功',
       saveFailed: '设置保存失败',

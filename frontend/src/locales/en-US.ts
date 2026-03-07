@@ -678,6 +678,97 @@ export default {
   // ==================== QA Strategy ====================
   strategy: {
     title: 'QA Strategy Configuration',
+    refresh: 'Refresh',
+    saveConfig: 'Save Configuration',
+
+    // Common Messages
+    fetchConfigError: 'Failed to fetch configuration',
+    saveConfigSuccess: 'Configuration saved successfully',
+    saveConfigError: 'Failed to save configuration',
+    resetConfigSuccess: 'Default configuration restored',
+    resetConfigError: 'Failed to restore default configuration',
+
+    // Configuration Info
+    configInfo: {
+      title: 'Configuration Guide',
+      description: 'Configuring the QA strategy will affect the quality and style of AI responses. Changes must be saved to take effect.',
+    },
+
+    // Model Parameters
+    modelParams: {
+      title: 'Model Parameters',
+      temperature: {
+        label: 'Temperature',
+        tooltip: 'Controls the randomness of output. Higher values produce more random and creative output; lower values produce more deterministic and consistent output',
+        required: 'Please enter temperature value',
+        unit: '',
+        marks: {
+          deterministic: 'Deterministic',
+          balanced: 'Balanced',
+          creative: 'Creative',
+          random: 'Random',
+        },
+      },
+      maxTokens: {
+        label: 'Max Tokens',
+        tooltip: 'Limits the maximum length of a single response. 1 Token ≈ 0.75 English characters',
+        required: 'Please enter max tokens',
+        unit: 'tokens',
+      },
+    },
+
+    // Retrieval Strategy
+    retrievalStrategy: {
+      title: 'Retrieval Strategy',
+      topK: {
+        label: 'Top-K Documents',
+        tooltip: 'Retrieve the K most relevant documents from the vector database as context',
+        required: 'Please enter Top-K value',
+        unit: 'docs',
+      },
+      similarityThreshold: {
+        label: 'Similarity Threshold',
+        tooltip: 'Only return documents with similarity above this threshold. Range 0-1, higher values are stricter',
+        required: 'Please enter similarity threshold',
+        marks: {
+          all: 'All',
+          loose: 'Loose',
+          moderate: 'Moderate',
+          strict: 'Strict',
+          precise: 'Precise',
+        },
+      },
+    },
+
+    // Prompt Configuration
+    promptConfig: {
+      title: 'Prompt Configuration',
+      systemPrompt: {
+        label: 'System Prompt',
+        tooltip: 'Defines the AI assistant\'s role, tasks, and response style',
+        required: 'Please enter system prompt',
+        placeholder: 'e.g., You are a professional AI assistant responsible for answering user questions about the knowledge base...',
+      },
+    },
+
+    // Quick Actions
+    quickActions: {
+      title: 'Quick Actions',
+      resetDefault: 'Reset to Default',
+    },
+
+    // Configuration Preview
+    configPreview: {
+      title: 'Current Configuration',
+      fields: {
+        temperature: 'Temperature',
+        maxTokens: 'Max Tokens',
+        topK: 'Top-K',
+        similarityThreshold: 'Similarity Threshold',
+        systemPrompt: 'System Prompt',
+        notSet: 'Not Set',
+      },
+    },
 
     // Tabs
     tabs: {
@@ -687,11 +778,10 @@ export default {
       security: 'Security Settings',
     },
 
-    // Model Parameters
+    // Model
     model: {
       title: 'Model Parameters Configuration',
       description: 'Configure basic AI model parameters',
-
       temperatureLabel: 'Temperature',
       temperatureHelp: 'Control the randomness of output, higher values produce more random output',
       maxTokensLabel: 'Max Tokens',
@@ -700,18 +790,16 @@ export default {
       topPHelp: 'Nucleus sampling parameter, controls vocabulary selection range',
       frequencyPenaltyLabel: 'Frequency Penalty',
       frequencyPenaltyHelp: 'Reduce the probability of recurring content',
-
       saveButton: 'Save Parameters',
       resetButton: 'Reset to Default',
       saveSuccess: 'Parameters saved successfully',
       saveFailed: 'Failed to save parameters',
     },
 
-    // Retrieval Strategy
+    // Retrieval
     retrieval: {
       title: 'Retrieval Strategy Configuration',
       description: 'Configure knowledge base retrieval parameters',
-
       topKLabel: 'Top-K',
       topKHelp: 'Return the K most relevant documents',
       thresholdLabel: 'Similarity Threshold',
@@ -721,7 +809,6 @@ export default {
       searchModeSemantic: 'Semantic Search',
       searchModeHybrid: 'Hybrid Search',
       searchModeKeyword: 'Keyword Search',
-
       saveButton: 'Save Strategy',
       testButton: 'Test Retrieval',
       saveSuccess: 'Strategy saved successfully',
@@ -732,14 +819,12 @@ export default {
     prompt: {
       title: 'Prompt Template Management',
       description: 'Customize system prompt templates',
-
       systemPromptLabel: 'System Prompt',
       systemPromptHelp: 'Define the role and behavior guidelines for the AI assistant',
       userPromptLabel: 'User Prompt Template',
       userPromptHelp: 'Define how user input is processed',
       contextPromptLabel: 'Context Template',
       contextHelp: 'Define how retrieved context is organized',
-
       saveButton: 'Save Templates',
       previewButton: 'Preview',
       resetButton: 'Reset to Default',
@@ -751,7 +836,6 @@ export default {
     security: {
       title: 'Security Settings',
       description: 'Configure content filtering and security rules',
-
       enableFilterLabel: 'Enable Sensitive Word Filter',
       enableFilterHelp: 'Automatically filter sensitive content',
       customWordsLabel: 'Custom Sensitive Words',
@@ -760,7 +844,6 @@ export default {
       maxLengthHelp: 'Limit the maximum character count of a single response',
       enableAuditLabel: 'Enable Audit Log',
       enableAuditHelp: 'Record all Q&A content for auditing',
-
       saveButton: 'Save Settings',
       saveSuccess: 'Settings saved successfully',
       saveFailed: 'Failed to save settings',
