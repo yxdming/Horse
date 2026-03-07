@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Form, Input, Button, Card, message } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { authApi } from '../services/api';
 import './Login.css';
 
 const Login: React.FC = () => {
@@ -15,23 +16,20 @@ const Login: React.FC = () => {
     try {
       setLoading(true);
 
-      // 模拟登录验证（实际应该调用后端API）
-      if (values.username === 'admin' && values.password === 'admin') {
-        // 保存登录状态
-        localStorage.setItem('user', JSON.stringify({
-          username: values.username,
-          loginTime: new Date().toISOString()
-        }));
+      // 调用后端登录 API
+      const response = await authApi.login(values.username, values.password);
 
-        message.success('登录成功！');
+      // 保存登录状态和 token
+      localStorage.setItem('token', response.access_token);
+      localStorage.setItem('user', JSON.stringify(response.user));
 
-        // 跳转到之前访问的页面或首页
-        navigate(from, { replace: true });
-      } else {
-        message.error('用户名或密码错误！');
-      }
+      message.success('登录成功！');
+
+      // 跳转到之前访问的页面或首页
+      navigate(from, { replace: true });
     } catch (error) {
-      message.error('登录失败，请重试');
+      const errorMessage = error instanceof Error ? error.message : '登录失败';
+      message.error(errorMessage);
     } finally {
       setLoading(false);
     }
@@ -41,8 +39,7 @@ const Login: React.FC = () => {
     <div className="login-container">
       <Card className="login-card">
         <div className="login-header">
-          <h1>AIDP 管理系统</h1>
-          <p>AI Data Platform Management System</p>
+          <h1>AI Data Platform</h1>
         </div>
 
         <Form

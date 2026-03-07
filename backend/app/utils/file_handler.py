@@ -2,7 +2,7 @@ import json
 import os
 from pathlib import Path
 from typing import Any, Dict, List, TypeVar
-from datetime import datetime
+from datetime import datetime, timezone
 
 T = TypeVar('T')
 
@@ -50,8 +50,27 @@ class FileHandler:
 
     def ensure_data_files(self) -> None:
         """Ensure all required data files exist with initial structure"""
+        from app.utils.auth import auth_handler
+
+        # Check if users.json exists and has users
+        users_data = self.read_json('users.json', {'users': []})
+        if not users_data.get('users'):
+            # Create default admin user with hashed password
+            default_admin = {
+                'id': '1',
+                'username': 'admin',
+                'email': 'admin@aidp.com',
+                'password_hash': auth_handler.get_password_hash('admin'),
+                'role': 'admin',
+                'status': 'active',
+                'created_at': datetime.now(timezone.utc).isoformat(),
+                'updated_at': datetime.now(timezone.utc).isoformat(),
+                'last_login': None
+            }
+            users_data['users'] = [default_admin]
+            self.write_json('users.json', users_data)
+
         default_files = {
-            'users.json': {'users': []},
             'knowledge.json': {'documents': []},
             'config.json': {
                 'qa_strategy': {

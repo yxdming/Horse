@@ -25,6 +25,15 @@ api.interceptors.response.use(
   }
 );
 
+// Auth APIs
+export const authApi = {
+  login: (username: string, password: string) =>
+    api.post('/auth/login', { username, password }).then(res => res.data),
+
+  getCurrentUser: (token: string) =>
+    api.get('/auth/me', { params: { token } }).then(res => res.data),
+};
+
 // User APIs
 export const userApi = {
   getUsers: (params?: { skip?: number; limit?: number; search?: string; role?: string; status?: string }) =>

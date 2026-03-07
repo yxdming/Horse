@@ -1,7 +1,8 @@
 from typing import List, Optional, Dict, Any
-from datetime import datetime
+from datetime import datetime, timezone
 from app.models.user import User, UserCreate, UserUpdate
 from app.utils.file_handler import file_handler
+from app.utils.auth import auth_handler
 
 
 class UserService:
@@ -23,12 +24,40 @@ class UserService:
                 return user
         return None
 
+    def get_user_by_username(self, username: str) -> Optional[Dict[str, Any]]:
+        """Get user by username"""
+        users = self.get_all_users()
+        for user in users:
+            if user['username'] == username:
+                return user
+        return None
+
     def get_user_by_email(self, email: str) -> Optional[Dict[str, Any]]:
         """Get user by email"""
         users = self.get_all_users()
         for user in users:
             if user['email'] == email:
                 return user
+        return None
+
+    def authenticate_user(self, username: str, password: str) -> Optional[Dict[str, Any]]:
+        """Authenticate user by username and password"""
+        user = self.get_user_by_username(username)
+        if not user:
+            return None
+
+        # Get stored password hash
+        stored_hash = user.get('password_hash')
+        if not stored_hash:
+            # For backward compatibility, check plain text password (temporary)
+            if user.get('password') == password:
+                return user
+            return None
+
+        # Verify password hash
+        if auth_handler.verify_password(password, stored_hash):
+            return user
+
         return None
 
     def create_user(self, user_create: UserCreate) -> Dict[str, Any]:
@@ -59,7 +88,7 @@ class UserService:
                 # Update fields
                 update_data = user_update.dict(exclude_unset=True)
                 user.update(update_data)
-                user['updated_at'] = datetime.utcnow().isoformat()
+                user['updated_at'] = datetime.now(timezone.utc).isoformat()
 
                 users[i] = user
                 self.file_handler.write_json('users.json', {'users': users})
@@ -82,7 +111,7 @@ class UserService:
         users = self.get_all_users()
         for user in users:
             if user['id'] == user_id:
-                user['last_login'] = datetime.utcnow().isoformat()
+                user['last_login'] = datetime.now(timezone.utc).isoformat()
                 self.file_handler.write_json('users.json', {'users': users})
                 return True
         return False
