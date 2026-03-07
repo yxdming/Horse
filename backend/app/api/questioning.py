@@ -57,6 +57,13 @@ async def test_database_connection(db_id: str):
 
 
 # ==================== Glossary Management ====================
+@router.get("/glossaries/search/{keyword}", response_model=dict)
+async def search_glossaries(keyword: str):
+    """Search glossary terms by keyword"""
+    glossaries = questioning_service.search_glossaries(keyword)
+    return {"glossaries": glossaries}
+
+
 @router.get("/glossaries/", response_model=dict)
 async def get_glossaries():
     """Get all glossary terms"""
@@ -91,14 +98,13 @@ async def delete_glossary(term_id: str):
     return {"message": "Glossary term deleted successfully"}
 
 
-@router.get("/glossaries/search/{keyword}", response_model=dict)
-async def search_glossaries(keyword: str):
-    """Search glossary terms by keyword"""
-    glossaries = questioning_service.search_glossaries(keyword)
-    return {"glossaries": glossaries}
-
-
 # ==================== Question History ====================
+@router.get("/history/stats", response_model=dict)
+async def get_question_stats():
+    """Get question statistics"""
+    return questioning_service.get_question_stats()
+
+
 @router.get("/history/", response_model=dict)
 async def get_question_histories(
     skip: int = Query(0, ge=0),
@@ -115,12 +121,6 @@ async def create_question_history(history_create: QuestionHistoryCreate):
         return questioning_service.create_question_history(history_create)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
-
-
-@router.get("/history/stats", response_model=dict)
-async def get_question_stats():
-    """Get question statistics"""
-    return questioning_service.get_question_stats()
 
 
 # ==================== Question Processing ====================
