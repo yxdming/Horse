@@ -112,8 +112,8 @@ echo "Frontend:   http://你的新IP地址:5173"
 **Windows**:
 ```powershell
 # 允许端口
-netsh advfirewall firewall add rule name="AIDP Frontend" dir=in action=allow protocol=TCP localport=5173
-netsh advfirewall firewall add rule name="AIDP Backend" dir=in action=allow protocol=TCP localport=8000
+netsh advfirewall firewall add rule name="AIDP Manager Frontend" dir=in action=allow protocol=TCP localport=5173
+netsh advfirewall firewall add rule name="AIDP Manager Backend" dir=in action=allow protocol=TCP localport=8000
 ```
 
 **Linux (UFW)**:

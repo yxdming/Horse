@@ -39,7 +39,7 @@ const Login: React.FC = () => {
     <div className="login-container">
       <Card className="login-card">
         <div className="login-header">
-          <h1>AI Data Platform</h1>
+          <h1>AIDP Manager</h1>
         </div>
 
         <Form

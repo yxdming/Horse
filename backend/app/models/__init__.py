@@ -1,1 +1,1 @@
-# Data models for AIDP
+# Data models for AIDP Manager

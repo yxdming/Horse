@@ -1,6 +1,6 @@
-# AIDP 管理系统
+# AIDP Manager
 
-AI Data Platform 全功能管理系统，支持数据总览、知识库管理、用户管理和问答策略配置。
+AI Data Platform Manager - 全功能管理系统，支持数据总览、知识库管理、用户管理和问答策略配置。
 
 ## 设计风格
 

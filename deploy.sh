@@ -1,10 +1,10 @@
 #!/bin/bash
 
-# AIDP Production Deployment Script
+# AIDP Manager Production Deployment Script
 
 set -e
 
-echo "Deploying AIDP Management System to Production..."
+echo "Deploying AIDP Manager Management System to Production..."
 
 # Configuration
 BACKEND_PORT=8000

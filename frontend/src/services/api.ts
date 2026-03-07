@@ -7,7 +7,10 @@ import type {
   QAStrategy,
   MemoryCreate,
   MemoryUpdate,
-  MemorySearchParams
+  MemorySearchParams,
+  DatabaseSourceCreate,
+  GlossaryTermCreate,
+  QuestionRequest,
 } from '../types';
 
 const api = axios.create({
@@ -118,6 +121,59 @@ export const memoryApi = {
 
   getStats: () =>
     api.get('/memory/stats/summary').then(res => res.data),
+};
+
+// Questioning APIs
+export const questioningApi = {
+  // Database management
+  getDatabases: () =>
+    api.get('/questioning/databases/').then(res => res.data),
+
+  createDatabase: (data: DatabaseSourceCreate) =>
+    api.post('/questioning/databases/', data).then(res => res.data),
+
+  updateDatabase: (id: string, data: any) =>
+    api.put(`/questioning/databases/${id}`, data).then(res => res.data),
+
+  deleteDatabase: (id: string) =>
+    api.delete(`/questioning/databases/${id}`).then(res => res.data),
+
+  testConnection: (id: string) =>
+    api.post(`/questioning/databases/${id}/test`).then(res => res.data),
+
+  // Glossary management
+  getGlossaries: () =>
+    api.get('/questioning/glossaries/').then(res => res.data),
+
+  createGlossary: (data: GlossaryTermCreate) =>
+    api.post('/questioning/glossaries/', data).then(res => res.data),
+
+  updateGlossary: (id: string, data: any) =>
+    api.put(`/questioning/glossaries/${id}`, data).then(res => res.data),
+
+  deleteGlossary: (id: string) =>
+    api.delete(`/questioning/glossaries/${id}`).then(res => res.data),
+
+  searchGlossaries: (keyword: string) =>
+    api.get(`/questioning/glossaries/search/${keyword}`).then(res => res.data),
+
+  // Question history
+  getHistories: (skip: number = 0, limit: number = 10) =>
+    api.get('/questioning/history/', { params: { skip, limit } }).then(res => res.data),
+
+  createHistory: (data: any) =>
+    api.post('/questioning/history/', data).then(res => res.data),
+
+  getQuestionStats: () =>
+    api.get('/questioning/history/stats').then(res => res.data),
+
+  // Question processing
+  askQuestion: (data: QuestionRequest) =>
+    api.post('/questioning/ask', data).then(res => res.data),
+
+  // Dashboard stats
+  getDashboardStats: () =>
+    api.get('/questioning/stats/dashboard').then(res => res.data),
 };
 
 // Stats APIs

@@ -509,7 +509,7 @@ const Knowledge: React.FC = () => {
       children: (
         <Card>
           <Descriptions title="知识库信息" bordered column={2}>
-            <Descriptions.Item label="知识库名称">AIDP 知识库</Descriptions.Item>
+            <Descriptions.Item label="知识库名称">AIDP Manager 知识库</Descriptions.Item>
             <Descriptions.Item label="创建时间">2026-03-01</Descriptions.Item>
             <Descriptions.Item label="文档总数">{total}</Descriptions.Item>
             <Descriptions.Item label="已索引文档">{documents.filter(d => d.vectorized).length}</Descriptions.Item>

@@ -7,8 +7,8 @@ from app.utils.file_handler import file_handler
 def create_app() -> FastAPI:
     """Create and configure FastAPI application"""
     app = FastAPI(
-        title="AIDP Management System API",
-        description="AI Data Platform Management System Backend",
+        title="AIDP Manager API",
+        description="AI Data Platform Manager Backend",
         version="1.0.0",
         docs_url="/api/docs",
         redoc_url="/api/redoc"
@@ -42,7 +42,7 @@ def create_app() -> FastAPI:
     @app.get("/")
     async def root():
         return {
-            "message": "AIDP Management System API",
+            "message": "AIDP Manager API",
             "version": "1.0.0",
             "docs": "/api/docs"
         }
@@ -56,12 +56,13 @@ def create_app() -> FastAPI:
         )
 
     # Import and register API routes
-    from app.api import users, knowledge, stats, config, auth, memory
+    from app.api import users, knowledge, stats, config, auth, memory, questioning
 
     app.include_router(auth.router, prefix="/api/auth", tags=["auth"])
     app.include_router(users.router, prefix="/api/users", tags=["users"])
     app.include_router(knowledge.router, prefix="/api/knowledge", tags=["knowledge"])
     app.include_router(memory.router, prefix="/api/memory", tags=["memory"])
+    app.include_router(questioning.router, prefix="/api/questioning", tags=["questioning"])
     app.include_router(stats.router, prefix="/api/stats", tags=["stats"])
     app.include_router(config.router, prefix="/api/config", tags=["config"])
 

@@ -1,1 +1,1 @@
-# AIDP Backend Application
+# AIDP Manager Backend Application

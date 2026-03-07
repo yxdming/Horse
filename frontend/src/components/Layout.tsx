@@ -8,6 +8,7 @@ import {
   SettingOutlined,
   LogoutOutlined,
   BulbOutlined,
+  QuestionCircleOutlined,
 } from '@ant-design/icons';
 import './Layout.css';
 import logoImage from '../images/logo.png';
@@ -44,6 +45,11 @@ const AppLayout: React.FC = () => {
       key: '/memory',
       icon: <BulbOutlined />,
       label: '记忆库管理',
+    },
+    {
+      key: '/questioning',
+      icon: <QuestionCircleOutlined />,
+      label: '问数管理',
     },
     {
       key: '/users',
@@ -85,8 +91,8 @@ const AppLayout: React.FC = () => {
         theme="dark"
       >
         <div className="logo">
-          <img src={logoImage} alt="AIDP Logo" className="logo-image" />
-          {!collapsed && <h1>AIDP</h1>}
+          <img src={logoImage} alt="AIDP Manager Logo" className="logo-image" />
+          {!collapsed && <h1>AIDP Manager</h1>}
         </div>
         <Menu
           mode="inline"
@@ -105,7 +111,7 @@ const AppLayout: React.FC = () => {
         }}>
           <div className="header-content">
             <h2 style={{ margin: 0 }}>
-              {menuItems.find(item => item.key === location.pathname)?.label || 'AIDP管理系统'}
+              {menuItems.find(item => item.key === location.pathname)?.label || 'AIDP Manager'}
             </h2>
             <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
               <div className="user-info">

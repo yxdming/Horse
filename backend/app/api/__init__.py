@@ -1,1 +1,1 @@
-# API routes for AIDP
+# API routes for AIDP Manager

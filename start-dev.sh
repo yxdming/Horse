@@ -1,8 +1,8 @@
 #!/bin/bash
 
-# AIDP Development Startup Script
+# AIDP Manager Development Startup Script
 
-echo "Starting AIDP Management System..."
+echo "Starting AIDP Manager Management System..."
 
 # Start Backend
 echo "Starting Backend Server..."
@@ -21,7 +21,7 @@ FRONTEND_PID=$!
 
 echo ""
 echo "=========================================="
-echo "AIDP Management System is running!"
+echo "AIDP Manager Management System is running!"
 echo "=========================================="
 echo "Backend API: http://7.250.75.172:8000"
 echo "API Docs:   http://7.250.75.172:8000/api/docs"

@@ -1,1 +1,1 @@
-# Business logic services for AIDP
+# Business logic services for AIDP Manager

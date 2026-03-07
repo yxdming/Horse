@@ -160,3 +160,102 @@ export interface MemoryStats {
   most_accessed: Memory[];
 }
 
+// Questioning (BI) types
+export interface DatabaseSource {
+  id: string;
+  name: string;
+  type: string; // MySQL, PostgreSQL, Oracle, SQLServer
+  host: string;
+  port: number;
+  database: string;
+  username: string;
+  status: string; // connected, disconnected
+  tableCount: number;
+  lastSync: string;
+  created_at: string;
+  updated_at?: string;
+}
+
+export interface DatabaseSourceCreate {
+  name: string;
+  type: string;
+  host: string;
+  port: number;
+  database: string;
+  username: string;
+  password?: string;
+  description?: string;
+}
+
+export interface DatabaseSourceUpdate {
+  name?: string;
+  type?: string;
+  host?: string;
+  port?: number;
+  database?: string;
+  username?: string;
+  password?: string;
+  description?: string;
+}
+
+export interface GlossaryTerm {
+  id: string;
+  term: string;
+  definition: string;
+  mapping: string;
+  category: string;
+  example: string;
+  created_at: string;
+  updated_at?: string;
+}
+
+export interface GlossaryTermCreate {
+  term: string;
+  definition: string;
+  mapping: string;
+  category: string;
+  example: string;
+}
+
+export interface GlossaryTermUpdate {
+  term?: string;
+  definition?: string;
+  mapping?: string;
+  category?: string;
+  example?: string;
+}
+
+export interface QuestionHistory {
+  id: string;
+  question: string;
+  sql: string;
+  result?: string;
+  duration: number;
+  status: string; // success, error
+  database_name: string;
+  confidence?: number;
+  created_at: string;
+}
+
+export interface QuestionRequest {
+  question: string;
+  database_id: string;
+}
+
+export interface QuestionResponse {
+  sql: string;
+  explanation: string;
+  confidence: number;
+  glossaries: string[];
+  estimated_rows?: number;
+}
+
+export interface QuestionStats {
+  total_questions: number;
+  success_count: number;
+  error_count: number;
+  success_rate: number;
+  avg_duration: number;
+  avg_confidence: number;
+}
+

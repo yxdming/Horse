@@ -73,6 +73,9 @@ class FileHandler:
         default_files = {
             'knowledge.json': {'documents': []},
             'memories.json': {'memories': []},
+            'databases.json': {'databases': []},
+            'glossaries.json': {'glossaries': []},
+            'question_history.json': {'histories': []},
             'config.json': {
                 'qa_strategy': {
                     'temperature': 0.7,

@@ -1,1 +1,1 @@
-# Utility functions for AIDP
+# Utility functions for AIDP Manager
