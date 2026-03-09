@@ -52,3 +52,36 @@ class MemorySearchParams(BaseModel):
     memory_type: Optional[str] = None
     search: Optional[str] = None
     min_importance: Optional[int] = Field(None, ge=1, le=5)
+
+
+# Memory User Permission Models
+class MemoryUserBase(BaseModel):
+    """Memory user base model"""
+    username: str = Field(..., min_length=1, max_length=50)
+    role: str = Field(default="查看者", description="角色：管理员、编辑者、查看者")
+    permissions: List[str] = Field(default_factory=list, description="权限列表：创建、编辑、删除、查看、全部")
+
+
+class MemoryUserCreate(MemoryUserBase):
+    """Memory user creation model"""
+    pass
+
+
+class MemoryUserUpdate(BaseModel):
+    """Memory user update model"""
+    username: Optional[str] = Field(None, min_length=1, max_length=50)
+    role: Optional[str] = None
+    permissions: Optional[List[str]] = None
+
+
+class MemoryUser(MemoryUserBase):
+    """Memory user complete model"""
+    id: str
+    memory_count: int = Field(default=0, description="记忆数量")
+    last_access: Optional[datetime] = Field(None, description="最后访问时间")
+    created_at: datetime
+
+    class Config:
+        json_encoders = {
+            datetime: lambda v: v.isoformat()
+        }

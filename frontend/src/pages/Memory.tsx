@@ -388,43 +388,27 @@ const MemoryPage: React.FC = () => {
 
   // ==================== 用户权限管理 ====================
   const fetchMemoryUsers = async () => {
-    // 模拟用户权限数据
-    setMemoryUsers([
-      {
-        id: '1',
-        username: 'admin',
-        role: '管理员',
-        permissions: ['全部'],
-        memoryCount: 0,
-        lastAccess: '2026-03-07 10:30:00',
-      },
-      {
-        id: '2',
-        username: 'user1',
-        role: '编辑者',
-        permissions: ['创建', '编辑', '查看'],
-        memoryCount: 15,
-        lastAccess: '2026-03-07 09:15:00',
-      },
-      {
-        id: '3',
-        username: 'user2',
-        role: '查看者',
-        permissions: ['查看'],
-        memoryCount: 0,
-        lastAccess: '2026-03-06 16:45:00',
-      },
-    ]);
+    try {
+      const response = await memoryApi.getMemoryUsers();
+      setMemoryUsers(response.users || []);
+    } catch (error) {
+      message.error(tp('memory.permissions.fetchFailed'));
+    }
   };
 
-  const handleAddUser = () => {
+  const handleAddUser = async () => {
     userForm.resetFields();
     setUserModalVisible(true);
   };
 
-  const handleDeleteUser = (id: string) => {
-    setMemoryUsers(memoryUsers.filter(u => u.id !== id));
-    message.success(tp('memory.permissions.removeSuccess'));
+  const handleDeleteUser = async (id: string) => {
+    try {
+      await memoryApi.deleteMemoryUser(id);
+      message.success(tp('memory.permissions.removeSuccess'));
+      fetchMemoryUsers();
+    } catch (error) {
+      message.error(tp('memory.permissions.removeFailed'));
+    }
   };
 
   const userColumns = [
@@ -847,21 +831,17 @@ const MemoryPage: React.FC = () => {
       <Modal
         title={tp('memory.permissions.addModalTitle')}
         open={userModalVisible}
-        onOk={() => {
-          userForm.validateFields().then((values) => {
-            setMemoryUsers([
-              ...memoryUsers,
-              {
-                id: Date.now().toString(),
-                ...values,
-                memoryCount: 0,
-                lastAccess: new Date().toLocaleString('zh-CN')
-              }
-            ]);
+        onOk={async () => {
+          try {
+            const values = await userForm.validateFields();
+            await memoryApi.createMemoryUser(values);
+            message.success(tp('memory.permissions.addSuccess'));
             setUserModalVisible(false);
             userForm.resetFields();
-            message.success(tp('memory.permissions.addSuccess'));
-          });
+            fetchMemoryUsers();
+          } catch (error) {
+            message.error(tp('memory.permissions.addFailed'));
+          }
         }}
         onCancel={() => {
           setUserModalVisible(false);

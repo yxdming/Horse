@@ -1,7 +1,7 @@
 from typing import List, Optional, Dict, Any
 from datetime import datetime, timezone
 from uuid import uuid4
-from app.models.memory import Memory, MemoryCreate, MemoryUpdate, MemorySearchParams
+from app.models.memory import Memory, MemoryCreate, MemoryUpdate, MemorySearchParams, MemoryUser, MemoryUserCreate, MemoryUserUpdate
 from app.utils.file_handler import file_handler
 
 
@@ -174,6 +174,90 @@ class MemoryService:
             'total_access': total_access,
             'most_accessed': sorted(memories, key=lambda x: x.get('access_count', 0), reverse=True)[:5]
         }
+
+    # ==================== Memory User Permission Management ====================
+
+    def get_all_memory_users(self) -> Dict[str, Any]:
+        """Get all memory users with permissions"""
+        data = self.file_handler.read_json('memory_users.json', {'users': []})
+        users = data.get('users', [])
+
+        return {
+            'users': users,
+            'total': len(users)
+        }
+
+    def get_memory_user_by_id(self, user_id: str) -> Optional[Dict[str, Any]]:
+        """Get memory user by ID"""
+        data = self.file_handler.read_json('memory_users.json', {'users': []})
+        users = data.get('users', [])
+
+        for user in users:
+            if user['id'] == user_id:
+                return user
+
+        return None
+
+    def create_memory_user(self, user_create: MemoryUserCreate) -> Dict[str, Any]:
+        """Create new memory user"""
+        data = self.file_handler.read_json('memory_users.json', {'users': []})
+        users = data.get('users', [])
+
+        # Check if username already exists
+        for user in users:
+            if user['username'] == user_create.username:
+                raise ValueError(f"用户 '{user_create.username}' 已存在")
+
+        # Create new user
+        user = MemoryUser(
+            id=str(uuid4()),
+            username=user_create.username,
+            role=user_create.role,
+            permissions=user_create.permissions,
+            memory_count=0,
+            last_access=None,
+            created_at=datetime.now(timezone.utc)
+        )
+
+        users.append(user.dict())
+        self.file_handler.write_json('memory_users.json', {'users': users})
+
+        return user.dict()
+
+    def update_memory_user(self, user_id: str, user_update: MemoryUserUpdate) -> Optional[Dict[str, Any]]:
+        """Update memory user"""
+        data = self.file_handler.read_json('memory_users.json', {'users': []})
+        users = data.get('users', [])
+
+        for i, user in enumerate(users):
+            if user['id'] == user_id:
+                # Update fields
+                update_data = user_update.dict(exclude_unset=True)
+
+                # Check if username is being changed and if it already exists
+                if 'username' in update_data:
+                    for other_user in users:
+                        if other_user['id'] != user_id and other_user['username'] == update_data['username']:
+                            raise ValueError(f"用户名 '{update_data['username']}' 已被使用")
+
+                user.update(update_data)
+                users[i] = user
+                self.file_handler.write_json('memory_users.json', {'users': users})
+                return user
+
+        return None
+
+    def delete_memory_user(self, user_id: str) -> bool:
+        """Delete memory user"""
+        data = self.file_handler.read_json('memory_users.json', {'users': []})
+        users = data.get('users', [])
+        original_length = len(users)
+        users = [u for u in users if u['id'] != user_id]
+
+        if len(users) < original_length:
+            self.file_handler.write_json('memory_users.json', {'users': users})
+            return True
+        return False
 
 
 # Global memory service instance

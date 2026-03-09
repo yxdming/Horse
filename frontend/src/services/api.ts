@@ -121,6 +121,22 @@ export const memoryApi = {
 
   getStats: () =>
     api.get('/memory/stats/summary').then(res => res.data),
+
+  // Memory User Permission Management
+  getMemoryUsers: () =>
+    api.get('/memory/users/list').then(res => res.data),
+
+  getMemoryUser: (id: string) =>
+    api.get(`/memory/users/${id}`).then(res => res.data),
+
+  createMemoryUser: (data: any) =>
+    api.post('/memory/users/', data).then(res => res.data),
+
+  updateMemoryUser: (id: string, data: any) =>
+    api.put(`/memory/users/${id}`, data).then(res => res.data),
+
+  deleteMemoryUser: (id: string) =>
+    api.delete(`/memory/users/${id}`).then(res => res.data),
 };
 
 // Questioning APIs

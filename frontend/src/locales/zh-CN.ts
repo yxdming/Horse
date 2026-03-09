@@ -410,9 +410,12 @@ export default {
 
       // 消息
       removeSuccess: '移除成功',
+      removeFailed: '移除失败',
       removeConfirm: '确定要移除这个用户吗？',
       remove: '移除',
       addSuccess: '添加成功',
+      addFailed: '添加失败',
+      fetchFailed: '获取用户列表失败',
     },
   },
 

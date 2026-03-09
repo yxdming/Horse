@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Query
 from typing import Optional, List
-from app.models.memory import Memory, MemoryCreate, MemoryUpdate, MemorySearchParams
+from app.models.memory import Memory, MemoryCreate, MemoryUpdate, MemorySearchParams, MemoryUserCreate, MemoryUserUpdate
 from app.services.memory_service import memory_service
 
 router = APIRouter()
@@ -83,7 +83,52 @@ async def delete_memory(memory_id: str):
     return {"message": "Memory deleted successfully"}
 
 
-@router.get("/stats/summary", response_model=dict)
-async def get_memory_stats():
-    """Get memory statistics"""
-    return memory_service.get_memory_stats()
+# ==================== Memory User Permission Management ====================
+
+@router.get("/users/list", response_model=dict)
+async def get_memory_users():
+    """Get all memory users with permissions"""
+    return memory_service.get_all_memory_users()
+
+
+@router.get("/users/{user_id}", response_model=dict)
+async def get_memory_user(user_id: str):
+    """Get memory user by ID"""
+    user = memory_service.get_memory_user_by_id(user_id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
+
+
+@router.post("/users/", response_model=dict)
+async def create_memory_user(user_create: MemoryUserCreate):
+    """Create new memory user"""
+    try:
+        return memory_service.create_memory_user(user_create)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.put("/users/{user_id}", response_model=dict)
+async def update_memory_user(user_id: str, user_update: MemoryUserUpdate):
+    """Update memory user"""
+    try:
+        user = memory_service.update_memory_user(user_id, user_update)
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+        return user
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.delete("/users/{user_id}")
+async def delete_memory_user(user_id: str):
+    """Delete memory user"""
+    success = memory_service.delete_memory_user(user_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {"message": "User deleted successfully"}

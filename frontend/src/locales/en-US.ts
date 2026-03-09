@@ -410,9 +410,12 @@ export default {
 
       // Messages
       removeSuccess: 'Removed successfully',
+      removeFailed: 'Failed to remove user',
       removeConfirm: 'Are you sure you want to remove this user?',
       remove: 'Remove',
       addSuccess: 'Added successfully',
+      addFailed: 'Failed to add user',
+      fetchFailed: 'Failed to fetch user list',
     },
   },
 
