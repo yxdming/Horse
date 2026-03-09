@@ -97,7 +97,7 @@ const AppLayout: React.FC = () => {
         collapsed={collapsed}
         onCollapse={setCollapsed}
         width={200}
-        theme="dark"
+        theme="light"
       >
         <div className="logo">
           <img src={logoImage} alt="AIDP Manager Logo" className="logo-image" />
@@ -105,7 +105,7 @@ const AppLayout: React.FC = () => {
         </div>
         <Menu
           mode="inline"
-          theme="dark"
+          theme="light"
           selectedKeys={[location.pathname]}
           items={menuItems}
           onClick={handleMenuClick}
@@ -116,7 +116,7 @@ const AppLayout: React.FC = () => {
         <Header style={{
           background: '#ffffff',
           padding: '0 24px',
-          borderBottom: '1px solid #f0f0f0',
+          borderBottom: '1px solid #E5E7EB',
         }}>
           <div className="header-content">
             <h2 style={{ margin: 0 }}>
@@ -128,7 +128,7 @@ const AppLayout: React.FC = () => {
                 <div className="user-info">
                   <Avatar
                     icon={<UserOutlined />}
-                    style={{ marginRight: 8, backgroundColor: '#595959' }}
+                    style={{ marginRight: 8, backgroundColor: '#6366F1' }}
                   />
                   <span>{username}</span>
                 </div>
@@ -138,9 +138,9 @@ const AppLayout: React.FC = () => {
         </Header>
         <Content style={{
           margin: '24px',
-          background: '#ffffff',
+          background: '#F9FAFB',
           padding: '24px',
-          borderRadius: '4px',
+          borderRadius: '12px',
           minHeight: 'calc(100vh - 64px - 48px)'
         }}>
           <Outlet />

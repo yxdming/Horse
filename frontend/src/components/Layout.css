@@ -1,10 +1,11 @@
-/* Sidebar container - dark theme */
+/* Sidebar container - light theme */
 .ant-layout-sider {
-  background: #001529 !important;
+  background: #F3F4F6 !important;
+  border-right: 1px solid #E5E7EB !important;
 }
 
 .ant-layout-sider .ant-layout-sider-children {
-  background: #001529 !important;
+  background: #F3F4F6 !important;
 }
 
 /* Logo section */
@@ -14,8 +15,8 @@
   flex-direction: row;
   align-items: center;
   padding: 0 16px;
-  background: #001529;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: #F3F4F6;
+  border-bottom: 1px solid #E5E7EB;
   gap: 12px;
 }
 
@@ -35,65 +36,66 @@
   margin: 0;
   font-size: 18px;
   font-weight: 600;
-  color: #ffffff;
+  color: #111827;
   white-space: nowrap;
   flex-shrink: 0;
 }
 
-/* Dark menu - all text white */
-.ant-menu-dark {
-  background: #001529 !important;
+/* Light menu styling */
+.ant-menu-light {
+  background: #F3F4F6 !important;
+  border-right: none !important;
 }
 
-.ant-menu-dark .ant-menu-item {
-  color: rgba(255, 255, 255, 0.85) !important;
+.ant-menu-light .ant-menu-item {
+  color: #4B5563 !important;
   background: transparent !important;
 }
 
-.ant-menu-dark .ant-menu-item:hover {
-  color: #ffffff !important;
-  background: rgba(255, 255, 255, 0.08) !important;
+.ant-menu-light .ant-menu-item:hover {
+  color: #111827 !important;
+  background: #E5E7EB !important;
 }
 
-.ant-menu-dark .ant-menu-item-selected {
-  background-color: #1890ff !important;
-  color: #ffffff !important;
+.ant-menu-light .ant-menu-item-selected {
+  background-color: #EEF2FF !important;
+  color: #6366F1 !important;
 }
 
-.ant-menu-dark .ant-menu-item-selected > span {
-  color: #ffffff !important;
+.ant-menu-light .ant-menu-item-selected > span {
+  color: #6366F1 !important;
 }
 
-.ant-menu-dark .ant-menu-item span {
-  color: rgba(255, 255, 255, 0.85);
+.ant-menu-light .ant-menu-item span {
+  color: #4B5563;
 }
 
-.ant-menu-dark .ant-menu-item:hover span {
-  color: #ffffff;
+.ant-menu-light .ant-menu-item:hover span {
+  color: #111827;
 }
 
 /* Menu icons */
-.ant-menu-dark .ant-menu-item .anticon {
-  color: rgba(255, 255, 255, 0.85);
+.ant-menu-light .ant-menu-item .anticon {
+  color: #6B7280;
 }
 
-.ant-menu-dark .ant-menu-item:hover .anticon {
-  color: #ffffff;
+.ant-menu-light .ant-menu-item:hover .anticon {
+  color: #111827;
 }
 
-.ant-menu-dark .ant-menu-item-selected .anticon {
-  color: #ffffff;
+.ant-menu-light .ant-menu-item-selected .anticon {
+  color: #6366F1;
 }
 
 /* Sider trigger (collapse button) */
 .ant-layout-sider-trigger {
-  background: #002140 !important;
-  color: #ffffff !important;
+  background: #E5E7EB !important;
+  color: #4B5563 !important;
 }
 
 .ant-layout-sider-trigger:hover {
-  background: #001529 !important;
-  color: #ffffff !important;
+  background: #D1D5DB !important;
+  color: #111827 !important;
 }
 
 /* Header styles */
@@ -106,7 +108,7 @@
 .header-content h2 {
   font-size: 20px;
   font-weight: 500;
-  color: #262626;
+  color: #111827;
   margin: 0;
 }
 
@@ -115,16 +117,16 @@
   align-items: center;
   cursor: pointer;
   padding: 4px 12px;
-  border-radius: 4px;
+  border-radius: 8px;
   transition: all 0.3s ease;
 }
 
 .user-info:hover {
-  background: rgba(0, 0, 0, 0.04);
+  background: #F3F4F6;
 }
 
 .user-info span {
   font-size: 14px;
-  color: #595959;
+  color: #374151;
   font-weight: 500;
 }

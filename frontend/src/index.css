@@ -1,13 +1,18 @@
-/* 全局样式 - 灰白色调主题 */
+/* 全局样式 - Reprise风格主题 */
 
 :root {
-  --color-bg-base: #fafafa;
-  --color-bg-container: #ffffff;
-  --color-border: #f0f0f0;
-  --color-text-primary: #262626;
-  --color-text-secondary: #595959;
-  --color-text-tertiary: #8c8c8c;
-  --color-border-light: #e8e8e8;
+  --color-bg-base: #FFFFFF;
+  --color-bg-container: #FFFFFF;
+  --color-bg-layout: #F9FAFB;
+  --color-border: #E5E7EB;
+  --color-border-secondary: #D1D5DB;
+  --color-text-primary: #111827;
+  --color-text-secondary: #6B7280;
+  --color-text-tertiary: #9CA3AF;
+  --color-brand: #6366F1;
+  --color-brand-hover: #4F46E5;
+  --color-fill-alter: #F9FAFB;
+  --color-bg-hover: #F3F4F6;
 }
 
 body {
@@ -22,13 +27,13 @@ body {
 
 /* 全局链接样式 */
 a {
-  color: #595959;
+  color: var(--color-brand);
   text-decoration: none;
   transition: color 0.3s;
 }
 
 a:hover {
-  color: #262626;
+  color: var(--color-brand-hover);
 }
 
 /* 滚动条样式 */
@@ -38,102 +43,106 @@ a:hover {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f0f0f0;
+  background: var(--color-bg-layout);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #d9d9d9;
-  border-radius: 4px;
+  background: var(--color-border-secondary);
+  border-radius: 6px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #bfbfbf;
+  background: #B0B5BA;
 }
 
 /* Card 组件 */
 .ant-card {
-  border-radius: 4px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px 0 rgba(0, 0, 0, 0.06);
 }
 
 .ant-card-head {
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .ant-card-head-title {
   font-weight: 500;
-  color: #262626;
+  color: var(--color-text-primary);
 }
 
 /* Table 组件 */
 .ant-table-thead > tr > th {
-  background-color: #fafafa;
-  border-bottom: 1px solid #f0f0f0;
-  color: #262626;
+  background-color: var(--color-fill-alter);
+  border-bottom: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
   font-weight: 500;
 }
 
 .ant-table-tbody > tr:hover > td {
-  background-color: #fafafa;
+  background-color: var(--color-bg-hover);
 }
 
 /* Button 组件 */
 .ant-btn-primary {
-  background-color: #595959;
-  border-color: #595959;
+  background-color: var(--color-brand);
+  border-color: var(--color-brand);
+  border-radius: 8px;
+  font-weight: 500;
 }
 
 .ant-btn-primary:hover,
 .ant-btn-primary:focus {
-  background-color: #434343;
-  border-color: #434343;
+  background-color: var(--color-brand-hover);
+  border-color: var(--color-brand-hover);
 }
 
 /* Tag 组件 */
 .ant-tag {
-  border-radius: 4px;
+  border-radius: 6px;
 }
 
 /* Form 组件 */
 .ant-form-item-label > label {
-  color: #595959;
+  color: var(--color-text-primary);
 }
 
 /* Modal 组件 */
 .ant-modal-content {
-  border-radius: 4px;
+  border-radius: 12px;
 }
 
 .ant-modal-header {
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .ant-modal-footer {
-  border-top: 1px solid #f0f0f0;
+  border-top: 1px solid var(--color-border);
 }
 
 /* Menu 组件 */
 .ant-menu-item-selected {
-  background-color: #f0f0f0 !important;
-  color: #262626 !important;
+  background-color: #EEF2FF !important;
+  color: var(--color-brand) !important;
+  border-radius: 8px;
 }
 
 .ant-menu-item:hover {
-  background-color: #fafafa;
+  background-color: var(--color-bg-hover) !important;
+  border-radius: 8px;
 }
 
 /* Statistic 组件 */
 .ant-statistic-title {
-  color: #8c8c8c;
+  color: var(--color-text-secondary);
 }
 
 .ant-statistic-content {
-  color: #262626;
+  color: var(--color-text-primary);
 }
 
 /* Divider */
 .ant-divider {
-  border-color: #f0f0f0;
+  border-color: var(--color-border);
 }
 
 /* 响应式 */
