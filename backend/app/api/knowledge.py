@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Query
 from typing import List, Optional
-from app.models.knowledge import DocumentCreate, DocumentUpdate
+from app.models.knowledge import DocumentCreate, DocumentUpdate, DirectoryMappingCreate, DirectoryMappingUpdate
 from app.services.knowledge_service import knowledge_service
 from app.services.vector_service import vector_service
 
@@ -160,3 +160,47 @@ async def rebuild_vector_index():
     """Rebuild entire vector index"""
     result = vector_service.rebuild_index()
     return result
+
+
+# ==================== Directory Mapping Management ====================
+
+@router.get("/mappings/list", response_model=dict)
+async def get_mappings():
+    """Get all directory mappings"""
+    return knowledge_service.get_all_mappings()
+
+
+@router.get("/mappings/{mapping_id}", response_model=dict)
+async def get_mapping(mapping_id: str):
+    """Get mapping by ID"""
+    mapping = knowledge_service.get_mapping_by_id(mapping_id)
+    if not mapping:
+        raise HTTPException(status_code=404, detail="Mapping not found")
+    return mapping
+
+
+@router.post("/mappings/", response_model=dict)
+async def create_mapping(mapping_create: DirectoryMappingCreate):
+    """Create new directory mapping"""
+    try:
+        return knowledge_service.create_mapping(mapping_create)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.put("/mappings/{mapping_id}", response_model=dict)
+async def update_mapping(mapping_id: str, mapping_update: DirectoryMappingUpdate):
+    """Update directory mapping"""
+    mapping = knowledge_service.update_mapping(mapping_id, mapping_update)
+    if not mapping:
+        raise HTTPException(status_code=404, detail="Mapping not found")
+    return mapping
+
+
+@router.delete("/mappings/{mapping_id}")
+async def delete_mapping(mapping_id: str):
+    """Delete directory mapping"""
+    success = knowledge_service.delete_mapping(mapping_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Mapping not found")
+    return {"message": "Mapping deleted successfully"}

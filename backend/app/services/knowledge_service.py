@@ -1,6 +1,7 @@
 from typing import List, Optional, Dict, Any
-from datetime import datetime
-from app.models.knowledge import DocumentCreate, DocumentUpdate, SearchResult
+from datetime import datetime, timezone
+from uuid import uuid4
+from app.models.knowledge import DocumentCreate, DocumentUpdate, SearchResult, DirectoryMapping, DirectoryMappingCreate, DirectoryMappingUpdate
 from app.utils.file_handler import file_handler
 
 
@@ -141,6 +142,77 @@ class KnowledgeService:
             'failed': failed,
             'errors': errors
         }
+
+    # ==================== Directory Mapping Management ====================
+
+    def get_all_mappings(self) -> Dict[str, Any]:
+        """Get all directory mappings"""
+        data = self.file_handler.read_json('directory_mappings.json', {'mappings': []})
+        mappings = data.get('mappings', [])
+
+        return {
+            'mappings': mappings,
+            'total': len(mappings)
+        }
+
+    def get_mapping_by_id(self, mapping_id: str) -> Optional[Dict[str, Any]]:
+        """Get mapping by ID"""
+        data = self.file_handler.read_json('directory_mappings.json', {'mappings': []})
+        mappings = data.get('mappings', [])
+
+        for mapping in mappings:
+            if mapping['id'] == mapping_id:
+                return mapping
+
+        return None
+
+    def create_mapping(self, mapping_create: DirectoryMappingCreate) -> Dict[str, Any]:
+        """Create new directory mapping"""
+        data = self.file_handler.read_json('directory_mappings.json', {'mappings': []})
+        mappings = data.get('mappings', [])
+
+        # Create new mapping
+        mapping = DirectoryMapping(
+            id=str(uuid4()),
+            directory_name=mapping_create.directory_name,
+            directory_path=mapping_create.directory_path,
+            file_system=mapping_create.file_system,
+            operator=mapping_create.operator,
+            last_import_time=datetime.now(timezone.utc)
+        )
+
+        mappings.append(mapping.dict())
+        self.file_handler.write_json('directory_mappings.json', {'mappings': mappings})
+
+        return mapping.dict()
+
+    def update_mapping(self, mapping_id: str, mapping_update: DirectoryMappingUpdate) -> Optional[Dict[str, Any]]:
+        """Update directory mapping"""
+        data = self.file_handler.read_json('directory_mappings.json', {'mappings': []})
+        mappings = data.get('mappings', [])
+
+        for i, mapping in enumerate(mappings):
+            if mapping['id'] == mapping_id:
+                # Update fields
+                update_data = mapping_update.dict(exclude_unset=True)
+                mapping.update(update_data)
+                mappings[i] = mapping
+                self.file_handler.write_json('directory_mappings.json', {'mappings': mappings})
+                return mapping
+
+        return None
+
+    def delete_mapping(self, mapping_id: str) -> bool:
+        """Delete directory mapping"""
+        data = self.file_handler.read_json('directory_mappings.json', {'mappings': []})
+        mappings = data.get('mappings', [])
+        original_length = len(mappings)
+        mappings = [m for m in mappings if m['id'] != mapping_id]
+
+        if len(mappings) < original_length:
+            self.file_handler.write_json('directory_mappings.json', {'mappings': mappings})
+            return True
+        return False
 
 
 # Global knowledge service instance

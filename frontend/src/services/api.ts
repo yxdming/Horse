@@ -94,6 +94,22 @@ export const knowledgeApi = {
 
   rebuildVectors: () =>
     api.post('/knowledge/vectors/rebuild').then(res => res.data),
+
+  // Directory Mapping Management
+  getMappings: () =>
+    api.get('/knowledge/mappings/list').then(res => res.data),
+
+  getMapping: (id: string) =>
+    api.get(`/knowledge/mappings/${id}`).then(res => res.data),
+
+  createMapping: (data: any) =>
+    api.post('/knowledge/mappings/', data).then(res => res.data),
+
+  updateMapping: (id: string, data: any) =>
+    api.put(`/knowledge/mappings/${id}`, data).then(res => res.data),
+
+  deleteMapping: (id: string) =>
+    api.delete(`/knowledge/mappings/${id}`).then(res => res.data),
 };
 
 // Memory APIs
