@@ -14,6 +14,7 @@ export default {
     import: '导入',
     view: '查看',
     back: '返回',
+    actions: '操作',
 
     // 状态
     loading: '加载中...',

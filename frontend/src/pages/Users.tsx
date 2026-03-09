@@ -172,18 +172,21 @@ const Users: React.FC = () => {
       dataIndex: 'username',
       key: 'username',
       width: 120,
+      align: 'center' as const,
     },
     {
       title: tp('users.email'),
       dataIndex: 'email',
       key: 'email',
       width: 200,
+      align: 'center' as const,
     },
     {
       title: tp('users.role'),
       dataIndex: 'role',
       key: 'role',
       width: 100,
+      align: 'center' as const,
       render: (role: string) => <Tag color={getRoleColor(role)}>{getRoleText(role)}</Tag>,
     },
     {
@@ -191,6 +194,7 @@ const Users: React.FC = () => {
       dataIndex: 'status',
       key: 'status',
       width: 100,
+      align: 'center' as const,
       render: (status: string) => <Tag color={getStatusColor(status)}>{getStatusText(status)}</Tag>,
     },
     {
@@ -198,6 +202,7 @@ const Users: React.FC = () => {
       dataIndex: 'created_at',
       key: 'created_at',
       width: 180,
+      align: 'center' as const,
       render: (date: string) => new Date(date).toLocaleString('zh-CN'),
     },
     {
@@ -205,6 +210,7 @@ const Users: React.FC = () => {
       dataIndex: 'last_login',
       key: 'last_login',
       width: 180,
+      align: 'center' as const,
       render: (date: string) => (date ? new Date(date).toLocaleString('zh-CN') : '-'),
     },
     {
@@ -212,6 +218,7 @@ const Users: React.FC = () => {
       key: 'action',
       width: 150,
       fixed: 'right' as const,
+      align: 'center' as const,
       render: (_: any, record: User) => (
         <Space size="small">
           <Button
