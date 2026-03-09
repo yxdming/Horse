@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, Query
 from typing import Optional, List
-from app.models.memory import Memory, MemoryCreate, MemoryUpdate, MemorySearchParams, MemoryUserCreate, MemoryUserUpdate
+from app.models.memory import Memory, MemoryCreate, MemoryUpdate, MemorySearchParams, MemoryUserCreate, MemoryUserUpdate, MemoryTemplateCreate, MemoryTemplateUpdate
 from app.services.memory_service import memory_service
 
 router = APIRouter()
@@ -132,3 +132,47 @@ async def delete_memory_user(user_id: str):
     if not success:
         raise HTTPException(status_code=404, detail="User not found")
     return {"message": "User deleted successfully"}
+
+
+# ==================== Memory Template Management ====================
+
+@router.get("/templates/list", response_model=dict)
+async def get_templates():
+    """Get all memory templates"""
+    return memory_service.get_all_templates()
+
+
+@router.get("/templates/{template_id}", response_model=dict)
+async def get_template(template_id: str):
+    """Get template by ID"""
+    template = memory_service.get_template_by_id(template_id)
+    if not template:
+        raise HTTPException(status_code=404, detail="Template not found")
+    return template
+
+
+@router.post("/templates/", response_model=dict)
+async def create_template(template_create: MemoryTemplateCreate):
+    """Create new template"""
+    try:
+        return memory_service.create_template(template_create)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.put("/templates/{template_id}", response_model=dict)
+async def update_template(template_id: str, template_update: MemoryTemplateUpdate):
+    """Update template"""
+    template = memory_service.update_template(template_id, template_update)
+    if not template:
+        raise HTTPException(status_code=404, detail="Template not found")
+    return template
+
+
+@router.delete("/templates/{template_id}")
+async def delete_template(template_id: str):
+    """Delete template"""
+    success = memory_service.delete_template(template_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Template not found")
+    return {"message": "Template deleted successfully"}

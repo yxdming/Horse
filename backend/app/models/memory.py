@@ -85,3 +85,40 @@ class MemoryUser(MemoryUserBase):
         json_encoders = {
             datetime: lambda v: v.isoformat()
         }
+
+
+# Memory Template Models
+class MemoryTemplateBase(BaseModel):
+    """Memory template base model"""
+    name: str = Field(..., min_length=1, max_length=100)
+    description: str = Field(default="", max_length=500)
+    category: str = Field(default="默认分类", max_length=50)
+    memory_type: str = Field(default="长期记忆", description="默认记忆类型")
+    default_importance: int = Field(default=3, ge=1, le=5, description="默认重要性")
+    tags: List[str] = Field(default_factory=list, description="默认标签")
+
+
+class MemoryTemplateCreate(MemoryTemplateBase):
+    """Memory template creation model"""
+    pass
+
+
+class MemoryTemplateUpdate(BaseModel):
+    """Memory template update model"""
+    name: Optional[str] = Field(None, min_length=1, max_length=100)
+    description: Optional[str] = Field(None, max_length=500)
+    category: Optional[str] = Field(None, max_length=50)
+    memory_type: Optional[str] = None
+    default_importance: Optional[int] = Field(None, ge=1, le=5)
+    tags: Optional[List[str]] = None
+
+
+class MemoryTemplate(MemoryTemplateBase):
+    """Memory template complete model"""
+    id: str
+    created_at: datetime
+
+    class Config:
+        json_encoders = {
+            datetime: lambda v: v.isoformat()
+        }

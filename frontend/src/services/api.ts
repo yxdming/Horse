@@ -137,6 +137,22 @@ export const memoryApi = {
 
   deleteMemoryUser: (id: string) =>
     api.delete(`/memory/users/${id}`).then(res => res.data),
+
+  // Memory Template Management
+  getTemplates: () =>
+    api.get('/memory/templates/list').then(res => res.data),
+
+  getTemplate: (id: string) =>
+    api.get(`/memory/templates/${id}`).then(res => res.data),
+
+  createTemplate: (data: any) =>
+    api.post('/memory/templates/', data).then(res => res.data),
+
+  updateTemplate: (id: string, data: any) =>
+    api.put(`/memory/templates/${id}`, data).then(res => res.data),
+
+  deleteTemplate: (id: string) =>
+    api.delete(`/memory/templates/${id}`).then(res => res.data),
 };
 
 // Questioning APIs

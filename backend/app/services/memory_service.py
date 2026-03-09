@@ -1,7 +1,7 @@
 from typing import List, Optional, Dict, Any
 from datetime import datetime, timezone
 from uuid import uuid4
-from app.models.memory import Memory, MemoryCreate, MemoryUpdate, MemorySearchParams, MemoryUser, MemoryUserCreate, MemoryUserUpdate
+from app.models.memory import Memory, MemoryCreate, MemoryUpdate, MemorySearchParams, MemoryUser, MemoryUserCreate, MemoryUserUpdate, MemoryTemplate, MemoryTemplateCreate, MemoryTemplateUpdate
 from app.utils.file_handler import file_handler
 
 
@@ -256,6 +256,79 @@ class MemoryService:
 
         if len(users) < original_length:
             self.file_handler.write_json('memory_users.json', {'users': users})
+            return True
+        return False
+
+    # ==================== Memory Template Management ====================
+
+    def get_all_templates(self) -> Dict[str, Any]:
+        """Get all memory templates"""
+        data = self.file_handler.read_json('memory_templates.json', {'templates': []})
+        templates = data.get('templates', [])
+
+        return {
+            'templates': templates,
+            'total': len(templates)
+        }
+
+    def get_template_by_id(self, template_id: str) -> Optional[Dict[str, Any]]:
+        """Get template by ID"""
+        data = self.file_handler.read_json('memory_templates.json', {'templates': []})
+        templates = data.get('templates', [])
+
+        for template in templates:
+            if template['id'] == template_id:
+                return template
+
+        return None
+
+    def create_template(self, template_create: MemoryTemplateCreate) -> Dict[str, Any]:
+        """Create new template"""
+        data = self.file_handler.read_json('memory_templates.json', {'templates': []})
+        templates = data.get('templates', [])
+
+        # Create new template
+        template = MemoryTemplate(
+            id=str(uuid4()),
+            name=template_create.name,
+            description=template_create.description,
+            category=template_create.category,
+            memory_type=template_create.memory_type,
+            default_importance=template_create.default_importance,
+            tags=template_create.tags,
+            created_at=datetime.now(timezone.utc)
+        )
+
+        templates.append(template.dict())
+        self.file_handler.write_json('memory_templates.json', {'templates': templates})
+
+        return template.dict()
+
+    def update_template(self, template_id: str, template_update: MemoryTemplateUpdate) -> Optional[Dict[str, Any]]:
+        """Update template"""
+        data = self.file_handler.read_json('memory_templates.json', {'templates': []})
+        templates = data.get('templates', [])
+
+        for i, template in enumerate(templates):
+            if template['id'] == template_id:
+                # Update fields
+                update_data = template_update.dict(exclude_unset=True)
+                template.update(update_data)
+                templates[i] = template
+                self.file_handler.write_json('memory_templates.json', {'templates': templates})
+                return template
+
+        return None
+
+    def delete_template(self, template_id: str) -> bool:
+        """Delete template"""
+        data = self.file_handler.read_json('memory_templates.json', {'templates': []})
+        templates = data.get('templates', [])
+        original_length = len(templates)
+        templates = [t for t in templates if t['id'] != template_id]
+
+        if len(templates) < original_length:
+            self.file_handler.write_json('memory_templates.json', {'templates': templates})
             return True
         return False
 

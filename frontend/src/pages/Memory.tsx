@@ -242,39 +242,12 @@ const MemoryPage: React.FC = () => {
 
   // ==================== 模板管理 ====================
   const fetchTemplates = async () => {
-    // 模拟模板数据
-    setTemplates([
-      {
-        id: '1',
-        name: '技术文档模板',
-        description: '用于记录技术知识、代码片段、解决方案等',
-        category: '技术',
-        memory_type: '长期记忆',
-        default_importance: 4,
-        tags: ['技术', '文档'],
-        created_at: '2026-03-07T10:00:00Z',
-      },
-      {
-        id: '2',
-        name: '会议记录模板',
-        description: '用于记录会议内容、决策事项、行动项等',
-        category: '工作',
-        memory_type: '短期记忆',
-        default_importance: 3,
-        tags: ['会议', '工作'],
-        created_at: '2026-03-07T10:00:00Z',
-      },
-      {
-        id: '3',
-        name: '学习笔记模板',
-        description: '用于记录学习心得、知识点总结等',
-        category: '学习',
-        memory_type: '工作记忆',
-        default_importance: 3,
-        tags: ['学习', '笔记'],
-        created_at: '2026-03-07T10:00:00Z',
-      },
-    ]);
+    try {
+      const response = await memoryApi.getTemplates();
+      setTemplates(response.templates || []);
+    } catch (error) {
+      message.error(tp('memory.templates.fetchFailed'));
+    }
   };
 
   const handleAddTemplate = () => {
@@ -289,23 +262,32 @@ const MemoryPage: React.FC = () => {
     setTemplateModalVisible(true);
   };
 
-  const handleDeleteTemplate = (id: string) => {
-    setTemplates(templates.filter(t => t.id !== id));
-    message.success(tp('memory.templates.deleteSuccess'));
+  const handleDeleteTemplate = async (id: string) => {
+    try {
+      await memoryApi.deleteTemplate(id);
+      message.success(tp('memory.templates.deleteSuccess'));
+      fetchTemplates();
+    } catch (error) {
+      message.error(tp('memory.templates.deleteFailed'));
+    }
   };
 
-  const handleSubmitTemplate = () => {
-    templateForm.validateFields().then((values) => {
+  const handleSubmitTemplate = async () => {
+    try {
+      const values = await templateForm.validateFields();
       if (editingTemplate) {
-        setTemplates(templates.map(t => t.id === editingTemplate.id ? { ...values, id: editingTemplate.id } : t));
+        await memoryApi.updateTemplate(editingTemplate.id, values);
         message.success(tp('memory.list.updateSuccess'));
       } else {
-        setTemplates([...templates, { ...values, id: Date.now().toString(), created_at: new Date().toISOString() }]);
+        await memoryApi.createTemplate(values);
         message.success(tp('memory.list.createSuccess'));
       }
       setTemplateModalVisible(false);
       templateForm.resetFields();
-    });
+      fetchTemplates();
+    } catch (error) {
+      message.error(editingTemplate ? tp('memory.templates.updateFailed') : tp('memory.templates.createFailed'));
+    }
   };
 
   const handleUseTemplate = (template: any) => {

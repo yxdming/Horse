@@ -372,6 +372,10 @@ export default {
 
       // 消息
       deleteSuccess: '删除成功',
+      deleteFailed: '删除失败',
+      fetchFailed: '获取模板列表失败',
+      updateFailed: '更新模板失败',
+      createFailed: '创建模板失败',
       deleteConfirm: '确定要删除这个模板吗？',
       applied: '已应用模板：{name}',
       use: '使用',

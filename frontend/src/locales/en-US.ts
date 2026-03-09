@@ -372,6 +372,10 @@ export default {
 
       // Messages
       deleteSuccess: 'Deleted successfully',
+      deleteFailed: 'Failed to delete template',
+      fetchFailed: 'Failed to fetch template list',
+      updateFailed: 'Failed to update template',
+      createFailed: 'Failed to create template',
       deleteConfirm: 'Are you sure you want to delete this template?',
       applied: 'Template applied: {name}',
       use: 'Use',
