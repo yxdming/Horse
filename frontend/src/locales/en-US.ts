@@ -192,7 +192,10 @@ export default {
       // Messages
       executeSuccess: 'Task {id} started',
       deleteSuccess: 'Deleted successfully',
+      deleteFailed: 'Failed to delete mapping',
+      fetchFailed: 'Failed to fetch mapping list',
       addSuccess: 'Added successfully',
+      addFailed: 'Failed to add mapping',
       deleteConfirm: 'Are you sure you want to delete this mapping task?',
       detailTitle: 'Directory Mapping Details',
     },

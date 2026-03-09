@@ -192,7 +192,10 @@ export default {
       // 消息
       executeSuccess: '任务 {id} 已开始执行',
       deleteSuccess: '删除成功',
+      deleteFailed: '删除失败',
+      fetchFailed: '获取映射列表失败',
       addSuccess: '添加成功',
+      addFailed: '添加失败',
       deleteConfirm: '确定要删除这个映射任务吗？',
       detailTitle: '目录映射详情',
     },

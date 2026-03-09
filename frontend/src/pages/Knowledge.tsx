@@ -259,50 +259,13 @@ const Knowledge: React.FC = () => {
   ];
 
   // ==================== 目录映射 ====================
-  const fetchMappings = () => {
-    // 模拟数据
-    setMappings([
-      {
-        id: 'TASK-001',
-        directoryName: '技术文档目录',
-        directoryPath: '/data/documents/tech',
-        fileSystem: 'NFS',
-        lastImportTime: '2026-03-06 10:30:00',
-        operator: 'admin'
-      },
-      {
-        id: 'TASK-002',
-        directoryName: '用户手册目录',
-        directoryPath: '/data/documents/manuals',
-        fileSystem: 'NFS',
-        lastImportTime: '2026-03-06 09:15:00',
-        operator: 'admin'
-      },
-      {
-        id: 'TASK-003',
-        directoryName: '政策文件目录',
-        directoryPath: '/data/documents/policies',
-        fileSystem: 'S3',
-        lastImportTime: '2026-03-05 16:45:00',
-        operator: 'user1'
-      },
-      {
-        id: 'TASK-004',
-        directoryName: '知识库归档',
-        directoryPath: '/data/archive',
-        fileSystem: 'LOCAL',
-        lastImportTime: '2026-03-04 14:20:00',
-        operator: 'user2'
-      },
-      {
-        id: 'TASK-005',
-        directoryName: '临时文档目录',
-        directoryPath: '/data/temp',
-        fileSystem: 'NFS',
-        lastImportTime: '2026-03-06 11:00:00',
-        operator: 'admin'
-      },
-    ]);
+  const fetchMappings = async () => {
+    try {
+      const response = await knowledgeApi.getMappings();
+      setMappings(response.mappings || []);
+    } catch (error) {
+      message.error(tp('knowledge.mappings.fetchFailed'));
+    }
   };
 
   const handleAddMapping = () => {
@@ -310,9 +273,14 @@ const Knowledge: React.FC = () => {
     setMappingModalVisible(true);
   };
 
-  const handleDeleteMapping = (id: string) => {
-    setMappings(mappings.filter(m => m.id !== id));
-    message.success(tp('knowledge.mappings.deleteSuccess'));
+  const handleDeleteMapping = async (id: string) => {
+    try {
+      await knowledgeApi.deleteMapping(id);
+      message.success(tp('knowledge.mappings.deleteSuccess'));
+      fetchMappings();
+    } catch (error) {
+      message.error(tp('knowledge.mappings.deleteFailed'));
+    }
   };
 
   const handleExecuteMapping = (id: string) => {
@@ -326,10 +294,10 @@ const Knowledge: React.FC = () => {
       content: (
         <div>
           <p><strong>{tp('knowledge.mappings.taskId')}：</strong>{record.id}</p>
-          <p><strong>{tp('knowledge.mappings.directoryName')}：</strong>{record.directoryName}</p>
-          <p><strong>{tp('knowledge.mappings.directoryPath')}：</strong>{record.directoryPath}</p>
-          <p><strong>{tp('knowledge.mappings.fileSystem')}：</strong>{record.fileSystem}</p>
-          <p><strong>{tp('knowledge.mappings.lastImportTime')}：</strong>{record.lastImportTime}</p>
+          <p><strong>{tp('knowledge.mappings.directoryName')}：</strong>{record.directory_name}</p>
+          <p><strong>{tp('knowledge.mappings.directoryPath')}：</strong>{record.directory_path}</p>
+          <p><strong>{tp('knowledge.mappings.fileSystem')}：</strong>{record.file_system}</p>
+          <p><strong>{tp('knowledge.mappings.lastImportTime')}：</strong>{record.last_import_time}</p>
           <p><strong>{tp('knowledge.mappings.operator')}：</strong>{record.operator}</p>
         </div>
       ),
@@ -346,21 +314,21 @@ const Knowledge: React.FC = () => {
     },
     {
       title: tp('knowledge.mappings.directoryName'),
-      dataIndex: 'directoryName',
-      key: 'directoryName',
+      dataIndex: 'directory_name',
+      key: 'directory_name',
       width: 150,
     },
     {
       title: tp('knowledge.mappings.directoryPath'),
-      dataIndex: 'directoryPath',
-      key: 'directoryPath',
+      dataIndex: 'directory_path',
+      key: 'directory_path',
       width: 200,
       ellipsis: true,
     },
     {
       title: tp('knowledge.mappings.fileSystem'),
-      dataIndex: 'fileSystem',
-      key: 'fileSystem',
+      dataIndex: 'file_system',
+      key: 'file_system',
       width: 100,
       render: (fs: string) => {
         const colors: Record<string, string> = {
@@ -373,8 +341,8 @@ const Knowledge: React.FC = () => {
     },
     {
       title: tp('knowledge.mappings.lastImportTime'),
-      dataIndex: 'lastImportTime',
-      key: 'lastImportTime',
+      dataIndex: 'last_import_time',
+      key: 'last_import_time',
       width: 180,
     },
     {
@@ -743,22 +711,17 @@ const Knowledge: React.FC = () => {
       <Modal
         title={tp('knowledge.mappings.modalTitle')}
         open={mappingModalVisible}
-        onOk={() => {
-          mappingForm.validateFields().then((values) => {
-            const taskId = `TASK-${String(mappings.length + 1).padStart(3, '0')}`;
-            setMappings([
-              ...mappings,
-              {
-                id: taskId,
-                ...values,
-                lastImportTime: new Date().toLocaleString('zh-CN'),
-                operator: '当前用户'
-              }
-            ]);
+        onOk={async () => {
+          try {
+            const values = await mappingForm.validateFields();
+            await knowledgeApi.createMapping(values);
+            message.success(tp('knowledge.mappings.addSuccess'));
             setMappingModalVisible(false);
             mappingForm.resetFields();
-            message.success(tp('knowledge.mappings.addSuccess'));
-          });
+            fetchMappings();
+          } catch (error) {
+            message.error(tp('knowledge.mappings.addFailed'));
+          }
         }}
         onCancel={() => {
           setMappingModalVisible(false);
