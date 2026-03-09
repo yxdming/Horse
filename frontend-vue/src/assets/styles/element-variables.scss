@@ -1,0 +1,73 @@
+/* Element Plus Theme Customization - Databricks Inspired */
+
+@forward 'element-plus/theme-chalk/src/common/var.scss' with (
+  // Primary Colors
+  $colors: (
+    'primary': (
+      'base': #6366F1,
+    ),
+    'success': (
+      'base': #10B981,
+    ),
+    'warning': (
+      'base': #F59E0B,
+    ),
+    'danger': (
+      'base': #EF4444,
+    ),
+    'error': (
+      'base': #EF4444,
+    ),
+    'info': (
+      'base': #3B82F6,
+    ),
+  ),
+
+  // Background Colors
+  $bg-color: (
+    '': #ffffff,
+    'page': #F9FAFB,
+    'overlay': #ffffff,
+  ),
+
+  // Text Colors
+  $text-color: (
+    'primary': #111827,
+    'regular': #6B7280,
+    'secondary': #9CA3AF,
+    'placeholder': #D1D5DB,
+    'disabled': #E5E7EB,
+  ),
+
+  // Border Colors
+  $border-color: (
+    '': #E5E7EB,
+    'light': #F3F4F6,
+    'lighter': #F9FAFB,
+    'extra-light': #FFFFFF,
+    'dark': #D1D5DB,
+    'darker': #9CA3AF,
+  ),
+
+  // Border Radius
+  $border-radius: (
+    'base': 8px,
+    'small': 4px,
+    'large': 12px,
+    'round': 20px,
+    'circle': 100%,
+  ),
+
+  // Box Shadow
+  $box-shadow: (
+    '': 0 1px 3px 0 rgba(0, 0, 0, 0.08),
+    'light': 0 1px 2px 0 rgba(0, 0, 0, 0.05),
+    'lighter': 0 1px 1px 0 rgba(0, 0, 0, 0.03),
+    'dark': 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+  ),
+
+  // Font
+  $font-family: (
+    '': "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif",
+  ),
+);
