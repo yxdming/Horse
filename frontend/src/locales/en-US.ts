@@ -311,8 +311,8 @@ export default {
     templates: {
       title: 'Template Management',
       addButton: 'Add Template',
-      description: 'Template Description',
-      descriptionText: 'Memory templates help you quickly create structured memory content. Templates define the format and required fields for memories.',
+      sectionTitle: 'Template Description',
+      sectionDescription: 'Memory templates help you quickly create structured memory content. Templates define the format and required fields for memories.',
 
       // Columns
       name: 'Template Name',

@@ -143,7 +143,7 @@ const getRoleType = (role: string) => {
     case 'admin':
       return 'danger'
     case 'user':
-      return 'primary'
+      return 'success'
     case 'readonly':
       return 'info'
     default:

@@ -78,9 +78,34 @@ const fetchDocuments = async () => {
 const fetchCategories = async () => {
   try {
     const data = await knowledgeApi.getCategories()
-    categories.value = data || []
+    console.log('Categories response:', data)
+
+    // 处理多种可能的响应格式
+    if (Array.isArray(data)) {
+      // 如果是数组，检查是否是嵌套数组
+      if (data.length > 0 && Array.isArray(data[0])) {
+        // 如果是嵌套数组，展开它
+        categories.value = data.flat()
+      } else {
+        // 普通字符串数组
+        categories.value = data
+      }
+    } else if (data && typeof data === 'object') {
+      // 如果是对象，尝试获取 categories 属性
+      if ('categories' in data && Array.isArray(data.categories)) {
+        categories.value = data.categories
+      } else {
+        // 对象的值可能是分类
+        categories.value = Object.values(data).filter(v => typeof v === 'string') as string[]
+      }
+    } else {
+      categories.value = []
+    }
+
+    console.log('Processed categories:', categories.value)
   } catch (error) {
     console.error('Failed to fetch categories:', error)
+    categories.value = []
   }
 }
 
@@ -173,16 +198,18 @@ const handleSemanticSearch = async () => {
 
 // Handle tags
 const handleTagInput = () => {
-  if (tagInput.value && !formData.value.tags.includes(tagInput.value)) {
+  if (tagInput.value && formData.value.tags && !formData.value.tags.includes(tagInput.value)) {
     formData.value.tags.push(tagInput.value)
     tagInput.value = ''
   }
 }
 
 const removeTag = (tag: string) => {
-  const index = formData.value.tags.indexOf(tag)
-  if (index > -1) {
-    formData.value.tags.splice(index, 1)
+  if (formData.value.tags) {
+    const index = formData.value.tags.indexOf(tag)
+    if (index > -1) {
+      formData.value.tags.splice(index, 1)
+    }
   }
 }
 
@@ -461,7 +488,7 @@ onMounted(() => {
         >
           <el-table-column :label="t('knowledge.mappings.taskId')" width="100" header-align="center">
             <template #default="{ row }">
-              <el-tag type="primary">{{ row.id }}</el-tag>
+              <el-tag type="success">{{ row.id }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column
@@ -481,7 +508,7 @@ onMounted(() => {
           <el-table-column :label="t('knowledge.mappings.fileSystem')" width="90" header-align="center">
             <template #default="{ row }">
               <el-tag
-                :type="row.file_system === 'NFS' ? 'primary' : row.file_system === 'S3' ? 'success' : 'warning'"
+                :type="row.file_system === 'NFS' ? 'info' : row.file_system === 'S3' ? 'success' : 'warning'"
                 size="small"
               >
                 {{ row.file_system }}
@@ -744,7 +771,7 @@ onMounted(() => {
     >
       <el-descriptions v-if="selectedMapping" :column="2" border>
         <el-descriptions-item :label="t('knowledge.mappings.taskId')">
-          <el-tag type="primary">{{ selectedMapping.id }}</el-tag>
+          <el-tag type="success">{{ selectedMapping.id }}</el-tag>
         </el-descriptions-item>
         <el-descriptions-item :label="t('knowledge.mappings.directoryName')">
           {{ selectedMapping.directory_name }}
@@ -754,7 +781,7 @@ onMounted(() => {
         </el-descriptions-item>
         <el-descriptions-item :label="t('knowledge.mappings.fileSystem')">
           <el-tag
-            :type="selectedMapping.file_system === 'NFS' ? 'primary' : selectedMapping.file_system === 'S3' ? 'success' : 'warning'"
+            :type="selectedMapping.file_system === 'NFS' ? 'info' : selectedMapping.file_system === 'S3' ? 'success' : 'warning'"
           >
             {{ selectedMapping.file_system }}
           </el-tag>

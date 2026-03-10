@@ -400,6 +400,7 @@ export default {
       colLastAccess: 'Last Access',
 
       // Modal
+      modalTitle: 'Add Memory User',
       addModalTitle: 'Add Memory User',
       usernameLabel: 'Username',
       usernamePlaceholder: 'Please enter username',

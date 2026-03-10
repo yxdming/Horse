@@ -6,7 +6,6 @@ import {
   Edit,
   Delete,
   Search,
-  Connection,
   ChatLineRound,
   Document
 } from '@element-plus/icons-vue'
@@ -273,12 +272,13 @@ const getStatusText = (status?: string) => {
 }
 
 // Watch tab changes
-const handleTabChange = (tabName: string) => {
-  if (tabName === 'databases') {
+const handleTabChange = (tabName: string | number) => {
+  const tab = String(tabName)
+  if (tab === 'databases') {
     fetchDatabases()
-  } else if (tabName === 'glossaries') {
+  } else if (tab === 'glossaries') {
     fetchGlossaries()
-  } else if (tabName === 'history') {
+  } else if (tab === 'history') {
     fetchHistory()
   }
 }
@@ -539,7 +539,7 @@ onMounted(() => {
 
                 <el-row :gutter="16" class="mt-16">
                   <el-col :span="12">
-                    <el-statistic :title="t('questioning.ask.confidence')" :value="(questionConfidence * 100).toFixed(1)" suffix="%" />
+                    <el-statistic :title="t('questioning.ask.confidence')" :value="Number((questionConfidence * 100).toFixed(1))" suffix="%" />
                   </el-col>
                   <el-col :span="12">
                     <div>{{ t('questioning.ask.recognizedTerms') }}:</div>

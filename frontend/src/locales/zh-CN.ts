@@ -351,8 +351,8 @@ export default {
     templates: {
       title: '模板管理',
       addButton: '新增模板',
-      description: '模板说明',
-      descriptionText: '预设记忆模板可以快速创建特定类型的记忆，提高记录效率。模板包含默认的分类、记忆类型、重要性和标签。',
+      sectionTitle: '模板说明',
+      sectionDescription: '预设记忆模板可以快速创建特定类型的记忆，提高记录效率。模板包含默认的分类、记忆类型、重要性和标签。',
 
       // 列
       name: '模板名称',

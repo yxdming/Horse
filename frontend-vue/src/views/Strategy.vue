@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import { Setting, Refresh, Check } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'

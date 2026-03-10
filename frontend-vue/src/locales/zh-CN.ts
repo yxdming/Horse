@@ -400,6 +400,7 @@ export default {
       colLastAccess: '最后访问',
 
       // 弹窗
+      modalTitle: '添加记忆库用户',
       addModalTitle: '添加记忆库用户',
       usernameLabel: '用户名',
       usernamePlaceholder: '请输入用户名',

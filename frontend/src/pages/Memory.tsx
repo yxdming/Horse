@@ -594,8 +594,8 @@ const MemoryPage: React.FC = () => {
           }
         >
           <Alert
-            message={tp('memory.templates.description')}
-            description={tp('memory.templates.descriptionText')}
+            message={tp('memory.templates.sectionTitle')}
+            description={tp('memory.templates.sectionDescription')}
             type="info"
             showIcon
             style={{ marginBottom: 16 }}

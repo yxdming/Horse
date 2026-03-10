@@ -1,54 +1,82 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
+// 路由配置 - 使用webpackChunkName进行代码分割
 const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('../views/Login.vue'),
-    meta: { requiresAuth: false }
+    component: () => import(/* webpackChunkName: "login" */ '../views/Login.vue'),
+    meta: {
+      requiresAuth: false,
+      title: '登录'
+    }
   },
   {
     path: '/',
-    component: () => import('../components/Layout.vue'),
+    component: () => import(/* webpackChunkName: "layout" */ '../components/Layout.vue'),
     meta: { requiresAuth: true },
     redirect: '/dashboard',
     children: [
       {
         path: 'dashboard',
         name: 'Dashboard',
-        component: () => import('../views/Dashboard.vue'),
-        meta: { title: '数据总览' }
+        component: () => import(/* webpackChunkName: "dashboard" */ '../views/Dashboard.vue'),
+        meta: {
+          title: '数据总览',
+          keepAlive: true,
+          icon: 'Odometer'
+        }
       },
       {
         path: 'knowledge',
         name: 'Knowledge',
-        component: () => import('../views/Knowledge.vue'),
-        meta: { title: '知识库管理' }
+        component: () => import(/* webpackChunkName: "knowledge" */ '../views/Knowledge.vue'),
+        meta: {
+          title: '知识库管理',
+          keepAlive: true,
+          icon: 'Reading'
+        }
       },
       {
         path: 'memory',
         name: 'Memory',
-        component: () => import('../views/Memory.vue'),
-        meta: { title: '记忆库管理' }
+        component: () => import(/* webpackChunkName: "memory" */ '../views/Memory.vue'),
+        meta: {
+          title: '记忆库管理',
+          keepAlive: true,
+          icon: 'Notebook'
+        }
       },
       {
         path: 'questioning',
         name: 'Questioning',
-        component: () => import('../views/Questioning.vue'),
-        meta: { title: '问数管理' }
+        component: () => import(/* webpackChunkName: "questioning" */ '../views/Questioning.vue'),
+        meta: {
+          title: '问数管理',
+          keepAlive: true,
+          icon: 'ChatLineRound'
+        }
       },
       {
         path: 'users',
         name: 'Users',
-        component: () => import('../views/Users.vue'),
-        meta: { title: '用户管理' }
+        component: () => import(/* webpackChunkName: "users" */ '../views/Users.vue'),
+        meta: {
+          title: '用户管理',
+          keepAlive: true,
+          icon: 'User'
+        }
       },
       {
         path: 'strategy',
         name: 'Strategy',
-        component: () => import('../views/Strategy.vue'),
-        meta: { title: '问答策略' }
+        component: () => import(/* webpackChunkName: "strategy" */ '../views/Strategy.vue'),
+        meta: {
+          title: '问答策略',
+          keepAlive: true,
+          icon: 'Setting'
+        }
       }
     ]
   }
@@ -66,7 +94,7 @@ router.beforeEach((to, from, next) => {
   // Restore auth state from localStorage to ensure sync
   authStore.restoreAuth()
 
-  const isAuthenticated = authStore.isAuthenticated.value
+  const isAuthenticated = authStore.isAuthenticated
   const token = localStorage.getItem('token')
 
   console.log('路由守卫 - 目标路径:', to.path)

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, watch, onMounted } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import {
   Plus,
@@ -7,8 +7,6 @@ import {
   Delete,
   Search,
   Refresh,
-  FolderOutlined,
-  BulbOutlined,
   User,
   Document,
   Clock
@@ -97,10 +95,54 @@ const fetchMetadata = async () => {
       memoryApi.getCategories(),
       memoryApi.getTypes()
     ])
-    categories.value = catData || []
-    types.value = typeData || []
+
+    // 处理 categories - 支持多种可能的响应格式
+    console.log('Categories response:', catData)
+    if (Array.isArray(catData)) {
+      // 如果是数组，检查是否是嵌套数组
+      if (catData.length > 0 && Array.isArray(catData[0])) {
+        // 如果是嵌套数组，展开它
+        categories.value = catData.flat()
+      } else {
+        // 普通字符串数组
+        categories.value = catData
+      }
+    } else if (catData && typeof catData === 'object') {
+      // 如果是对象，尝试获取 categories 属性
+      if ('categories' in catData && Array.isArray(catData.categories)) {
+        categories.value = catData.categories
+      } else {
+        // 对象的值可能是分类
+        categories.value = Object.values(catData).filter(v => typeof v === 'string') as string[]
+      }
+    } else {
+      categories.value = []
+    }
+
+    // 处理 types - 支持多种可能的响应格式
+    console.log('Types response:', typeData)
+    if (Array.isArray(typeData)) {
+      if (typeData.length > 0 && Array.isArray(typeData[0])) {
+        types.value = typeData.flat()
+      } else {
+        types.value = typeData
+      }
+    } else if (typeData && typeof typeData === 'object') {
+      if ('types' in typeData && Array.isArray(typeData.types)) {
+        types.value = typeData.types
+      } else {
+        types.value = Object.values(typeData).filter(v => typeof v === 'string') as string[]
+      }
+    } else {
+      types.value = []
+    }
+
+    console.log('Processed categories:', categories.value)
+    console.log('Processed types:', types.value)
   } catch (error) {
     console.error('Failed to fetch metadata:', error)
+    categories.value = []
+    types.value = []
   }
 }
 
@@ -182,16 +224,18 @@ const handleSubmit = async () => {
 
 // Handle tags
 const handleTagInput = () => {
-  if (tagInput.value && !formData.value.tags.includes(tagInput.value)) {
+  if (tagInput.value && formData.value.tags && !formData.value.tags.includes(tagInput.value)) {
     formData.value.tags.push(tagInput.value)
     tagInput.value = ''
   }
 }
 
 const removeTag = (tag: string) => {
-  const index = formData.value.tags.indexOf(tag)
-  if (index > -1) {
-    formData.value.tags.splice(index, 1)
+  if (formData.value.tags) {
+    const index = formData.value.tags.indexOf(tag)
+    if (index > -1) {
+      formData.value.tags.splice(index, 1)
+    }
   }
 }
 
@@ -369,13 +413,6 @@ const getTypeText = (type: string) => {
   }
   return typeMap[type] || type
 }
-
-const getImportanceColor = (importance: number) => {
-  if (importance >= 4) return 'danger'
-  if (importance >= 3) return 'warning'
-  return 'info'
-}
-
 
 // Watch for changes
 watch([page, pageSize, searchQuery, selectedCategory, selectedType, minImportance], () => {
@@ -570,9 +607,9 @@ onMounted(() => {
         </template>
 
         <el-alert
-          :title="t('memory.templates.description')"
+          :title="t('memory.templates.sectionTitle')"
           type="info"
-          :description="t('memory.templates.descriptionText')"
+          :description="t('memory.templates.sectionDescription')"
           :closable="false"
           show-icon
           style="margin-bottom: 16px"
@@ -610,7 +647,7 @@ onMounted(() => {
           />
           <el-table-column prop="category" :label="t('memory.list.colCategory')" min-width="100" header-align="center">
             <template #default="{ row }">
-              <el-tag type="primary">{{ row.category }}</el-tag>
+              <el-tag type="success">{{ row.category }}</el-tag>
             </template>
           </el-table-column>
           <el-table-column :label="t('memory.list.colType')" min-width="100" header-align="center">

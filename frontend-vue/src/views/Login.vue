@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, nextTick } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { User, Lock } from '@element-plus/icons-vue'
 import { useI18n } from 'vue-i18n'
@@ -9,7 +9,6 @@ import { useAuthStore } from '../stores/auth'
 
 const { t } = useI18n()
 const router = useRouter()
-const route = useRoute()
 const authStore = useAuthStore()
 
 const loading = ref(false)
@@ -35,14 +34,14 @@ const handleLogin = async () => {
     authStore.setAuth(response.access_token, response.user)
 
     console.log('Token已设置:', authStore.token)
-    console.log('认证状态 (setAuth后):', authStore.isAuthenticated.value)
+    console.log('认证状态 (setAuth后):', authStore.isAuthenticated)
 
     ElMessage.success(t('login.loginSuccess'))
 
     // Wait for reactive state to update before navigation
     await nextTick()
 
-    console.log('认证状态 (nextTick后):', authStore.isAuthenticated.value)
+    console.log('认证状态 (nextTick后):', authStore.isAuthenticated)
 
     // Redirect to dashboard
     await router.push('/dashboard')
