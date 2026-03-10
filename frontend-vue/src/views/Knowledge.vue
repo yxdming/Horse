@@ -316,10 +316,6 @@ onMounted(() => {
 
 <template>
   <div class="page-container">
-    <div class="page-header">
-      <h1 class="page-title">{{ t('knowledge.title') }}</h1>
-    </div>
-
     <el-tabs v-model="activeTab" type="border-card">
       <!-- Files Management Tab -->
       <el-tab-pane :label="t('knowledge.tabs.files')" name="files">

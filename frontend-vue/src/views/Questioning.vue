@@ -290,10 +290,6 @@ onMounted(() => {
 
 <template>
   <div class="page-container">
-    <div class="page-header">
-      <h1 class="page-title">{{ t('questioning.title') }}</h1>
-    </div>
-
     <el-tabs v-model="activeTab" type="border-card" @tab-change="handleTabChange">
       <!-- Databases Tab -->
       <el-tab-pane :label="t('questioning.tabs.databases')" name="databases">

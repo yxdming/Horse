@@ -22,7 +22,7 @@ const currentLanguage = computed({
 </script>
 
 <template>
-  <el-select v-model="currentLanguage" style="width: 120px">
+  <el-select v-model="currentLanguage" class="language-select" style="width: 120px">
     <el-option
       v-for="lang in languages"
       :key="lang.value"
@@ -31,3 +31,25 @@ const currentLanguage = computed({
     />
   </el-select>
 </template>
+
+<style scoped>
+.language-select {
+  :deep(.el-input__wrapper) {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background-color: #F6F8FA;
+      border-radius: 6px;
+    }
+  }
+
+  :deep(.el-input__inner) {
+    font-weight: 500;
+    color: #24292F;
+    font-size: 14px;
+  }
+}
+</style>

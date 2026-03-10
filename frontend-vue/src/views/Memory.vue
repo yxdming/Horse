@@ -442,10 +442,6 @@ onMounted(() => {
 
 <template>
   <div class="page-container">
-    <div class="page-header">
-      <h1 class="page-title">{{ t('memory.title') }}</h1>
-    </div>
-
     <el-tabs v-model="activeTab" type="border-card">
       <!-- Memory List Tab -->
       <el-tab-pane :label="t('memory.tabs.list')" name="list">

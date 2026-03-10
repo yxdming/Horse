@@ -232,6 +232,10 @@ export default {
       colUpdateTime: 'Updated',
       colActions: 'Actions',
 
+      // Status
+      indexed: 'Indexed',
+      notIndexed: 'Not Indexed',
+
       // Modal
       addModalTitle: 'Add Document',
       editModalTitle: 'Edit Document',
