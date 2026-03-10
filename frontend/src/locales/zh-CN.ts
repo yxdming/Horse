@@ -232,6 +232,10 @@ export default {
       colUpdateTime: '更新时间',
       colActions: '操作',
 
+      // 状态
+      indexed: '已索引',
+      notIndexed: '未索引',
+
       // 弹窗
       addModalTitle: '新增文档',
       editModalTitle: '编辑文档',

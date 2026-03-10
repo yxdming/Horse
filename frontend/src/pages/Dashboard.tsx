@@ -185,7 +185,7 @@ const Dashboard: React.FC = () => {
         <Col xs={24} sm={12} md={6}>
           <Card>
             <Statistic
-              title={tp('dashboard.stats.todayQA')}
+              title={tp('dashboard.stats.todayQuestions')}
               value={stats?.qa.today_qa_count || 0}
               prefix={<QuestionCircleOutlined />}
               valueStyle={{ color: '#fa8c16' }}
