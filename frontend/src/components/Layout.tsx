@@ -137,11 +137,14 @@ const AppLayout: React.FC = () => {
           </div>
         </Header>
         <Content style={{
-          margin: '24px',
+          marginTop: '0',
+          marginLeft: '12px',
+          marginRight: '12px',
+          marginBottom: '12px',
           background: '#F9FAFB',
-          padding: '24px',
-          borderRadius: '12px',
-          minHeight: 'calc(100vh - 64px - 48px)'
+          padding: '12px',
+          borderRadius: '6px',
+          minHeight: 'calc(100vh - 64px - 12px)'
         }}>
           <Outlet />
         </Content>
