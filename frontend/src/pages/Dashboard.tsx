@@ -196,7 +196,7 @@ const Dashboard: React.FC = () => {
 
       <Row gutter={[16, 16]} style={{ marginTop: 16 }}>
         <Col xs={24} md={12}>
-          <Card title={tp('dashboard.overview.title')}>
+          <Card title={tp('dashboard.overview.title')} style={{ height: 350 }}>
             <Row gutter={[16, 16]}>
               <Col span={12}>
                 <Statistic
@@ -234,8 +234,8 @@ const Dashboard: React.FC = () => {
           </Card>
         </Col>
         <Col xs={24} md={12}>
-          <Card title={tp('dashboard.charts.categoryDist')}>
-            <ReactECharts option={getCategoryDistOption()} style={{ height: 250 }} />
+          <Card title={tp('dashboard.charts.categoryDist')} style={{ height: 350 }}>
+            <ReactECharts option={getCategoryDistOption()} style={{ height: 270 }} />
           </Card>
         </Col>
       </Row>
