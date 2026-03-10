@@ -112,28 +112,32 @@ const Strategy: React.FC = () => {
         >
           <Title level={4}>{tp('strategy.modelParams.title')}</Title>
 
-          <Form.Item
-            label={
-              <Space>
-                <Text strong>{tp('strategy.modelParams.temperature.label')}</Text>
-                <Text type="secondary">: {form.getFieldValue('temperature')?.toFixed(2) || 0.7}</Text>
-              </Space>
-            }
-            name="temperature"
-            tooltip={tp('strategy.modelParams.temperature.tooltip')}
-            rules={[{ required: true, message: tp('strategy.modelParams.temperature.required') }]}
-          >
-            <Slider
-              min={0}
-              max={2}
-              step={0.1}
-              marks={{
-                0: tp('strategy.modelParams.temperature.marks.deterministic'),
-                0.7: tp('strategy.modelParams.temperature.marks.balanced'),
-                1.4: tp('strategy.modelParams.temperature.marks.creative'),
-                2: tp('strategy.modelParams.temperature.marks.random'),
-              }}
-            />
+          <Form.Item noStyle shouldUpdate={(prevValues, currentValues) => prevValues.temperature !== currentValues.temperature}>
+            {() => (
+              <Form.Item
+                label={
+                  <Space>
+                    <Text strong>{tp('strategy.modelParams.temperature.label')}</Text>
+                    <Text type="secondary">: {form.getFieldValue('temperature')?.toFixed(2) || 0.7}</Text>
+                  </Space>
+                }
+                name="temperature"
+                tooltip={tp('strategy.modelParams.temperature.tooltip')}
+                rules={[{ required: true, message: tp('strategy.modelParams.temperature.required') }]}
+              >
+                <Slider
+                  min={0}
+                  max={2}
+                  step={0.1}
+                  marks={{
+                    0: tp('strategy.modelParams.temperature.marks.deterministic'),
+                    0.7: tp('strategy.modelParams.temperature.marks.balanced'),
+                    1.4: tp('strategy.modelParams.temperature.marks.creative'),
+                    2: tp('strategy.modelParams.temperature.marks.random'),
+                  }}
+                />
+              </Form.Item>
+            )}
           </Form.Item>
 
           <Form.Item
@@ -171,31 +175,35 @@ const Strategy: React.FC = () => {
             />
           </Form.Item>
 
-          <Form.Item
-            label={
-              <Space>
-                <Text strong>{tp('strategy.retrievalStrategy.similarityThreshold.label')}</Text>
-                <Text type="secondary">
-                  : {form.getFieldValue('similarity_threshold')?.toFixed(2) || 0.75}
-                </Text>
-              </Space>
-            }
-            name="similarity_threshold"
-            tooltip={tp('strategy.retrievalStrategy.similarityThreshold.tooltip')}
-            rules={[{ required: true, message: tp('strategy.retrievalStrategy.similarityThreshold.required') }]}
-          >
-            <Slider
-              min={0}
-              max={1}
-              step={0.05}
-              marks={{
-                0: tp('strategy.retrievalStrategy.similarityThreshold.marks.all'),
-                0.5: tp('strategy.retrievalStrategy.similarityThreshold.marks.loose'),
-                0.75: tp('strategy.retrievalStrategy.similarityThreshold.marks.moderate'),
-                0.9: tp('strategy.retrievalStrategy.similarityThreshold.marks.strict'),
-                1: tp('strategy.retrievalStrategy.similarityThreshold.marks.precise'),
-              }}
-            />
+          <Form.Item noStyle shouldUpdate={(prevValues, currentValues) => prevValues.similarity_threshold !== currentValues.similarity_threshold}>
+            {() => (
+              <Form.Item
+                label={
+                  <Space>
+                    <Text strong>{tp('strategy.retrievalStrategy.similarityThreshold.label')}</Text>
+                    <Text type="secondary">
+                      : {form.getFieldValue('similarity_threshold')?.toFixed(2) || 0.75}
+                    </Text>
+                  </Space>
+                }
+                name="similarity_threshold"
+                tooltip={tp('strategy.retrievalStrategy.similarityThreshold.tooltip')}
+                rules={[{ required: true, message: tp('strategy.retrievalStrategy.similarityThreshold.required') }]}
+              >
+                <Slider
+                  min={0}
+                  max={1}
+                  step={0.05}
+                  marks={{
+                    0: tp('strategy.retrievalStrategy.similarityThreshold.marks.all'),
+                    0.5: tp('strategy.retrievalStrategy.similarityThreshold.marks.loose'),
+                    0.75: tp('strategy.retrievalStrategy.similarityThreshold.marks.moderate'),
+                    0.9: tp('strategy.retrievalStrategy.similarityThreshold.marks.strict'),
+                    1: tp('strategy.retrievalStrategy.similarityThreshold.marks.precise'),
+                  }}
+                />
+              </Form.Item>
+            )}
           </Form.Item>
 
           <Divider />
