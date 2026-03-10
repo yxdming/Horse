@@ -230,29 +230,35 @@ const Strategy: React.FC = () => {
         <Divider />
 
         <Title level={4}>{tp('strategy.configPreview.title')}</Title>
-        <Card size="small" style={{ background: '#f5f5f5' }}>
-          <Space direction="vertical" style={{ width: '100%' }}>
-            <Text>
-              <Text strong>{tp('strategy.configPreview.fields.temperature')}:</Text> {form.getFieldValue('temperature') || 0.7}
-            </Text>
-            <Text>
-              <Text strong>{tp('strategy.configPreview.fields.maxTokens')}:</Text> {form.getFieldValue('max_tokens') || 2000}
-            </Text>
-            <Text>
-              <Text strong>{tp('strategy.configPreview.fields.topK')}:</Text> {form.getFieldValue('top_k') || 5}
-            </Text>
-            <Text>
-              <Text strong>{tp('strategy.configPreview.fields.similarityThreshold')}:</Text>{' '}
-              {form.getFieldValue('similarity_threshold') || 0.75}
-            </Text>
-            <Text>
-              <Text strong>{tp('strategy.configPreview.fields.systemPrompt')}:</Text>
-            </Text>
-            <Text type="secondary" style={{ whiteSpace: 'pre-wrap' }}>
-              {form.getFieldValue('system_prompt') || tp('strategy.configPreview.fields.notSet')}
-            </Text>
-          </Space>
-        </Card>
+        <Form.Item noStyle>
+          <Form.Item shouldUpdate={(prevValues, currentValues) => prevValues !== currentValues}>
+            {() => (
+              <Card size="small" style={{ background: '#f5f5f5' }}>
+                <Space direction="vertical" style={{ width: '100%' }}>
+                  <Text>
+                    <Text strong>{tp('strategy.configPreview.fields.temperature')}:</Text> {form.getFieldValue('temperature') || 0.7}
+                  </Text>
+                  <Text>
+                    <Text strong>{tp('strategy.configPreview.fields.maxTokens')}:</Text> {form.getFieldValue('max_tokens') || 2000}
+                  </Text>
+                  <Text>
+                    <Text strong>{tp('strategy.configPreview.fields.topK')}:</Text> {form.getFieldValue('top_k') || 5}
+                  </Text>
+                  <Text>
+                    <Text strong>{tp('strategy.configPreview.fields.similarityThreshold')}:</Text>{' '}
+                    {form.getFieldValue('similarity_threshold') || 0.75}
+                  </Text>
+                  <Text>
+                    <Text strong>{tp('strategy.configPreview.fields.systemPrompt')}:</Text>
+                  </Text>
+                  <Text type="secondary" style={{ whiteSpace: 'pre-wrap' }}>
+                    {form.getFieldValue('system_prompt') || tp('strategy.configPreview.fields.notSet')}
+                  </Text>
+                </Space>
+              </Card>
+            )}
+          </Form.Item>
+        </Form.Item>
       </Card>
     </div>
   );
