@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElAvatar, ElMessageBox } from 'element-plus'
+import { ElDropdown, ElDropdownMenu, ElDropdownItem, ElAvatar, ElMessageBox, ElBreadcrumb, ElBreadcrumbItem } from 'element-plus'
 import { useI18n } from 'vue-i18n'
+import type { Component } from 'vue'
 import {
   Odometer,
   Document,
@@ -12,11 +13,19 @@ import {
   Setting,
   SwitchButton,
   ArrowLeft,
-  ArrowRight
+  ArrowRight,
+  HomeFilled
 } from '@element-plus/icons-vue'
 import { useAuthStore } from '../stores/auth'
 import LanguageSwitcher from './LanguageSwitcher.vue'
 import logoImage from '../assets/images/logo.png'
+
+interface BreadcrumbItem {
+  title?: string
+  icon?: Component
+  onClick?: () => void
+  isLast?: boolean
+}
 
 const { t } = useI18n()
 const router = useRouter()
@@ -62,9 +71,43 @@ const menuItems = computed(() => [
   },
 ])
 
-const currentLabel = computed(() => {
-  const item = menuItems.value.find(item => item.key === route.path)
-  return item?.label || 'AIDP Manager'
+// 生成面包屑导航
+const breadcrumbItems = computed<BreadcrumbItem[]>(() => {
+  const items: BreadcrumbItem[] = []
+  const pathSegments = route.path.split('/').filter(Boolean)
+  const isLast = (index: number) => index === pathSegments.length - 1
+
+  if (pathSegments.length === 0) {
+    // 首页 - 只显示标题，不需要可点击
+    items.push({
+      title: t('sidebar.dashboard'),
+      icon: HomeFilled
+    })
+  } else {
+    // 首先添加Home图标（可点击返回首页）
+    items.push({
+      title: '',
+      icon: HomeFilled,
+      onClick: () => router.push('/')
+    })
+
+    // 构建路径面包屑
+    let currentPath = ''
+    pathSegments.forEach((segment, index) => {
+      currentPath += `/${segment}`
+      const menuItem = menuItems.value.find(item => item.key === currentPath)
+
+      if (menuItem) {
+        items.push({
+          title: menuItem.label,
+          ...(isLast(index) ? {} : { onClick: () => router.push(currentPath) }),
+          isLast: isLast(index)
+        })
+      }
+    })
+  }
+
+  return items
 })
 
 const handleMenuClick = (key: string) => {
@@ -130,7 +173,21 @@ const handleLogout = async () => {
     <el-container>
       <el-header class="layout-header">
         <div class="header-content">
-          <h2>{{ currentLabel }}</h2>
+          <el-breadcrumb separator="/">
+            <el-breadcrumb-item
+              v-for="(item, index) in breadcrumbItems"
+              :key="index"
+              @click="item.onClick"
+              :class="{ 'is-clickable': item.onClick, 'is-last': item.isLast }"
+            >
+              <template v-if="item.icon">
+                <el-icon :size="14" style="margin-right: 4px">
+                  <component :is="item.icon" />
+                </el-icon>
+              </template>
+              <span v-if="item.title" :style="{ fontSize: '14px', color: item.isLast ? '#24292F' : '#57606A', fontWeight: item.isLast ? 500 : 400 }">{{ item.title }}</span>
+            </el-breadcrumb-item>
+          </el-breadcrumb>
           <div class="header-actions">
             <LanguageSwitcher />
             <el-dropdown trigger="click" @command="handleLogout">
@@ -168,8 +225,8 @@ const handleLogout = async () => {
 }
 
 .layout-sider {
-  background: #F3F4F6;
-  border-right: 1px solid #E5E7EB;
+  background: #FFFFFF;
+  border-right: none;
   transition: width 0.2s;
   display: flex;
   flex-direction: column;
@@ -186,32 +243,33 @@ const handleLogout = async () => {
 .logo {
   display: flex;
   align-items: center;
-  padding: 0 16px;
-  height: 60px;
+  padding: 16px;
+  height: 56px;
   gap: 12px;
   border-bottom: 1px solid #E5E7EB;
   box-sizing: border-box;
 }
 
 .logo-image {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   object-fit: contain;
   flex-shrink: 0;
 }
 
 .logo h1 {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
-  color: #111827;
+  color: #24292F;
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
 }
 
 .layout-menu {
-  background: #F3F4F6;
+  background: #FFFFFF;
   border-right: none;
+  padding: 8px 0;
 }
 
 .layout-menu:not(.el-menu--collapse) {
@@ -220,31 +278,38 @@ const handleLogout = async () => {
 
 /* 菜单项默认状态 */
 .layout-menu .el-menu-item {
-  color: #4B5563;
+  color: #57606A;
+  margin: 2px 8px;
+  border-radius: 6px;
+  height: 32px;
+  line-height: 32px;
+  font-weight: 400;
+  font-size: 14px;
 }
 
 .layout-menu .el-menu-item .el-icon {
-  color: #6B7280;
+  color: #57606A;
 }
 
 /* 菜单项悬停状态 */
 .layout-menu .el-menu-item:hover {
-  background-color: #E5E7EB;
-  color: #111827;
+  background-color: #F6F8FA;
+  color: #24292F;
 }
 
 .layout-menu .el-menu-item:hover .el-icon {
-  color: #111827;
+  color: #24292F;
 }
 
 /* 菜单项选中状态 */
 .layout-menu .el-menu-item.is-active {
-  background-color: #EEF2FF;
-  color: #6366F1;
+  background-color: #FFFFFF;
+  color: #24292F;
+  font-weight: 400;
 }
 
 .layout-menu .el-menu-item.is-active .el-icon {
-  color: #6366F1;
+  color: #24292F;
 }
 
 /* 折叠按钮 */
@@ -252,19 +317,19 @@ const handleLogout = async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 24px;
-  margin: 8px 0;
-  background-color: #E5E7EB;
-  border-radius: 0;
+  height: 32px;
+  margin: 8px;
+  background-color: transparent;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  color: #4B5563;
+  transition: all 0.15s ease;
+  color: #57606A;
   flex-shrink: 0;
 }
 
 .collapse-trigger:hover {
-  background-color: #D1D5DB;
-  color: #111827;
+  background-color: #F6F8FA;
+  color: #24292F;
 }
 
 .layout-header {
@@ -273,7 +338,7 @@ const handleLogout = async () => {
   padding: 0 24px;
   display: flex;
   align-items: center;
-  height: 60px;
+  height: 56px;
 }
 
 .header-content {
@@ -283,11 +348,43 @@ const handleLogout = async () => {
   width: 100%;
 }
 
+/* 面包屑导航 */
+.header-content :deep(.el-breadcrumb) {
+  margin: 0;
+}
+
+.header-content :deep(.el-breadcrumb__item) {
+  font-size: 14px;
+}
+
+.header-content :deep(.el-breadcrumb__item:last-child .el-breadcrumb__inner) {
+  color: #24292F;
+  font-weight: 500;
+}
+
+.header-content :deep(.el-breadcrumb__item .el-breadcrumb__inner) {
+  color: #57606A;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.header-content :deep(.el-breadcrumb__item .el-breadcrumb__inner:hover) {
+  color: #24292F;
+}
+
+.header-content :deep(.is-clickable) {
+  cursor: pointer;
+}
+
+.header-content :deep(.is-last) {
+  cursor: default;
+}
+
 .header-content h2 {
   margin: 0;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;
-  color: #111827;
+  color: #24292F;
 }
 
 .header-actions {
@@ -300,20 +397,26 @@ const handleLogout = async () => {
   display: flex;
   align-items: center;
   cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 8px;
-  transition: background-color 0.2s;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background-color 0.15s ease;
+  background-color: transparent;
+  border: none;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #24292F;
 }
 
 .user-info:hover {
-  background-color: #F3F4F6;
+  background-color: #F6F8FA;
 }
 
 .layout-main {
-  background: #F9FAFB;
+  background: #F6F8FA;
   padding: 24px;
-  min-height: calc(100vh - 60px);
-  height: calc(100vh - 60px);
+  min-height: calc(100vh - 56px);
+  height: calc(100vh - 56px);
   overflow-y: auto;
 }
 </style>

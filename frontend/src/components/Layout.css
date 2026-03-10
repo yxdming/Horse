@@ -105,6 +105,30 @@
   justify-content: space-between;
 }
 
+/* Breadcrumb styles */
+.ant-breadcrumb {
+  margin: 0;
+  font-size: 14px;
+}
+
+.ant-breadcrumb-link {
+  color: #57606A;
+  transition: color 0.15s ease;
+}
+
+.ant-breadcrumb-link:hover {
+  color: #24292F;
+}
+
+.ant-breadcrumb-separator {
+  color: #D0D7DE;
+}
+
+.ant-breadcrumb > span:last-child .ant-breadcrumb-link {
+  color: #24292F;
+  font-weight: 500;
+}
+
 .header-content h2 {
   font-size: 20px;
   font-weight: 500;

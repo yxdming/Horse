@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Layout, Menu, Dropdown, Avatar, Space } from 'antd';
+import { Layout, Menu, Dropdown, Avatar, Space, Breadcrumb } from 'antd';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import {
   DashboardOutlined,
@@ -9,6 +9,7 @@ import {
   LogoutOutlined,
   BulbOutlined,
   QuestionCircleOutlined,
+  HomeOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from '../contexts/LanguageContext';
 import { createTranslateProxy } from '../utils/i18n';
@@ -86,9 +87,43 @@ const AppLayout: React.FC = () => {
     },
   ];
 
-  const currentLabel = useMemo(() => {
-    return menuItems.find(item => item.key === location.pathname)?.label || 'AIDP Manager';
-  }, [menuItems, location.pathname]);
+  // 生成面包屑导航
+  const breadcrumbItems = useMemo(() => {
+    const items: Array<{ title: React.ReactNode; onClick?: () => void }> = [];
+
+    // 根据当前路径添加面包屑项
+    const pathSegments = location.pathname.split('/').filter(Boolean);
+
+    if (pathSegments.length === 0) {
+      // 首页 - 只显示标题，不需要可点击
+      items.push({
+        title: <span style={{ fontSize: 14, color: '#24292F', fontWeight: 500 }}><HomeOutlined /> {tp('sidebar.dashboard')}</span>,
+      });
+    } else {
+      // 首先添加Home图标（可点击返回首页）
+      items.push({
+        title: <span style={{ fontSize: 14 }}><HomeOutlined /></span>,
+        onClick: () => navigate('/'),
+      });
+
+      // 构建路径面包屑
+      let currentPath = '';
+      pathSegments.forEach((segment, index) => {
+        currentPath += `/${segment}`;
+        const menuItem = menuItems.find(item => item.key === currentPath);
+
+        if (menuItem) {
+          const isLast = index === pathSegments.length - 1;
+          items.push({
+            title: <span style={{ fontSize: 14, color: isLast ? '#24292F' : '#57606A', fontWeight: isLast ? 500 : 400 }}>{menuItem.label}</span>,
+            ...(isLast ? {} : { onClick: () => navigate(currentPath) }),
+          });
+        }
+      });
+    }
+
+    return items;
+  }, [location.pathname, menuItems, navigate, tp]);
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -119,9 +154,7 @@ const AppLayout: React.FC = () => {
           borderBottom: '1px solid #E5E7EB',
         }}>
           <div className="header-content">
-            <h2 style={{ margin: 0 }}>
-              {currentLabel}
-            </h2>
+            <Breadcrumb items={breadcrumbItems} style={{ margin: 0 }} />
             <Space size="middle">
               <LanguageSwitcher style={{ width: 120 }} />
               <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
