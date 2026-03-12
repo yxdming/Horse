@@ -90,6 +90,8 @@
   background: #ffffff !important;
   color: #4B5563 !important;
   border-top: 1px solid #E5E7EB;
+  justify-content: flex-start !important;
+  padding-left: 16px;
 }
 
 .ant-layout-sider-trigger:hover {
@@ -139,7 +141,7 @@
   display: flex;
   align-items: center;
   cursor: pointer;
-  padding: 4px 12px;
+  padding: 2px 8px;
   border-radius: 8px;
   transition: all 0.3s ease;
 }

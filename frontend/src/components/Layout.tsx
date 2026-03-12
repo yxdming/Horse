@@ -131,9 +131,13 @@ const AppLayout: React.FC = () => {
     const pathSegments = location.pathname.split('/').filter(Boolean);
 
     if (pathSegments.length === 0) {
-      // 首页 - 只显示标题，不需要可点击
+      // 首页 - 显示Home图标和页面名称，保持和其他页面一致的格式
       items.push({
-        title: <span style={{ fontSize: 14, color: '#24292F', fontWeight: 500 }}><HomeOutlined /> {tp('sidebar.dashboard')}</span>,
+        title: <span style={{ fontSize: 14 }}><HomeOutlined /></span>,
+        onClick: () => navigate('/'),
+      });
+      items.push({
+        title: <span style={{ fontSize: 14, color: '#24292F', fontWeight: 500 }}>{tp('sidebar.dashboard')}</span>,
       });
     } else {
       // 首先添加Home图标（可点击返回首页）
