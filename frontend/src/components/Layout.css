@@ -1,11 +1,10 @@
 /* Sidebar container - light theme */
 .ant-layout-sider {
-  background: #F3F4F6 !important;
-  border-right: 1px solid #E5E7EB !important;
+  background: #ffffff !important;
 }
 
 .ant-layout-sider .ant-layout-sider-children {
-  background: #F3F4F6 !important;
+  background: #ffffff !important;
 }
 
 /* Logo section */
@@ -15,8 +14,7 @@
   flex-direction: row;
   align-items: center;
   padding: 0 16px;
-  background: #F3F4F6;
-  border-bottom: 1px solid #E5E7EB;
+  background: #ffffff;
   gap: 12px;
 }
 
@@ -43,7 +41,7 @@
 
 /* Light menu styling */
 .ant-menu-light {
-  background: #F3F4F6 !important;
+  background: #ffffff !important;
   border-right: none !important;
 }
 
@@ -54,7 +52,7 @@
 
 .ant-menu-light .ant-menu-item:hover {
   color: #111827 !important;
-  background: #E5E7EB !important;
+  background: #F3F4F6 !important;
 }
 
 .ant-menu-light .ant-menu-item-selected {
@@ -89,12 +87,13 @@
 
 /* Sider trigger (collapse button) */
 .ant-layout-sider-trigger {
-  background: #E5E7EB !important;
+  background: #ffffff !important;
   color: #4B5563 !important;
+  border-top: 1px solid #E5E7EB;
 }
 
 .ant-layout-sider-trigger:hover {
-  background: #D1D5DB !important;
+  background: #F3F4F6 !important;
   color: #111827 !important;
 }
 
@@ -146,11 +145,22 @@
 }
 
 .user-info:hover {
-  background: #F3F4F6;
+  background: #F9FAFB;
 }
 
 .user-info span {
   font-size: 14px;
   color: #374151;
   font-weight: 500;
+}
+
+/* 子菜单箭头样式 - 默认向右（折叠状态） */
+.ant-menu-light .ant-menu-submenu-arrow .ant-menu-submenu-arrow-icon {
+  transform: rotate(-90deg) !important;
+  transition: transform 0.3s ease;
+}
+
+/* 当子菜单展开时，箭头向下 */
+.ant-menu-light .ant-menu-submenu-open > .ant-menu-submenu-title .ant-menu-submenu-arrow .ant-menu-submenu-arrow-icon {
+  transform: rotate(0deg) !important;
 }

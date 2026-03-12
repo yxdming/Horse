@@ -15,6 +15,12 @@ export default {
     view: '查看',
     back: '返回',
     actions: '操作',
+    favorite: '收藏',
+    unfavorite: '取消收藏',
+    test: '测试',
+    preview: '预览',
+    copy: '复制',
+    close: '关闭',
 
     // 状态
     loading: '加载中...',
@@ -42,12 +48,15 @@ export default {
 
   // ==================== 侧边栏导航 ====================
   sidebar: {
-    dashboard: '数据总览',
-    knowledge: '知识库管理',
-    memory: '记忆库管理',
-    questioning: '问数管理',
+    dashboard: '数据看板',
+    knowledge: '知识问答',
+    knowledgeBase: '知识库管理',
+    glossary: '行话配置',
+    prompts: '提示词配置',
+    memory: '记忆库',
+    questioning: '智能问数',
     users: '用户管理',
-    strategy: '问答策略',
+    strategy: '安全',
     logout: '退出登录',
   },
 
@@ -219,6 +228,7 @@ export default {
 
       // 搜索
       searchPlaceholder: '搜索文档标题、内容或标签',
+      filterCategory: '筛选分类',
       categoryPlaceholder: '选择分类',
 
       // 列
@@ -228,6 +238,7 @@ export default {
       colVectorized: '向量化',
       colIndexed: '已索引',
       colNotIndexed: '未索引',
+      colCreated: '创建时间',
       colUpdateTime: '更新时间',
       colActions: '操作',
 
@@ -240,6 +251,7 @@ export default {
       editModalTitle: '编辑文档',
       titleLabel: '标题',
       titlePlaceholder: '请输入文档标题',
+      titleRequired: '请输入标题',
       categoryLabel: '分类',
       modalCategoryPlaceholder: '输入或选择分类',
       categoryHelp: '可以从现有分类中选择，或输入新的分类名称',
@@ -247,6 +259,24 @@ export default {
       tagsPlaceholder: '输入标签，按回车添加',
       contentLabel: '内容',
       contentPlaceholder: '请输入文档内容',
+      contentRequired: '请输入内容',
+      categoryRequired: '请选择分类',
+
+      // 上传
+      uploadModalTitle: '批量上传文档',
+      uploadText: '点击或拖拽文件到此区域上传',
+      uploadHint: '支持单个或批量上传，文件大小不超过10MB',
+
+      // Tab
+      tabDocuments: '文档列表',
+
+      // 分页
+      total: '共 {count} 条',
+
+      // 状态
+      yes: '是',
+      no: '否',
+      import: '导入',
 
       // 搜索弹窗
       searchModalTitle: '语义搜索',
@@ -858,6 +888,157 @@ export default {
       saveButton: '保存设置',
       saveSuccess: '设置保存成功',
       saveFailed: '设置保存失败',
+    },
+  },
+
+  // ==================== 行话配置 ====================
+  glossary: {
+    title: '行话配置',
+    import: {
+      title: '批量导入',
+      button: '批量导入',
+      description: '从CSV文件批量导入行话术语',
+      format: '文件格式说明',
+    },
+    export: {
+      button: '导出',
+      success: '导出成功',
+    },
+    stats: {
+      totalTerms: '总术语数',
+      categories: '分类数量',
+      recentlyAdded: '最近新增',
+    },
+    tabs: {
+      terms: '术语列表',
+      categories: '分类浏览',
+    },
+    terms: {
+      title: '术语列表',
+      addButton: '新增术语',
+      addModalTitle: '新增术语',
+      editModalTitle: '编辑术语',
+      deleteConfirm: '确定要删除这个术语吗？',
+      searchPlaceholder: '搜索术语、定义或映射',
+      filterCategory: '筛选分类',
+      total: '共 {count} 条',
+
+      // 术语单位
+      term: '术语',
+
+      // 列
+      colTerm: '术语',
+      colDefinition: '定义',
+      colMapping: '中文映射',
+      colCategory: '分类',
+      colExample: '示例',
+      colCreated: '创建时间',
+      colActions: '操作',
+
+      // 表单
+      termLabel: '术语',
+      termPlaceholder: '请输入术语',
+      termRequired: '请输入术语',
+      definitionLabel: '定义',
+      definitionPlaceholder: '请输入术语定义',
+      definitionRequired: '请输入定义',
+      mappingLabel: '中文映射',
+      mappingPlaceholder: '请输入中文翻译',
+      mappingRequired: '请输入中文映射',
+      categoryLabel: '分类',
+      categoryPlaceholder: '选择或输入分类',
+      categoryRequired: '请选择分类',
+      exampleLabel: '示例',
+      examplePlaceholder: '请输入使用示例',
+
+      // 消息
+      fetchFailed: '获取术语列表失败',
+      createSuccess: '术语创建成功',
+      createFailed: '术语创建失败',
+      updateSuccess: '术语更新成功',
+      updateFailed: '术语更新失败',
+      deleteSuccess: '术语删除成功',
+      deleteFailed: '术语删除失败',
+    },
+  },
+
+  // ==================== 提示词配置 ====================
+  prompts: {
+    title: '提示词模板',
+    import: {
+      title: '批量导入',
+      button: '批量导入',
+      description: '从JSON文件批量导入提示词模板',
+      format: '文件格式说明',
+    },
+    export: {
+      button: '导出',
+      success: '导出成功',
+    },
+    stats: {
+      totalTemplates: '总模板数',
+      favorites: '收藏数',
+      categories: '分类数量',
+      totalUsage: '总使用次数',
+    },
+    tabs: {
+      templates: '所有模板',
+      favorites: '我的收藏',
+    },
+    templates: {
+      title: '提示词模板',
+      addButton: '新建模板',
+      addModalTitle: '新建提示词模板',
+      editModalTitle: '编辑提示词模板',
+      deleteConfirm: '确定要删除这个模板吗？',
+      searchPlaceholder: '搜索模板名称、描述或标签',
+      filterCategory: '筛选分类',
+      total: '共 {count} 个模板',
+
+      // 列
+      colName: '名称',
+      colCategory: '分类',
+      colTags: '标签',
+      colVariables: '变量',
+      colUsage: '使用次数',
+      colCreated: '创建时间',
+      colActions: '操作',
+
+      // 表单
+      nameLabel: '模板名称',
+      namePlaceholder: '请输入模板名称',
+      nameRequired: '请输入模板名称',
+      descriptionLabel: '描述',
+      descriptionPlaceholder: '请输入模板描述',
+      descriptionRequired: '请输入模板描述',
+      categoryLabel: '分类',
+      categoryPlaceholder: '选择或输入分类',
+      categoryRequired: '请选择分类',
+      templateLabel: '提示词模板',
+      templatePlaceholder: '请输入提示词内容，使用 {变量名} 表示变量',
+      templateRequired: '请输入提示词模板',
+      templateHelp: '使用 {变量名} 来定义可替换的变量，例如：{用户名}、{主题}等',
+      tagsLabel: '标签',
+      tagsPlaceholder: '请输入标签',
+
+      // 操作
+      toggleFavoriteFailed: '操作失败',
+      copySuccess: '已复制到剪贴板',
+      testRunning: '正在测试...',
+      testSuccess: '测试成功',
+      testFailed: '测试失败',
+      testHelp: '填写变量值来测试提示词效果',
+      testDescription: '为模板中的变量提供实际值，然后查看生成的提示词',
+      preview: '预览',
+
+      // 消息
+      fetchFailed: '获取模板列表失败',
+      createSuccess: '模板创建成功',
+      createFailed: '模板创建失败',
+      updateSuccess: '模板更新成功',
+      updateFailed: '模板更新失败',
+      deleteSuccess: '模板删除成功',
+      deleteFailed: '模板删除失败',
     },
   },
 

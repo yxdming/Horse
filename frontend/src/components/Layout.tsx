@@ -10,6 +10,10 @@ import {
   BulbOutlined,
   QuestionCircleOutlined,
   HomeOutlined,
+  BookOutlined,
+  FileTextOutlined,
+  MessageOutlined,
+  RightOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from '../contexts/LanguageContext';
 import { createTranslateProxy } from '../utils/i18n';
@@ -43,19 +47,36 @@ const AppLayout: React.FC = () => {
       label: tp('sidebar.dashboard'),
     },
     {
+      key: '/questioning',
+      icon: <QuestionCircleOutlined />,
+      label: tp('sidebar.questioning'),
+    },
+    {
       key: '/knowledge',
       icon: <DatabaseOutlined />,
       label: tp('sidebar.knowledge'),
+      children: [
+        {
+          key: '/knowledge-base',
+          icon: <BookOutlined />,
+          label: tp('sidebar.knowledgeBase'),
+        },
+        {
+          key: '/glossary',
+          icon: <FileTextOutlined />,
+          label: tp('sidebar.glossary'),
+        },
+        {
+          key: '/prompts',
+          icon: <MessageOutlined />,
+          label: tp('sidebar.prompts'),
+        },
+      ],
     },
     {
       key: '/memory',
       icon: <BulbOutlined />,
       label: tp('sidebar.memory'),
-    },
-    {
-      key: '/questioning',
-      icon: <QuestionCircleOutlined />,
-      label: tp('sidebar.questioning'),
     },
     {
       key: '/users',
@@ -91,6 +112,21 @@ const AppLayout: React.FC = () => {
   const breadcrumbItems = useMemo(() => {
     const items: Array<{ title: React.ReactNode; onClick?: () => void }> = [];
 
+    // 创建扁平化的菜单项映射，包括所有子菜单项
+    const menuItemsMap = new Map<string, { label: string; parentPath?: string }>();
+    menuItems.forEach(item => {
+      menuItemsMap.set(item.key, { label: item.label as string });
+      // 如果有子菜单，也添加到映射中
+      if (item.children) {
+        item.children.forEach((child: any) => {
+          menuItemsMap.set(child.key, {
+            label: child.label as string,
+            parentPath: item.key as string,
+          });
+        });
+      }
+    });
+
     // 根据当前路径添加面包屑项
     const pathSegments = location.pathname.split('/').filter(Boolean);
 
@@ -106,20 +142,28 @@ const AppLayout: React.FC = () => {
         onClick: () => navigate('/'),
       });
 
-      // 构建路径面包屑
-      let currentPath = '';
-      pathSegments.forEach((segment, index) => {
-        currentPath += `/${segment}`;
-        const menuItem = menuItems.find(item => item.key === currentPath);
+      // 检查当前路径是否是子菜单项
+      const currentMenuItem = menuItemsMap.get(location.pathname);
 
-        if (menuItem) {
-          const isLast = index === pathSegments.length - 1;
+      if (currentMenuItem?.parentPath) {
+        // 如果是子菜单项，先添加父级菜单
+        const parentItem = menuItemsMap.get(currentMenuItem.parentPath);
+        if (parentItem) {
           items.push({
-            title: <span style={{ fontSize: 14, color: isLast ? '#24292F' : '#57606A', fontWeight: isLast ? 500 : 400 }}>{menuItem.label}</span>,
-            ...(isLast ? {} : { onClick: () => navigate(currentPath) }),
+            title: <span style={{ fontSize: 14, color: '#57606A', fontWeight: 400 }}>{parentItem.label}</span>,
+            onClick: () => navigate(currentMenuItem.parentPath!),
           });
         }
-      });
+        // 然后添加当前子菜单项
+        items.push({
+          title: <span style={{ fontSize: 14, color: '#24292F', fontWeight: 500 }}>{currentMenuItem.label}</span>,
+        });
+      } else if (currentMenuItem) {
+        // 如果是普通菜单项，直接添加
+        items.push({
+          title: <span style={{ fontSize: 14, color: '#24292F', fontWeight: 500 }}>{currentMenuItem.label}</span>,
+        });
+      }
     }
 
     return items;
@@ -144,6 +188,7 @@ const AppLayout: React.FC = () => {
           selectedKeys={[location.pathname]}
           items={menuItems}
           onClick={handleMenuClick}
+          expandIcon={({ isOpen }) => (isOpen ? <RightOutlined rotate={90} /> : <RightOutlined />)}
           style={{ borderRight: 0 }}
         />
       </Sider>
@@ -151,7 +196,6 @@ const AppLayout: React.FC = () => {
         <Header style={{
           background: '#ffffff',
           padding: '0 24px',
-          borderBottom: '1px solid #E5E7EB',
         }}>
           <div className="header-content">
             <Breadcrumb items={breadcrumbItems} style={{ margin: 0 }} />
@@ -171,10 +215,10 @@ const AppLayout: React.FC = () => {
         </Header>
         <Content style={{
           marginTop: '0',
-          marginLeft: '12px',
+          marginLeft: '0',
           marginRight: '12px',
           marginBottom: '12px',
-          background: '#F9FAFB',
+          background: '#F3F4F6',
           padding: '12px',
           borderRadius: '6px',
           minHeight: 'calc(100vh - 64px - 12px)'

@@ -15,6 +15,12 @@ export default {
     view: 'View',
     back: 'Back',
     actions: 'Actions',
+    favorite: 'Favorite',
+    unfavorite: 'Unfavorite',
+    test: 'Test',
+    preview: 'Preview',
+    copy: 'Copy',
+    close: 'Close',
 
     // Status
     loading: 'Loading...',
@@ -42,12 +48,15 @@ export default {
 
   // ==================== Sidebar Navigation ====================
   sidebar: {
-    dashboard: 'Dashboard',
-    knowledge: 'Knowledge Base',
-    memory: 'Memory Manager',
-    questioning: 'Questioning',
+    dashboard: 'Data Dashboard',
+    knowledge: 'Knowledge Q&A',
+    knowledgeBase: 'Knowledge Base',
+    glossary: 'Glossary',
+    prompts: 'Prompt Templates',
+    memory: 'Memory',
+    questioning: 'Smart Query',
     users: 'User Management',
-    strategy: 'QA Strategy',
+    strategy: 'Security',
     logout: 'Logout',
   },
 
@@ -219,6 +228,7 @@ export default {
 
       // Search
       searchPlaceholder: 'Search document title, content, or tags',
+      filterCategory: 'Filter by Category',
       categoryPlaceholder: 'Select category',
 
       // Columns
@@ -228,6 +238,7 @@ export default {
       colVectorized: 'Vectorized',
       colIndexed: 'Indexed',
       colNotIndexed: 'Not Indexed',
+      colCreated: 'Created',
       colUpdateTime: 'Updated',
       colActions: 'Actions',
 
@@ -240,6 +251,7 @@ export default {
       editModalTitle: 'Edit Document',
       titleLabel: 'Title',
       titlePlaceholder: 'Please enter document title',
+      titleRequired: 'Please enter title',
       categoryLabel: 'Category',
       modalCategoryPlaceholder: 'Enter or select category',
       categoryHelp: 'You can select from existing categories or enter a new category name',
@@ -247,6 +259,24 @@ export default {
       tagsPlaceholder: 'Enter tags and press Enter to add',
       contentLabel: 'Content',
       contentPlaceholder: 'Please enter document content',
+      contentRequired: 'Please enter content',
+      categoryRequired: 'Please select category',
+
+      // Upload
+      uploadModalTitle: 'Batch Upload Documents',
+      uploadText: 'Click or drag files to this area to upload',
+      uploadHint: 'Support single or batch upload, file size not exceeding 10MB',
+
+      // Tab
+      tabDocuments: 'Document List',
+
+      // Pagination
+      total: 'Total {count} items',
+
+      // Status
+      yes: 'Yes',
+      no: 'No',
+      import: 'Import',
 
       // Search Modal
       searchModalTitle: 'Semantic Search',
@@ -858,6 +888,157 @@ export default {
       saveButton: 'Save Settings',
       saveSuccess: 'Settings saved successfully',
       saveFailed: 'Failed to save settings',
+    },
+  },
+
+  // ==================== Glossary Configuration ====================
+  glossary: {
+    title: 'Glossary Configuration',
+    import: {
+      title: 'Batch Import',
+      button: 'Batch Import',
+      description: 'Import glossary terms from CSV file',
+      format: 'File Format Instructions',
+    },
+    export: {
+      button: 'Export',
+      success: 'Exported successfully',
+    },
+    stats: {
+      totalTerms: 'Total Terms',
+      categories: 'Categories',
+      recentlyAdded: 'Recently Added',
+    },
+    tabs: {
+      terms: 'Term List',
+      categories: 'Browse by Category',
+    },
+    terms: {
+      title: 'Glossary Terms',
+      addButton: 'Add Term',
+      addModalTitle: 'Add New Term',
+      editModalTitle: 'Edit Term',
+      deleteConfirm: 'Are you sure you want to delete this term?',
+      searchPlaceholder: 'Search term, definition, or mapping',
+      filterCategory: 'Filter by Category',
+      total: 'Total {count} items',
+
+      // Term unit
+      term: 'Term',
+
+      // Columns
+      colTerm: 'Term',
+      colDefinition: 'Definition',
+      colMapping: 'Chinese Mapping',
+      colCategory: 'Category',
+      colExample: 'Example',
+      colCreated: 'Created',
+      colActions: 'Actions',
+
+      // Form
+      termLabel: 'Term',
+      termPlaceholder: 'Please enter term',
+      termRequired: 'Please enter term',
+      definitionLabel: 'Definition',
+      definitionPlaceholder: 'Please enter definition',
+      definitionRequired: 'Please enter definition',
+      mappingLabel: 'Chinese Mapping',
+      mappingPlaceholder: 'Please enter Chinese translation',
+      mappingRequired: 'Please enter Chinese mapping',
+      categoryLabel: 'Category',
+      categoryPlaceholder: 'Select or enter category',
+      categoryRequired: 'Please select category',
+      exampleLabel: 'Example',
+      examplePlaceholder: 'Please enter usage example',
+
+      // Messages
+      fetchFailed: 'Failed to fetch term list',
+      createSuccess: 'Term created successfully',
+      createFailed: 'Failed to create term',
+      updateSuccess: 'Term updated successfully',
+      updateFailed: 'Failed to update term',
+      deleteSuccess: 'Term deleted successfully',
+      deleteFailed: 'Failed to delete term',
+    },
+  },
+
+  // ==================== Prompt Templates ====================
+  prompts: {
+    title: 'Prompt Templates',
+    import: {
+      title: 'Batch Import',
+      button: 'Batch Import',
+      description: 'Import prompt templates from JSON file',
+      format: 'File Format Instructions',
+    },
+    export: {
+      button: 'Export',
+      success: 'Exported successfully',
+    },
+    stats: {
+      totalTemplates: 'Total Templates',
+      favorites: 'Favorites',
+      categories: 'Categories',
+      totalUsage: 'Total Usage',
+    },
+    tabs: {
+      templates: 'All Templates',
+      favorites: 'My Favorites',
+    },
+    templates: {
+      title: 'Prompt Templates',
+      addButton: 'New Template',
+      addModalTitle: 'Create New Template',
+      editModalTitle: 'Edit Template',
+      deleteConfirm: 'Are you sure you want to delete this template?',
+      searchPlaceholder: 'Search template name, description, or tags',
+      filterCategory: 'Filter by Category',
+      total: 'Total {count} templates',
+
+      // Columns
+      colName: 'Name',
+      colCategory: 'Category',
+      colTags: 'Tags',
+      colVariables: 'Variables',
+      colUsage: 'Usage Count',
+      colCreated: 'Created',
+      colActions: 'Actions',
+
+      // Form
+      nameLabel: 'Template Name',
+      namePlaceholder: 'Please enter template name',
+      nameRequired: 'Please enter template name',
+      descriptionLabel: 'Description',
+      descriptionPlaceholder: 'Please enter template description',
+      descriptionRequired: 'Please enter description',
+      categoryLabel: 'Category',
+      categoryPlaceholder: 'Select or enter category',
+      categoryRequired: 'Please select category',
+      templateLabel: 'Prompt Template',
+      templatePlaceholder: 'Enter prompt content, use {variable_name} for variables',
+      templateRequired: 'Please enter prompt template',
+      templateHelp: 'Use {variable_name} to define replaceable variables, e.g., {username}, {topic}, etc.',
+      tagsLabel: 'Tags',
+      tagsPlaceholder: 'Please enter tags',
+
+      // Actions
+      toggleFavoriteFailed: 'Action failed',
+      copySuccess: 'Copied to clipboard',
+      testRunning: 'Testing...',
+      testSuccess: 'Test successful',
+      testFailed: 'Test failed',
+      testHelp: 'Fill in variable values to test the prompt',
+      testDescription: 'Provide actual values for template variables and preview the generated prompt',
+      preview: 'Preview',
+
+      // Messages
+      fetchFailed: 'Failed to fetch template list',
+      createSuccess: 'Template created successfully',
+      createFailed: 'Failed to create template',
+      updateSuccess: 'Template updated successfully',
+      updateFailed: 'Failed to update template',
+      deleteSuccess: 'Template deleted successfully',
+      deleteFailed: 'Failed to delete template',
     },
   },
 

@@ -9,6 +9,9 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Knowledge from './pages/Knowledge';
+import KnowledgeBase from './pages/KnowledgeBase';
+import Glossary from './pages/Glossary';
+import Prompts from './pages/Prompts';
 import Memory from './pages/Memory';
 import Questioning from './pages/Questioning';
 import Users from './pages/Users';
@@ -122,8 +125,10 @@ const AppContent: React.FC = () => {
           Tag: {
             borderRadiusSM: 6,
             marginXS: 4,
+            paddingInline: 8,
           },
           Statistic: {
+            titleColor: '#6B7280',
             contentFontSize: 24,
           },
           Divider: {
@@ -131,6 +136,7 @@ const AppContent: React.FC = () => {
             marginMD: 20,
             marginSM: 16,
             marginXS: 12,
+            borderColor: '#E5E7EB',
           },
           Alert: {
             borderRadiusLG: 8,
@@ -157,9 +163,12 @@ const AppContent: React.FC = () => {
             }
           >
             <Route index element={<Dashboard />} />
-            <Route path="knowledge" element={<Knowledge />} />
-            <Route path="memory" element={<Memory />} />
             <Route path="questioning" element={<Questioning />} />
+            <Route path="knowledge" element={<Knowledge />} />
+            <Route path="knowledge-base" element={<KnowledgeBase />} />
+            <Route path="glossary" element={<Glossary />} />
+            <Route path="prompts" element={<Prompts />} />
+            <Route path="memory" element={<Memory />} />
             <Route path="users" element={<Users />} />
             <Route path="strategy" element={<Strategy />} />
           </Route>

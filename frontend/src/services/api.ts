@@ -254,4 +254,58 @@ export const configApi = {
     api.post('/config/qa-strategy/reset').then(res => res.data),
 };
 
+// Glossary APIs
+export const glossaryApi = {
+  getTerms: (params?: { skip?: number; limit?: number; category?: string; search?: string }) =>
+    api.get('/glossary/', { params }).then(res => res.data),
+
+  getTerm: (id: string) =>
+    api.get(`/glossary/${id}`).then(res => res.data),
+
+  createTerm: (data: GlossaryTermCreate) =>
+    api.post('/glossary/', data).then(res => res.data),
+
+  updateTerm: (id: string, data: any) =>
+    api.put(`/glossary/${id}`, data).then(res => res.data),
+
+  deleteTerm: (id: string) =>
+    api.delete(`/glossary/${id}`).then(res => res.data),
+
+  getCategories: () =>
+    api.get('/glossary/categories/').then(res => res.data),
+
+  getStats: () =>
+    api.get('/glossary/stats/').then(res => res.data),
+};
+
+// Prompt Templates APIs
+export const promptsApi = {
+  getTemplates: (params?: { skip?: number; limit?: number; category?: string; search?: string }) =>
+    api.get('/prompts/', { params }).then(res => res.data),
+
+  getTemplate: (id: string) =>
+    api.get(`/prompts/${id}`).then(res => res.data),
+
+  createTemplate: (data: any) =>
+    api.post('/prompts/', data).then(res => res.data),
+
+  updateTemplate: (id: string, data: any) =>
+    api.put(`/prompts/${id}`, data).then(res => res.data),
+
+  deleteTemplate: (id: string) =>
+    api.delete(`/prompts/${id}`).then(res => res.data),
+
+  toggleFavorite: (id: string) =>
+    api.post(`/prompts/${id}/favorite`).then(res => res.data),
+
+  testTemplate: (id: string, data: any) =>
+    api.post(`/prompts/${id}/test`, data).then(res => res.data),
+
+  getCategories: () =>
+    api.get('/prompts/categories/').then(res => res.data),
+
+  getStats: () =>
+    api.get('/prompts/stats/').then(res => res.data),
+};
+
 export default api;
