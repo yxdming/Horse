@@ -122,10 +122,8 @@ const AppContent: React.FC = () => {
           Tag: {
             borderRadiusSM: 6,
             marginXS: 4,
-            paddingInline: 8,
           },
           Statistic: {
-            titleColor: '#6B7280',
             contentFontSize: 24,
           },
           Divider: {
@@ -133,7 +131,6 @@ const AppContent: React.FC = () => {
             marginMD: 20,
             marginSM: 16,
             marginXS: 12,
-            borderColor: '#E5E7EB',
           },
           Alert: {
             borderRadiusLG: 8,

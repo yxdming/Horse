@@ -80,11 +80,30 @@ export default {
       avgResponseTime: 'Avg Response Time',
     },
 
+    // System Overview
+    overview: {
+      title: 'System Overview',
+      vectorCount: 'Vector Index Count',
+      avgResponseTime: 'Avg Response Time',
+      categoryCount: 'Category Count',
+      successRate: 'Success Rate',
+      unit个: '',
+      unit条: '',
+      unit秒: '',
+      unit次: '',
+    },
+
     // Charts
     charts: {
       userGrowth: 'User Growth Trend',
+      userGrowthPeriod: 'User Growth Trend (Last 30 Days)',
       questionVolume: 'Question Volume',
+      questionVolumePeriod: 'Question Volume (Last 7 Days)',
       categoryDistribution: 'Category Distribution',
+      docCount: 'Document Count',
+      categoryDist: 'Category Distribution',
+      qaStats: 'QA Statistics',
+      qaStatsPeriod: 'QA Statistics (Last 7 Days)',
       last7Days: 'Last 7 Days',
       last30Days: 'Last 30 Days',
     },
@@ -122,6 +141,7 @@ export default {
     intro: {
       info: 'Knowledge Base Information',
       name: 'AIDP Manager Knowledge Base',
+      nameValue: 'AIDP Manager Knowledge Base',
       createTime: 'Created',
       totalDocs: 'Total Documents',
       indexedDocs: 'Indexed Documents',
@@ -173,7 +193,10 @@ export default {
       // Messages
       executeSuccess: 'Task {id} started',
       deleteSuccess: 'Deleted successfully',
+      deleteFailed: 'Failed to delete',
+      fetchFailed: 'Failed to fetch mapping list',
       addSuccess: 'Added successfully',
+      addFailed: 'Failed to add',
       deleteConfirm: 'Are you sure you want to delete this mapping task?',
       detailTitle: 'Directory Mapping Details',
     },
@@ -200,14 +223,18 @@ export default {
       categoryPlaceholder: 'Select category',
 
       // Columns
-      title: 'Title',
-      category: 'Category',
-      tags: 'Tags',
-      vectorized: 'Vectorized',
+      colTitle: 'Title',
+      colCategory: 'Category',
+      colTags: 'Tags',
+      colVectorized: 'Vectorized',
+      colIndexed: 'Indexed',
+      colNotIndexed: 'Not Indexed',
+      colUpdateTime: 'Updated',
+      colActions: 'Actions',
+
+      // Status
       indexed: 'Indexed',
       notIndexed: 'Not Indexed',
-      updateTime: 'Updated',
-      actions: 'Actions',
 
       // Modal
       addModalTitle: 'Add Document',
@@ -215,7 +242,7 @@ export default {
       titleLabel: 'Title',
       titlePlaceholder: 'Please enter document title',
       categoryLabel: 'Category',
-      categoryPlaceholder: 'Enter or select category',
+      modalCategoryPlaceholder: 'Enter or select category',
       categoryHelp: 'You can select from existing categories or enter a new category name',
       tagsLabel: 'Tags',
       tagsPlaceholder: 'Enter tags and press Enter to add',
@@ -224,7 +251,7 @@ export default {
 
       // Search Modal
       searchModalTitle: 'Semantic Search',
-      searchPlaceholder: 'Enter search content, the system will use semantic search to find relevant documents',
+      searchModalPlaceholder: 'Enter search content, the system will use semantic search to find relevant documents',
       searchResults: 'Search Results',
       similarity: 'Similarity',
 
@@ -263,12 +290,18 @@ export default {
       batchExport: 'Batch Export',
 
       // Search
-      searchPlaceholder: 'Search memory content or tags',
+      searchPlaceholder: 'Search memory title, content, or tags',
       typePlaceholder: 'Memory Type',
       categoryPlaceholder: 'Category',
       importancePlaceholder: 'Min Importance',
 
       // Columns
+      colTitle: 'Title',
+      colCategory: 'Category',
+      colType: 'Type',
+      colImportance: 'Importance',
+      colAccessCount: 'Access Count',
+      colCreateTime: 'Created',
       content: 'Content',
       category: 'Category',
       type: 'Type',
@@ -287,13 +320,22 @@ export default {
       addModalTitle: 'Add Memory',
       editModalTitle: 'Edit Memory',
       quickAddModalTitle: 'Quick Add Memory',
+      titleLabel: 'Title',
+      titlePlaceholder: 'Please enter memory title',
       contentLabel: 'Content',
       contentPlaceholder: 'Please enter memory content',
       categoryLabel: 'Category',
+      categoryHelp: 'You can select from existing categories or enter a new category name',
+      categorySelectPlaceholder: 'Enter or select category',
       tagsLabel: 'Tags',
       tagsPlaceholder: 'Enter tags and press Enter to add',
       typeLabel: 'Type',
       importanceLabel: 'Importance',
+
+      // Statistics
+      statsTotal: 'Total Memories',
+      statsCategories: 'Categories',
+      statsTypes: 'Types',
 
       // Messages
       fetchFailed: 'Failed to fetch memory list',
@@ -305,6 +347,8 @@ export default {
       deleteFailed: 'Failed to delete',
       deleteConfirm: 'Are you sure you want to delete this memory?',
       accessSuccess: 'Access information updated',
+      semanticSearch: 'Semantic Search',
+      semanticSearchDeveloping: 'Semantic Search Under Development',
     },
 
     // Templates
@@ -313,24 +357,77 @@ export default {
       addButton: 'Add Template',
       sectionTitle: 'Template Description',
       sectionDescription: 'Memory templates help you quickly create structured memory content. Templates define the format and required fields for memories.',
+      defaultImportance: 'Default Importance',
 
       // Columns
       name: 'Template Name',
-      description: 'Description',
+      colDescription: 'Description',
       fieldCount: 'Field Count',
       lastUsed: 'Last Used',
       actions: 'Actions',
 
+      // Modal
+      addModalTitle: 'Add Template',
+      editModalTitle: 'Edit Template',
+      nameLabel: 'Template Name',
+      namePlaceholder: 'Please enter template name',
+      descriptionLabel: 'Description',
+      descriptionPlaceholder: 'Please enter template description',
+      categoryPlaceholder: 'Please enter category',
+      defaultImportanceLabel: 'Default Importance',
+      defaultImportancePlaceholder: 'Please select default importance',
+      defaultTagsLabel: 'Default Tags',
+
       // Messages
       deleteSuccess: 'Deleted successfully',
+      deleteFailed: 'Failed to delete',
+      fetchFailed: 'Failed to fetch template list',
+      updateFailed: 'Failed to update template',
+      createFailed: 'Failed to create template',
       deleteConfirm: 'Are you sure you want to delete this template?',
+      applied: 'Template applied: {name}',
+      use: 'Use',
     },
 
     // Permissions
     permissions: {
       title: 'Permission Management',
+      addButton: 'Add User',
       description: 'Permission Description',
-      descriptionText: 'Configure user access permissions for the memory library. Administrators can manage all memories, while regular users can only manage their own memories.',
+      descriptionText: 'Administrators have all permissions, editors can create, edit, and view memories, and viewers can only browse memory content.',
+
+      // Columns
+      colUsername: 'Username',
+      colRole: 'Role',
+      colPermissions: 'Permissions',
+      colMemoryCount: 'Memory Count',
+      colLastAccess: 'Last Access',
+
+      // Modal
+      addModalTitle: 'Add Memory Library User',
+      usernameLabel: 'Username',
+      usernamePlaceholder: 'Please enter username',
+      roleLabel: 'Role',
+      rolePlaceholder: 'Please select role',
+      roleAdmin: 'Administrator',
+      roleEditor: 'Editor',
+      roleViewer: 'Viewer',
+      permissionsLabel: 'Permissions',
+      permissionsPlaceholder: 'Please select permissions',
+      permAll: 'All',
+      permCreate: 'Create',
+      permEdit: 'Edit',
+      permView: 'View',
+      permDelete: 'Delete',
+
+      // Messages
+      removeSuccess: 'Removed successfully',
+      removeFailed: 'Failed to remove',
+      removeConfirm: 'Are you sure you want to remove this user?',
+      remove: 'Remove',
+      addSuccess: 'Added successfully',
+      addFailed: 'Failed to add',
+      fetchFailed: 'Failed to fetch user list',
     },
   },
 
@@ -352,12 +449,14 @@ export default {
       addButton: 'Add Data Source',
 
       // Columns
-      name: 'Source Name',
+      name: 'Data Source Name',
       type: 'Database Type',
       host: 'Host',
       port: 'Port',
       database: 'Database',
       status: 'Status',
+      tableCount: 'Table Count',
+      lastSync: 'Last Sync',
       actions: 'Actions',
 
       // Status
@@ -374,9 +473,10 @@ export default {
       // Modal
       addModalTitle: 'Add Data Source',
       editModalTitle: 'Edit Data Source',
-      nameLabel: 'Source Name',
+      nameLabel: 'Data Source Name',
       typeLabel: 'Database Type',
       hostLabel: 'Host',
+      hostPlaceholder: 'e.g., 192.168.1.100',
       portLabel: 'Port',
       databaseLabel: 'Database',
       usernameLabel: 'Username',
@@ -384,8 +484,13 @@ export default {
 
       // Buttons
       testConnection: 'Test Connection',
+      testConnecting: 'Testing connection...',
       testSuccess: 'Connection successful',
       testFailed: 'Connection failed',
+
+      // Alert
+      alertMessage: 'Data Source Description',
+      alertDescription: 'Configure and manage database connections, supporting mainstream databases like MySQL, PostgreSQL. The system automatically synchronizes table structure for natural language to SQL conversion.',
 
       // Messages
       fetchFailed: 'Failed to fetch data source list',
@@ -407,19 +512,46 @@ export default {
       // Columns
       term: 'Term',
       definition: 'Definition',
+      mapping: 'Mapping Rule',
       category: 'Category',
+      example: 'Example Question',
       examples: 'Examples',
       updateTime: 'Updated',
       actions: 'Actions',
+
+      // Statistics
+      statsTotal: 'Total Terms',
+      statsSales: 'Sales Metrics',
+      statsUser: 'User Metrics',
+      statsOther: 'Other Metrics',
+
+      // Categories
+      categorySales: 'Sales Metrics',
+      categoryUser: 'User Metrics',
+      categoryProduct: 'Product Metrics',
+      categoryFinance: 'Finance Metrics',
 
       // Modal
       addModalTitle: 'Add Term',
       editModalTitle: 'Edit Term',
       termLabel: 'Term',
+      termPlaceholder: 'e.g., GMV, DAU, Conversion Rate',
       definitionLabel: 'Definition',
+      definitionPlaceholder: 'e.g., Total transaction amount, Daily active users',
+      mappingLabel: 'Mapping Rule',
+      mappingPlaceholder: 'e.g., SUM(order_amount)',
+      mappingRequired: 'Please enter SQL mapping rule',
       categoryLabel: 'Category',
+      categoryPlaceholder: 'Please select category',
+      exampleLabel: 'Example Question',
+      examplePlaceholder: 'e.g., What is this month\'s GMV',
+      exampleRequired: 'Please enter example question',
       examplesLabel: 'Examples',
       examplesPlaceholder: 'One example per line',
+
+      // Alert
+      alertMessage: 'Glossary Description',
+      alertDescription: 'Maintain business terminology dictionary, map industry jargon and business terms to database fields and SQL expressions to improve question understanding accuracy.',
 
       // Messages
       fetchFailed: 'Failed to fetch term list',
@@ -458,6 +590,13 @@ export default {
       statsSuccess: 'Success',
       statsFailed: 'Failed',
       avgDuration: 'Avg Duration',
+
+      // Alert
+      alertMessage: 'History Description',
+      alertDescription: 'View user query history, including questions, generated SQL, execution results, etc. Can be used to analyze user needs and optimize terminology dictionary.',
+
+      // Messages
+      fetchFailed: 'Failed to fetch history records',
     },
 
     // Natural Language Query
@@ -465,14 +604,24 @@ export default {
       title: 'Natural Language Query',
       selectDatabase: 'Select Database',
       questionLabel: 'Question',
-      questionPlaceholder: 'Please enter your question, e.g., Query user growth trend in the last 7 days',
-      askButton: 'Ask',
-      clearButton: 'Clear',
+      questionPlaceholder: 'Please enter your question, e.g., What is this month\'s sales, Top 10 products...',
+      askButton: 'Generate SQL',
+      clearButton: 'Clear Results',
+      executeButton: 'Execute Query',
+
+      // Examples
+      exampleLabel: 'Example Questions',
+      example1: 'What is this month\'s sales',
+      example2: 'Top 10 selling products',
+      example3: 'User growth trend in the last 7 days',
+      example4: 'Regional GMV ranking',
 
       // Results
-      resultTitle: 'Query Results',
+      resultTitle: 'Generation Results',
       generatedSQL: 'Generated SQL',
       confidence: 'Confidence',
+      recognizedTerms: 'Recognized Terms',
+      explanation: 'Understanding Explanation',
       duration: 'Duration',
       resultCount: 'Results',
 
@@ -480,7 +629,7 @@ export default {
       noDatabase: 'Please select a database first',
       questionRequired: 'Please enter a question',
       askSuccess: 'Query successful',
-      askFailed: 'Query failed',
+      askFailed: 'Failed to generate SQL',
     },
   },
 
@@ -544,6 +693,97 @@ export default {
   // ==================== QA Strategy ====================
   strategy: {
     title: 'QA Strategy Configuration',
+    refresh: 'Refresh',
+    saveConfig: 'Save Configuration',
+
+    // Common Messages
+    fetchConfigError: 'Failed to fetch configuration',
+    saveConfigSuccess: 'Configuration saved successfully',
+    saveConfigError: 'Failed to save configuration',
+    resetConfigSuccess: 'Default configuration restored',
+    resetConfigError: 'Failed to restore default configuration',
+
+    // Config Info
+    configInfo: {
+      title: 'Configuration Description',
+      description: 'Configuring QA strategy will affect the quality and style of AI responses. Changes must be saved to take effect.',
+    },
+
+    // Model Parameters (Detailed)
+    modelParams: {
+      title: 'Model Parameters',
+      temperature: {
+        label: 'Temperature',
+        tooltip: 'Controls the randomness of output. Higher values produce more random and creative output; lower values produce more deterministic and consistent output',
+        required: 'Please enter temperature value',
+        unit: '',
+        marks: {
+          deterministic: 'Deterministic',
+          balanced: 'Balanced',
+          creative: 'Creative',
+          random: 'Random',
+        },
+      },
+      maxTokens: {
+        label: 'Max Tokens',
+        tooltip: 'Limits the maximum length of a single response. 1 Token ≈ 0.75 Chinese characters',
+        required: 'Please enter max tokens',
+        unit: 'tokens',
+      },
+    },
+
+    // Retrieval Strategy
+    retrievalStrategy: {
+      title: 'Retrieval Strategy',
+      topK: {
+        label: 'Top-K Count',
+        tooltip: 'Retrieve the K most relevant documents from the vector database as context',
+        required: 'Please enter Top-K value',
+        unit: '',
+      },
+      similarityThreshold: {
+        label: 'Similarity Threshold',
+        tooltip: 'Only return documents with similarity above this threshold. Range 0-1, higher values are stricter',
+        required: 'Please enter similarity threshold',
+        marks: {
+          all: 'All',
+          loose: 'Loose',
+          moderate: 'Moderate',
+          strict: 'Strict',
+          precise: 'Precise',
+        },
+      },
+    },
+
+    // Prompt Configuration
+    promptConfig: {
+      title: 'Prompt Configuration',
+      systemPrompt: {
+        label: 'System Prompt',
+        tooltip: 'Define the role, tasks, and response style of the AI assistant',
+        required: 'Please enter system prompt',
+        placeholder: 'e.g., You are a professional AI assistant responsible for answering user questions about the knowledge base...',
+      },
+    },
+
+    // Quick Actions
+    quickActions: {
+      title: 'Quick Actions',
+      resetDefault: 'Restore Default Configuration',
+    },
+
+    // Configuration Preview
+    configPreview: {
+      title: 'Current Configuration Preview',
+      fields: {
+        temperature: 'Temperature',
+        maxTokens: 'Max Tokens',
+        topK: 'Top-K',
+        similarityThreshold: 'Similarity Threshold',
+        systemPrompt: 'System Prompt',
+        notSet: 'Not Set',
+      },
+    },
 
     // Tabs
     tabs: {
@@ -553,31 +793,28 @@ export default {
       security: 'Security Settings',
     },
 
-    // Model Parameters
+    // Model
     model: {
       title: 'Model Parameters Configuration',
       description: 'Configure basic AI model parameters',
-
       temperatureLabel: 'Temperature',
-      temperatureHelp: 'Control the randomness of output, higher values produce more random output',
+      temperatureHelp: 'Controls the randomness of output, higher values produce more random output',
       maxTokensLabel: 'Max Tokens',
-      maxTokensHelp: 'Limit the maximum length of a single response',
+      maxTokensHelp: 'Limits the maximum length of a single response',
       topPLabel: 'Top P',
       topPHelp: 'Nucleus sampling parameter, controls vocabulary selection range',
       frequencyPenaltyLabel: 'Frequency Penalty',
       frequencyPenaltyHelp: 'Reduce the probability of recurring content',
-
       saveButton: 'Save Parameters',
       resetButton: 'Reset to Default',
       saveSuccess: 'Parameters saved successfully',
       saveFailed: 'Failed to save parameters',
     },
 
-    // Retrieval Strategy
+    // Retrieval
     retrieval: {
       title: 'Retrieval Strategy Configuration',
       description: 'Configure knowledge base retrieval parameters',
-
       topKLabel: 'Top-K',
       topKHelp: 'Return the K most relevant documents',
       thresholdLabel: 'Similarity Threshold',
@@ -587,7 +824,6 @@ export default {
       searchModeSemantic: 'Semantic Search',
       searchModeHybrid: 'Hybrid Search',
       searchModeKeyword: 'Keyword Search',
-
       saveButton: 'Save Strategy',
       testButton: 'Test Retrieval',
       saveSuccess: 'Strategy saved successfully',
@@ -598,14 +834,12 @@ export default {
     prompt: {
       title: 'Prompt Template Management',
       description: 'Customize system prompt templates',
-
       systemPromptLabel: 'System Prompt',
       systemPromptHelp: 'Define the role and behavior guidelines for the AI assistant',
       userPromptLabel: 'User Prompt Template',
       userPromptHelp: 'Define how user input is processed',
       contextPromptLabel: 'Context Template',
       contextHelp: 'Define how retrieved context is organized',
-
       saveButton: 'Save Templates',
       previewButton: 'Preview',
       resetButton: 'Reset to Default',
@@ -617,7 +851,6 @@ export default {
     security: {
       title: 'Security Settings',
       description: 'Configure content filtering and security rules',
-
       enableFilterLabel: 'Enable Sensitive Word Filter',
       enableFilterHelp: 'Automatically filter sensitive content',
       customWordsLabel: 'Custom Sensitive Words',
@@ -626,7 +859,6 @@ export default {
       maxLengthHelp: 'Limit the maximum character count of a single response',
       enableAuditLabel: 'Enable Audit Log',
       enableAuditHelp: 'Record all Q&A content for auditing',
-
       saveButton: 'Save Settings',
       saveSuccess: 'Settings saved successfully',
       saveFailed: 'Failed to save settings',

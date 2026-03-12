@@ -1,0 +1,113 @@
+# ===========================================
+# Docker Compose 配置文件
+# ===========================================
+# 用于快速部署前端应用
+# ===========================================
+
+version: '3.8'
+
+services:
+  # 生产环境（优化版）
+  frontend-optimized:
+    build:
+      context: .
+      dockerfile: Dockerfile.optimized
+    container_name: aidp-frontend-optimized
+    ports:
+      - "3001:80"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+      - BACKEND_URL=http://backend:8000  # 配置后端 API 地址
+    networks:
+      - aidp-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    profiles:
+      - optimized
+      - production
+
+  # 开发环境（完整版）
+  frontend-full:
+    build:
+      context: .
+      dockerfile: Dockerfile.full
+    container_name: aidp-frontend-full
+    ports:
+      - "5173:5173"
+      - "3002:80"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./src:/app/src:ro  # 只读挂载源码，支持热更新
+    networks:
+      - aidp-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5173/"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    profiles:
+      - full
+      - development
+
+  # 依赖打包版（离线部署）
+  frontend-bundle:
+    build:
+      context: .
+      dockerfile: Dockerfile.bundle
+    container_name: aidp-frontend-bundle
+    ports:
+      - "3003:80"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    networks:
+      - aidp-network
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+    profiles:
+      - bundle
+      - offline
+
+networks:
+  aidp-network:
+    driver: bridge
+    name: aidp-network
+
+# ===========================================
+# 使用说明
+# ===========================================
+#
+# 1. 启动生产环境（优化版）:
+#    docker-compose --profile production up -d
+#
+# 2. 启动开发环境（完整版）:
+#    docker-compose --profile development up -d
+#
+# 3. 启动离线部署版本（依赖打包版）:
+#    docker-compose --profile offline up -d
+#
+# 4. 启动所有服务:
+#    docker-compose --profile optimized --profile full --profile bundle up -d
+#
+# 5. 停止服务:
+#    docker-compose down
+#
+# 6. 查看日志:
+#    docker-compose logs -f [service-name]
+#
+# 7. 重新构建:
+#    docker-compose build --no-cache
+#
+# ===========================================

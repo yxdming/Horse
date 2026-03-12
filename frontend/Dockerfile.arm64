@@ -1,0 +1,91 @@
+# ===========================================
+# ARM64 多架构构建
+# ===========================================
+# 支持架构: linux/amd64, linux/arm64
+# 构建方式: docker buildx
+# ===========================================
+
+# 构建阶段
+FROM --platform=$BUILDPLATFORM node:18-alpine AS builder
+
+# 接受构建参数
+ARG BUILDPLATFORM
+ARG TARGETPLATFORM
+ARG TARGETOS
+ARG TARGETARCH
+
+# 显示构建信息
+RUN echo "Building on: $BUILDPLATFORM" && \
+    echo "Targeting: $TARGETPLATFORM" && \
+    echo "Target OS: $TARGETOS" && \
+    echo "Target Arch: $TARGETARCH"
+
+# 设置工作目录
+WORKDIR /app
+
+# 安装必要的构建工具（针对ARM64架构）
+RUN apk add --no-cache python3 make g++ && \
+    if [ "$TARGETARCH" = "arm64" ]; then \
+        echo "Installing ARM64 specific dependencies..."; \
+    fi
+
+# 复制 package 文件
+COPY package*.json ./
+
+# 安装所有依赖（针对目标架构）
+RUN npm ci --production=false
+
+# 复制源代码
+COPY . .
+
+# 构建应用（针对目标架构）
+RUN npm run build
+
+# 生产阶段 - 多架构支持
+FROM --platform=$TARGETPLATFORM nginx:1.25-alpine
+
+# 接收目标平台参数
+ARG TARGETPLATFORM
+ARG TARGETARCH
+
+# 安装 envsubst（用于环境变量替换）
+RUN apk add --no-cache gettext
+
+# 添加非root用户
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nginx -u 1001
+
+# 从构建阶段复制构建产物
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+# 复制自定义 nginx 配置和启动脚本
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+
+# 设置脚本执行权限
+RUN chmod +x /docker-entrypoint.sh
+
+# 设置权限
+RUN chown -R nginx:nodejs /usr/share/nginx/html && \
+    chown -R nginx:nodejs /var/cache/nginx && \
+    chown -R nginx:nodejs /var/log/nginx && \
+    touch /var/run/nginx.pid && \
+    chown -R nginx:nodejs /var/run/nginx.pid
+
+# 添加架构信息标签
+LABEL architecture="${TARGETARCH}"
+LABEL description="AIDP Frontend - Multi-architecture support"
+LABEL version="1.0.0"
+
+# 暴露端口
+EXPOSE 80
+
+# 定义环境变量（默认值）
+ENV BACKEND_URL=http://backend:8000
+
+# 健康检查
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD wget --quiet --tries=1 --spider http://localhost/ || exit 1
+
+# 使用启动脚本
+ENTRYPOINT ["/docker-entrypoint.sh"]
