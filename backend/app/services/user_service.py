@@ -32,14 +32,6 @@ class UserService:
                 return user
         return None
 
-    def get_user_by_email(self, email: str) -> Optional[Dict[str, Any]]:
-        """Get user by email"""
-        users = self.get_all_users()
-        for user in users:
-            if user['email'] == email:
-                return user
-        return None
-
     def authenticate_user(self, username: str, password: str) -> Optional[Dict[str, Any]]:
         """Authenticate user by username and password"""
         user = self.get_user_by_username(username)
@@ -64,14 +56,9 @@ class UserService:
         """Create new user"""
         users = self.get_all_users()
 
-        # Check if email already exists
-        if self.get_user_by_email(user_create.email):
-            raise ValueError("User with this email already exists")
-
         # Create new user
         user = User(
             username=user_create.username,
-            email=user_create.email,
             role=user_create.role
         )
 

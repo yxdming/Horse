@@ -22,8 +22,7 @@ async def get_users(
     if search:
         search_lower = search.lower()
         users = [u for u in users if
-                 search_lower in u.get('username', '').lower() or
-                 search_lower in u.get('email', '').lower()]
+                 search_lower in u.get('username', '').lower()]
 
     if role:
         users = [u for u in users if u.get('role') == role]

@@ -33,7 +33,6 @@ export default {
     validation: {
       required: 'Please enter {field}',
       requiredSelect: 'Please select {field}',
-      email: 'Please enter a valid email address',
     },
 
     // Confirmation Dialogs
@@ -645,13 +644,12 @@ export default {
 
     // Actions
     addButton: 'Add User',
-    searchPlaceholder: 'Search username or email',
+    searchPlaceholder: 'Search username',
     roleFilter: 'Filter by Role',
     statusFilter: 'Filter by Status',
 
     // Columns
     username: 'Username',
-    email: 'Email',
     role: 'Role',
     status: 'Status',
     createTime: 'Created',
@@ -672,8 +670,6 @@ export default {
     editModalTitle: 'Edit User',
     usernameLabel: 'Username',
     usernamePlaceholder: 'Please enter username',
-    emailLabel: 'Email',
-    emailPlaceholder: 'Please enter email',
     roleLabel: 'Role',
     rolePlaceholder: 'Please select role',
     statusLabel: 'Status',

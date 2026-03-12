@@ -98,7 +98,6 @@ const Users: React.FC = () => {
       if (editingUser) {
         const updateData: UserUpdate = {
           username: values.username,
-          email: values.email,
           role: values.role,
           status: values.status,
         };
@@ -107,7 +106,6 @@ const Users: React.FC = () => {
       } else {
         const createData: UserCreate = {
           username: values.username,
-          email: values.email,
           role: values.role,
         };
         await userApi.createUser(createData);
@@ -171,13 +169,6 @@ const Users: React.FC = () => {
       title: tp('users.username'),
       dataIndex: 'username',
       key: 'username',
-      width: 120,
-      align: 'center' as const,
-    },
-    {
-      title: tp('users.email'),
-      dataIndex: 'email',
-      key: 'email',
       width: 200,
       align: 'center' as const,
     },
@@ -185,7 +176,7 @@ const Users: React.FC = () => {
       title: tp('users.role'),
       dataIndex: 'role',
       key: 'role',
-      width: 100,
+      width: 120,
       align: 'center' as const,
       render: (role: string) => <Tag color={getRoleColor(role)}>{getRoleText(role)}</Tag>,
     },
@@ -349,17 +340,6 @@ const Users: React.FC = () => {
             rules={[{ required: true, message: tp('common.validation.required', { field: tp('users.usernameLabel') }) }]}
           >
             <Input placeholder={tp('users.usernamePlaceholder')} />
-          </Form.Item>
-
-          <Form.Item
-            label={tp('users.emailLabel')}
-            name="email"
-            rules={[
-              { required: true, message: tp('common.validation.required', { field: tp('users.emailLabel') }) },
-              { type: 'email', message: tp('common.validation.email') },
-            ]}
-          >
-            <Input placeholder={tp('users.emailPlaceholder')} />
           </Form.Item>
 
           <Form.Item

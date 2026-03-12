@@ -2,7 +2,6 @@
 export interface User {
   id: string;
   username: string;
-  email: string;
   role: 'admin' | 'user' | 'readonly';
   status: 'active' | 'inactive';
   created_at: string;
@@ -11,13 +10,11 @@ export interface User {
 
 export interface UserCreate {
   username: string;
-  email: string;
   role: 'admin' | 'user' | 'readonly';
 }
 
 export interface UserUpdate {
   username?: string;
-  email?: string;
   role?: 'admin' | 'user' | 'readonly';
   status?: 'active' | 'inactive';
 }

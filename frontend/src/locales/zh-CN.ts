@@ -33,7 +33,6 @@ export default {
     validation: {
       required: '请输入{field}',
       requiredSelect: '请选择{field}',
-      email: '请输入有效的邮箱地址',
     },
 
     // 确认对话框
@@ -645,13 +644,12 @@ export default {
 
     // 操作
     addButton: '新增用户',
-    searchPlaceholder: '搜索用户名或邮箱',
+    searchPlaceholder: '搜索用户名',
     roleFilter: '筛选角色',
     statusFilter: '筛选状态',
 
     // 列
     username: '用户名',
-    email: '邮箱',
     role: '角色',
     status: '状态',
     createTime: '创建时间',
@@ -672,8 +670,6 @@ export default {
     editModalTitle: '编辑用户',
     usernameLabel: '用户名',
     usernamePlaceholder: '请输入用户名',
-    emailLabel: '邮箱',
-    emailPlaceholder: '请输入邮箱',
     roleLabel: '角色',
     rolePlaceholder: '请选择角色',
     statusLabel: '状态',
