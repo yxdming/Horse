@@ -8,7 +8,6 @@ import {
   Input,
   Select,
   Tag,
-  message,
   Popconfirm,
   Card,
   Row,
@@ -35,6 +34,7 @@ import type { DatabaseSource, GlossaryTerm, QuestionHistory } from '../types';
 import { questioningApi } from '../services/api';
 import { useTranslation } from '../contexts/LanguageContext';
 import { createTranslateProxy } from '../utils/i18n';
+import { useApp } from '../hooks/useApp';
 
 const { TextArea } = Input;
 const { Search } = Input;
@@ -42,6 +42,7 @@ const { Search } = Input;
 const QuestioningPage: React.FC = () => {
   const { t } = useTranslation();
   const tp = useMemo(() => createTranslateProxy(t), [t]);
+  const { message } = useApp();
   const [activeTab, setActiveTab] = useState('databases');
 
   // 数据库管理状态

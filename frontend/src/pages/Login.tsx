@@ -1,15 +1,17 @@
 import React, { useState, useMemo } from 'react';
-import { Form, Input, Button, Card, message } from 'antd';
+import { Form, Input, Button, Card } from 'antd';
 import { UserOutlined, LockOutlined } from '@ant-design/icons';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { authApi } from '../services/api';
 import { useTranslation } from '../contexts/LanguageContext';
 import { createTranslateProxy } from '../utils/i18n';
+import { useApp } from '../hooks/useApp';
 import './Login.css';
 
 const Login: React.FC = () => {
   const { t } = useTranslation();
   const tp = useMemo(() => createTranslateProxy(t), [t]);
+  const { message } = useApp();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();

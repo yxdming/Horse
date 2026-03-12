@@ -8,7 +8,6 @@ import {
   Input,
   Select,
   Tag,
-  message,
   Popconfirm,
   Card,
   Row,
@@ -26,12 +25,14 @@ import type { User, UserCreate, UserUpdate } from '../types';
 import { userApi } from '../services/api';
 import { useTranslation } from '../contexts/LanguageContext';
 import { createTranslateProxy } from '../utils/i18n';
+import { useApp } from '../hooks/useApp';
 
 const { Search } = Input;
 
 const Users: React.FC = () => {
   const { t } = useTranslation();
   const tp = useMemo(() => createTranslateProxy(t), [t]);
+  const { message } = useApp();
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState<User[]>([]);
   const [total, setTotal] = useState(0);

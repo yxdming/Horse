@@ -9,7 +9,6 @@ import {
   Select,
   AutoComplete,
   Tag,
-  message,
   Popconfirm,
   Card,
   Row,
@@ -38,6 +37,7 @@ import type { KnowledgeDocument, SearchResult } from '../types';
 import { knowledgeApi } from '../services/api';
 import { useTranslation } from '../contexts/LanguageContext';
 import { createTranslateProxy } from '../utils/i18n';
+import { useApp } from '../hooks/useApp';
 
 const { TextArea } = Input;
 const { Search } = Input;
@@ -45,6 +45,7 @@ const { Search } = Input;
 const KnowledgeBase: React.FC = () => {
   const { t } = useTranslation();
   const tp = createTranslateProxy(t);
+  const { message } = useApp();
   const [activeTab, setActiveTab] = useState('documents');
 
   // 文档管理状态

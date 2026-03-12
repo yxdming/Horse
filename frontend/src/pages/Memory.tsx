@@ -9,7 +9,6 @@ import {
   Select,
   AutoComplete,
   Tag,
-  message,
   Popconfirm,
   Card,
   Row,
@@ -34,6 +33,7 @@ import type { Memory } from '../types';
 import { memoryApi } from '../services/api';
 import { useTranslation } from '../contexts/LanguageContext';
 import { createTranslateProxy } from '../utils/i18n';
+import { useApp } from '../hooks/useApp';
 
 const { TextArea } = Input;
 const { Search } = Input;
@@ -41,6 +41,7 @@ const { Search } = Input;
 const MemoryPage: React.FC = () => {
   const { t } = useTranslation();
   const tp = useMemo(() => createTranslateProxy(t), [t]);
+  const { message } = useApp();
   const [activeTab, setActiveTab] = useState('memories');
 
   // 记忆管理状态

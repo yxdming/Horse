@@ -6,7 +6,6 @@ import {
   InputNumber,
   Button,
   Space,
-  message,
   Slider,
   Typography,
   Divider,
@@ -21,6 +20,7 @@ import type { QAStrategy } from '../types';
 import { configApi } from '../services/api';
 import { useTranslation } from '../contexts/LanguageContext';
 import { createTranslateProxy } from '../utils/i18n';
+import { useApp } from '../hooks/useApp';
 
 const { TextArea } = Input;
 const { Title, Text } = Typography;
@@ -28,6 +28,7 @@ const { Title, Text } = Typography;
 const Strategy: React.FC = () => {
   const { t } = useTranslation();
   const tp = useMemo(() => createTranslateProxy(t), [t]);
+  const { message } = useApp();
   const [loading, setLoading] = useState(false);
   const [config, setConfig] = useState<QAStrategy | null>(null);
   const [form] = Form.useForm();

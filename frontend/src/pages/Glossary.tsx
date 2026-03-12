@@ -8,7 +8,6 @@ import {
   Input,
   Select,
   Tag,
-  message,
   Popconfirm,
   Card,
   Row,
@@ -32,6 +31,7 @@ import {
 } from '@ant-design/icons';
 import { useTranslation } from '../contexts/LanguageContext';
 import { createTranslateProxy } from '../utils/i18n';
+import { useApp } from '../hooks/useApp';
 
 const { TextArea } = Input;
 const { Search } = Input;
@@ -50,6 +50,7 @@ interface GlossaryTerm {
 const Glossary: React.FC = () => {
   const { t } = useTranslation();
   const tp = createTranslateProxy(t);
+  const { message } = useApp();
   const [activeTab, setActiveTab] = useState('terms');
 
   // 状态管理
