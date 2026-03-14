@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Layout, Menu, Dropdown, Avatar, Space, Breadcrumb } from 'antd';
+import { Layout, Menu, Dropdown, Avatar, Space, Breadcrumb, Button } from 'antd';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import {
   DashboardOutlined,
@@ -14,6 +14,7 @@ import {
   FileTextOutlined,
   MessageOutlined,
   RightOutlined,
+  RollbackOutlined,
 } from '@ant-design/icons';
 import { useTranslation } from '../contexts/LanguageContext';
 import { createTranslateProxy } from '../utils/i18n';
@@ -97,6 +98,11 @@ const AppLayout: React.FC = () => {
   const handleLogout = () => {
     localStorage.removeItem('user');
     navigate('/login', { replace: true });
+  };
+
+  const handleSwitchToRubik = () => {
+    // 跳转到 RubikSQL 应用
+    window.location.href = 'http://localhost:32744';
   };
 
   const userMenuItems = [
@@ -205,6 +211,19 @@ const AppLayout: React.FC = () => {
             <Breadcrumb items={breadcrumbItems} style={{ margin: 0 }} />
             <Space size="middle">
               <LanguageSwitcher style={{ width: 120 }} />
+              <Button
+                type="text"
+                icon={<RollbackOutlined />}
+                onClick={handleSwitchToRubik}
+                style={{
+                  borderRadius: 8,
+                  padding: '4px 12px',
+                  transition: 'all 0.3s ease',
+                }}
+                className="hover:text-indigo-600 hover:bg-indigo-50"
+              >
+                返回 RubikSQL
+              </Button>
               <Dropdown menu={{ items: userMenuItems }} placement="bottomRight">
                 <div className="user-info">
                   <Avatar

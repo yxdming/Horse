@@ -1,0 +1,223 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /* Design System Variables */
+  :root {
+    /* Core Colors */
+    --white: #FFFFFF;
+    --off-white: #F0EEE9; /* Pantone 11-4201 */
+    --text-primary: #1A1A1A;
+    --text-secondary: #6B7280;
+    --border-light: #F3F4F6;
+    --border: #E5E7EB;
+
+    /* Accent Colors */
+    --accent: #3B82F6;
+    --accent-hover: #2563EB;
+    --accent-light: #EFF6FF;
+
+    /* Semantic Colors */
+    --success: #22C55E;
+    --success-bg: #F0FDF4;
+    --warning: #F59E0B;
+    --error: #EF4444;
+
+    /* Button Colors */
+    --btn-primary: #2D2D2D;
+
+    /* Transitions */
+    --transition-fast: 150ms;
+    --transition-normal: 200ms;
+    --transition-slow: 300ms;
+    --transition-slower: 500ms;
+  }
+
+  body {
+    @apply bg-white text-[#1A1A1A] antialiased;
+  }
+
+  /* Custom Scrollbar for WebKit */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-[#E5E7EB] rounded-full;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-[#D1D5DB];
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* SQL Editor white cursor */
+  .sql-editor-textarea {
+    caret-color: #ffffff;
+  }
+
+  /* Ensure blinking cursor animation */
+  @keyframes cursor-blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+  }
+
+  /* Subtle hover states */
+  .hover-subtle:hover {
+    @apply bg-[#F9FAFB] border-[#D1D5DB];
+  }
+
+  /* Clean focus states - blue only */
+  .focus-clean:focus {
+    @apply outline-none border-[#3B82F6] ring-2 ring-[#EFF6FF];
+  }
+
+  /* Success flash animation */
+  @keyframes success-flash {
+    0% { background-color: var(--btn-primary); }
+    50% { background-color: var(--success); }
+    100% { background-color: var(--btn-primary); }
+  }
+
+  .animate-success-flash {
+    animation: success-flash var(--transition-slower) ease;
+  }
+
+  /* Off-white background for secondary content */
+  .bg-off-white {
+    background-color: var(--off-white);
+  }
+
+  /* Dark button styles */
+  .btn-dark {
+    @apply bg-[#2D2D2D] text-white transition-all duration-150;
+    @apply hover:bg-[#1A1A1A] focus:outline-none focus:ring-2 focus:ring-[#EFF6FF];
+  }
+
+  /* Minimal tag styles */
+  .tag-minimal {
+    @apply bg-[#F3F4F6] text-[#6B7280] border-[#E5E7EB];
+    @apply px-2 py-1 text-sm rounded-[0.25rem] border;
+  }
+}
+
+/* Shimmer animation for progress bars */
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s infinite linear;
+}
+
+/* CodeMirror Editor Styles */
+.cm-editor {
+  height: 100% !important;
+}
+
+.cm-editor.cm-focused {
+  outline: none !important;
+}
+
+.cm-scroller {
+  overflow: auto !important;
+}
+
+.cm-content {
+  padding: 0.75rem !important;
+}
+
+.cm-lineNumbers .cm-gutterElement {
+  padding: 0 0.5em 0 0.5em !important;
+  min-width: 2.5em !important;
+  text-align: right !important;
+  font-size: 0.75rem !important;
+  line-height: 1.5 !important;
+}
+
+.cm-lineNumbers {
+  background: transparent !important;
+  border-right: 1px solid !important;
+}
+
+/* Dark theme overrides */
+.cm-editor.dark {
+  background-color: #1e1e1e !important;
+}
+
+.cm-editor.dark .cm-gutters {
+  background-color: #1e1e1e !important;
+  border-right-color: #374151 !important;
+}
+
+.cm-editor.dark .cm-lineNumbers .cm-gutterElement {
+  color: #6b7280 !important;
+}
+
+.cm-editor.dark .cm-activeLine {
+  background-color: #2d2d2d !important;
+}
+
+.cm-editor.dark .cm-activeLineGutter {
+  background-color: #2d2d2d !important;
+}
+
+.cm-editor.dark .cm-cursor {
+  border-left-color: #ffffff !important;
+}
+
+.cm-editor.dark .cm-selectionBackground {
+  background-color: #264f78 !important;
+}
+
+.cm-editor.dark .cm-focused .cm-selectionBackground {
+  background-color: #264f78 !important;
+}
+
+/* Light theme overrides */
+.cm-editor.light .cm-gutters {
+  background-color: #ffffff !important;
+  border-right-color: #e5e7eb !important;
+}
+
+.cm-editor.light .cm-lineNumbers .cm-gutterElement {
+  color: #9ca3af !important;
+}
+
+.cm-editor.light .cm-activeLine {
+  background-color: #f3f4f6 !important;
+}
+
+.cm-editor.light .cm-activeLineGutter {
+  background-color: #f3f4f6 !important;
+}
+
+/* Placeholder */
+.cm-editor::before {
+  content: attr(placeholder);
+  color: #6b7280;
+  font-style: italic;
+  pointer-events: none;
+  position: absolute;
+  padding: 0.75rem;
+}
